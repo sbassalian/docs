@@ -99,27 +99,33 @@
           "subtotal": {
             "type": "number",
             "format": "float",
-            "description": "Subtotal amount of the transaction"
+            "description": "Subtotal amount of the transaction",
+            "nullable": true
           },
           "currency": {
             "type": "string",
-            "description": "Currency of the transaction"
+            "description": "Currency of the transaction",
+            "nullable": true
           },
           "order_id": {
             "type": "string",
-            "description": "ID of the order"
+            "description": "ID of the order",
+            "nullable": true
           },
           "order_type": {
             "type": "string",
-            "description": "Type of the order"
+            "description": "Type of the order",
+            "nullable": true
           },
           "payment_id": {
             "type": "string",
-            "description": "ID of the payment"
+            "description": "ID of the payment",
+            "nullable": true
           },
           "external_user_id": {
             "type": "string",
-            "description": "External user ID associated with the event"
+            "description": "External user ID associated with the event",
+            "nullable": true
           },
           "quantity": {
             "type": "integer",

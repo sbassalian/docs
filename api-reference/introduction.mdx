@@ -1,33 +1,23 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'Growi API documentation for showcasing endpoints and authentication methods'
 ---
 
 <Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
+ If you're looking to integrate with Growi's powerful affiliate management platform, this documentation is for you. Here you'll find all the details you need to authenticate and interact with our API endpoints.
 </Note>
 
 ## Welcome
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+Welcome to the Growi API documentation. Here you will find all the information you need to interact with the Growi platform through our API. You can build comprehensive affiliate management solutions and integrate seamlessly with our services.
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API endpoints are authenticated using Bearer tokens. To authenticate your requests, you need to include the Authorization header with your API key.
+
+To authenticate, pass up an Authorization header with the value:<br/>`Bearer <api-key>`:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+Base Url https://api.growi.io/api/public/v1
+Authorization: Bearer YOUR_API_KEY
 ```

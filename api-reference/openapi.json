@@ -77,12 +77,7 @@
     "schemas": {
       "NewTrackingEvent": {
         "type": "object",
-        "required": [
-          "event_name",
-          "occurred_at",
-          "visitor_uid",
-          "campaign_affiliate_id"
-        ],
+        "required": ["event_name", "occurred_at", "visitor_uid"],
         "properties": {
           "event_name": {
             "type": "string",
@@ -154,7 +149,7 @@
           },
           "campaign_affiliate_id": {
             "type": "string",
-            "description": "Tag of the campaign affiliate associated with the event"
+            "description": "Tag of the campaign affiliate associated with the event. Not required when `order_id` is present and the order is recurring."
           }
         }
       },

@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "http://api.growi.io/api/public/v1"
+      "url": "https://api.growi.io/api/public/v1"
     }
   ],
   "security": [

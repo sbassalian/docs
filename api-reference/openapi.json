@@ -134,6 +134,7 @@
           },
           "order_type": {
             "type": "string",
+            "enum": ["one_time", "subscription"],
             "description": "Type of the order",
             "nullable": true
           },
@@ -152,8 +153,8 @@
             "description": "Quantity involved in the event"
           },
           "campaign_affiliate_id": {
-            "type": "integer",
-            "description": "ID of the campaign affiliate associated with the event"
+            "type": "string",
+            "description": "Tag of the campaign affiliate associated with the event"
           }
         }
       },

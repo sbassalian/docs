@@ -77,10 +77,15 @@
     "schemas": {
       "NewTrackingEvent": {
         "type": "object",
-        "required": ["event_name", "occurred_at", "visitor_uid", "campaign_affiliate_id"],
+        "required": [
+          "event_name",
+          "occurred_at",
+          "visitor_uid",
+          "campaign_affiliate_id"
+        ],
         "properties": {
           "event_name": {
-            "type": "string",
+            "type": "integer",
             "description": "Name of the event"
           },
           "occurred_at": {
@@ -93,17 +98,16 @@
             "description": "Unique identifier for the visitor"
           },
           "event_data": {
-            "type": "string",
+            "type": "object",
             "description": "Additional data related to the event"
           },
           "subtotal": {
-            "type": "number",
-            "format": "float",
+            "type": "integer",
             "description": "Subtotal amount of the transaction",
             "nullable": true
           },
           "currency": {
-            "type": "string",
+            "type": "integer",
             "description": "Currency of the transaction",
             "nullable": true
           },
@@ -113,7 +117,7 @@
             "nullable": true
           },
           "order_type": {
-            "type": "string",
+            "type": "integer",
             "description": "Type of the order",
             "nullable": true
           },
@@ -132,7 +136,7 @@
             "description": "Quantity involved in the event"
           },
           "campaign_affiliate_id": {
-            "type": "string",
+            "type": "integer",
             "description": "ID of the campaign affiliate associated with the event"
           }
         }

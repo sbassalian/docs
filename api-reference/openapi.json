@@ -85,7 +85,23 @@
         ],
         "properties": {
           "event_name": {
-            "type": "integer",
+            "type": "string",
+            "enum": [
+              "cart_viewed",
+              "checkout_address_info_submitted",
+              "checkout_completed",
+              "checkout_contact_info_submitted",
+              "checkout_shipping_info_submitted",
+              "checkout_started",
+              "collection_viewed",
+              "page_viewed",
+              "payment_info_submitted",
+              "product_added_to_cart",
+              "product_removed_from_cart",
+              "product_viewed",
+              "search_submitted",
+              "payment_completed"
+            ],
             "description": "Name of the event"
           },
           "occurred_at": {
@@ -117,7 +133,7 @@
             "nullable": true
           },
           "order_type": {
-            "type": "integer",
+            "type": "string",
             "description": "Type of the order",
             "nullable": true
           },

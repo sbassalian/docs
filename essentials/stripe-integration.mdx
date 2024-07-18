@@ -1,0 +1,93 @@
+---
+title: "Stripe Integration"
+description: "Learn how to set up Stripe with Growi"
+---
+
+<Info>
+  **Prerequisite** You should have a Stripe account and administrative access to
+  your Growi dashboard.
+</Info>
+
+# How to Set Up Stripe with Growi
+
+In a few simple steps, you can set up Growi with your Stripe integration to track affiliates. We also have an open-source example [here](https://github.com/Growi-Inc/stripe-integration-example).
+
+## 1. Authenticate Your Stripe Account with Growi
+
+Navigate to the “Settings” tab, then the “Integrations & Socials” section, and finally click “Install Now” on the Stripe integration.
+
+<Frame>
+  <img
+    src="/images/stripe1.png"
+    alt="Stripe Integration Setup"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+## 2. Add Our Tracking Script
+
+Add the following script to your app:
+
+```html
+<script
+  async
+  src="https://cdn.growi.io/growi.js"
+  data-growi="{YOUR_PUBLIC_GROWI_ID}"
+/>
+```
+
+You can get your “Public Growi ID” from the dashboard on the “Integrations &
+Socials” page.
+
+<Frame>
+  <img
+    src="/images/stripe2.png"
+    alt="Public Growi ID"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+## 3. Send Affiliate Code to Stripe The tracking script will capture users
+
+navigating to your site with affiliate parameters and save them to
+window.growi.affiliate_code. You must pass the affiliate code to the Stripe
+metadata using the growi_affiliate_code key.
+
+```js
+const paymentLink = await stripe.paymentLinks.create({
+  line_items: [
+    {
+      price: "price_nj8h23ud",
+      quantity: 1,
+    },
+  ],
+  metadata: {
+    growi_affiliate_code: window.growi.affiliate_code,
+  },
+});
+```
+
+React Example For those using React, we have
+a repository demonstrating our Stripe integration: [React Stripe Integration
+Example](https://github.com/Growi-Inc/stripe-integration-example).
+
+## Troubleshooting
+
+Here's how to solve some common problems when setting
+up Stripe with Growi.
+
+<AccordionGroup>
+  <Accordion title="Stripe Integration Not Appearing">
+    Ensure you have administrative access and have navigated to the correct
+    section in the Growi dashboard.
+  </Accordion>
+  <Accordion title="Tracking Script Not Capturing Affiliate Code">
+    Verify that the script is correctly added to your app and that the Public
+    Growi ID is correct.
+  </Accordion>
+  <Accordion title="Affiliate Code Not Being Sent to Stripe">
+    Double-check your implementation of passing the affiliate code to Stripe
+    metadata. Ensure `window.growi.affiliate_code` is being captured and used
+    correctly.
+  </Accordion>
+</AccordionGroup>

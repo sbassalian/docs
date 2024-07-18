@@ -309,7 +309,7 @@
           },
           "campaign_affiliate_id": {
             "type": "string",
-            "description": "Tag of the campaign affiliate associated with the event. Not required when `order_id` is present and the order is recurring."
+            "description": "Tag of the campaign affiliate associated with the event. Not required when `order_id` is present and the order is a recurring subscription."
           }
         }
       },

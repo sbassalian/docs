@@ -15,30 +15,41 @@
       "to": "#07C983"
     }
   },
-  "topbarLinks": [],
-  "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://growi.io"
-  },
-  "tabs": [
+  "topbarLinks": [
     {
-      "name": "API Reference",
-      "url": "api-reference"
+      "name": "Support",
+      "url": "mailto:hi@mintlify.com"
     }
   ],
+  "topbarCtaButton": {
+    "name": "Dashboard",
+    "url": "https://dashboard.mintlify.com"
+  },
+  "tabs": [],
   "anchors": [],
   "navigation": [
+    {
+      "group": "Get Started",
+      "pages": ["introduction", "quickstart", "development"]
+    },
+    {
+      "group": "Essentials",
+      "pages": [
+        "essentials/markdown",
+        "essentials/code",
+        "essentials/images",
+        "essentials/settings",
+        "essentials/navigation",
+        "essentials/reusable-snippets"
+      ]
+    },
     {
       "group": "API Documentation",
       "pages": ["api-reference/introduction"]
     },
     {
-      "group": "Endpoints",
-      "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
-      ]
+      "group": "Endpoint Examples",
+      "pages": ["api-reference/endpoint/create"]
     }
   ],
   "footerSocials": {}

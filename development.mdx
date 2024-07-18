@@ -1,98 +1,93 @@
 ---
-title: 'Development'
-description: 'Learn how to preview changes locally'
+title: "Stripe Integration"
+description: "Learn how to set up Stripe with Growi"
 ---
 
 <Info>
-  **Prerequisite** You should have installed Node.js (version 18.10.0 or
-  higher).
+  **Prerequisite** You should have a Stripe account and administrative access to
+  your Growi dashboard.
 </Info>
 
-Step 1. Install Mintlify on your OS:
+# How to Set Up Stripe with Growi
 
-<CodeGroup>
+In a few simple steps, you can set up Growi with your Stripe integration to track affiliates. We also have an open-source example [here](https://github.com/Growi-Inc/stripe-integration-example).
 
-```bash npm
-npm i -g mintlify
-```
+## 1. Authenticate Your Stripe Account with Growi
 
-```bash yarn
-yarn global add mintlify
-```
-
-</CodeGroup>
-
-Step 2. Go to the docs are located (where you can find `mint.json`) and run the following command:
-
-```bash
-mintlify dev
-```
-
-The documentation website is now available at `http://localhost:3000`.
-
-### Custom Ports
-
-Mintlify uses port 3000 by default. You can use the `--port` flag to customize the port Mintlify runs on. For example, use this command to run in port 3333:
-
-```bash
-mintlify dev --port 3333
-```
-
-You will see an error like this if you try to run Mintlify in a port that's already taken:
-
-```md
-Error: listen EADDRINUSE: address already in use :::3000
-```
-
-## Mintlify Versions
-
-Each CLI is linked to a specific version of Mintlify. Please update the CLI if your local website looks different than production.
-
-<CodeGroup>
-
-```bash npm
-npm i -g mintlify@latest
-```
-
-```bash yarn
-yarn global upgrade mintlify
-```
-
-</CodeGroup>
-
-## Deployment
-
-<Tip>
-  Unlimited editors available under the [Startup
-  Plan](https://mintlify.com/pricing)
-</Tip>
-
-You should see the following if the deploy successfully went through:
+Navigate to the “Settings” tab, then the “Integrations & Socials” section, and finally click “Install Now” on the Stripe integration.
 
 <Frame>
-  <img src="/images/checks-passed.png" style={{ borderRadius: '0.5rem' }} />
+  <img
+    src="https://prod-files-secure.s3.us-west-2.amazonaws.com/c0b95190-eac0-4e6f-b913-17fc9e0e1157/0117fe94-c1cb-42e5-ba26-ad3600dec030/Untitled.png"
+    alt="Stripe Integration Setup"
+    style={{ borderRadius: "0.5rem" }}
+  />
 </Frame>
+
+## 2. Add Our Tracking Script
+
+Add the following script to your app:
+
+```html
+<script
+  async
+  src="https://cdn.growi.io/growi.js"
+  data-growi="{YOUR_PUBLIC_GROWI_ID}"
+/>
+```
+
+You can get your “Public Growi ID” from the dashboard on the “Integrations &
+Socials” page.
+
+<frame>
+  <img
+    src="https://prod-files-secure.s3.us-west-2.amazonaws.com/c0b95190-eac0-4e6f-b913-17fc9e0e1157/5019ad94-3fa1-4eac-b216-26cf7051cc8b/Untitled.png"
+    alt="Public Growi ID"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</frame>
+
+## 3. Send Affiliate Code to Stripe The tracking script will capture users
+
+navigating to your site with affiliate parameters and save them to
+window.growi.affiliate_code. You must pass the affiliate code to the Stripe
+metadata using the growi_affiliate_code key.
+
+```js
+const paymentLink = await stripe.paymentLinks.create({
+  line_items: [
+    {
+      price: "price_nj8h23ud",
+      quantity: 1,
+    },
+  ],
+  metadata: {
+    growi_affiliate_code: window.growi.affiliate_code,
+  },
+});
+```
+
+React Example For those using React, we have
+a repository demonstrating our Stripe integration: [React Stripe Integration
+Example](https://github.com/Growi-Inc/stripe-integration-example).
 
 ## Troubleshooting
 
-Here's how to solve some common problems when working with the CLI.
+Here's how to solve some common problems when setting
+up Stripe with Growi.
 
 <AccordionGroup>
-  <Accordion title="Mintlify is not loading">
-    Update to Node v18. Run `mintlify install` and try again.
+  <Accordion title="Stripe Integration Not Appearing">
+    Ensure you have administrative access and have navigated to the correct
+    section in the Growi dashboard.
   </Accordion>
-  <Accordion title="No such file or directory on Windows">
-Go to the `C:/Users/Username/.mintlify/` directory and remove the `mint`
-folder. Then Open the Git Bash in this location and run `git clone
-https://github.com/mintlify/mint.git`.
-
-Repeat step 3.
-
+  <Accordion title="Tracking Script Not Capturing Affiliate Code">
+    Verify that the script is correctly added to your app and that the Public
+    Growi ID is correct.
   </Accordion>
-  <Accordion title="Getting an unknown error">
-    Try navigating to the root of your device and delete the ~/.mintlify folder.
-    Then run `mintlify dev` again.
+  <Accordion title="Affiliate Code Not Being Sent to Stripe">
+    Double-check your implementation of passing the affiliate code to Stripe
+    metadata. Ensure `window.growi.affiliate_code` is being captured and used
+    correctly.
   </Accordion>
 </AccordionGroup>
-
-Curious about what changed in a CLI version? [Check out the CLI changelog.](/changelog/command-line)

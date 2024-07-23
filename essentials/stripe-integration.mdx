@@ -53,6 +53,7 @@ The tracking script will capture users navigating to your site with affiliate pa
 window.growi.affiliate_code. You must pass the affiliate code to the Stripe
 metadata using the growi_affiliate_code key.
 
+Example: Payment Link
 ```js
 const paymentLink = await stripe.paymentLinks.create({
   line_items: [
@@ -64,6 +65,22 @@ const paymentLink = await stripe.paymentLinks.create({
   metadata: {
     growi_affiliate_code: window.growi.affiliate_code,
   },
+});
+```
+
+Example: Checkout Session
+```js
+const paymentLink = await stripe.checkout.sessions.create({
+  line_items: [
+    {
+      price: "price_nj8h23ud",
+      quantity: 1,
+    },
+  ],
+  metadata: {
+    growi_affiliate_code: window.growi.affiliate_code,
+  },
+  mode: "subscription",
 });
 ```
 

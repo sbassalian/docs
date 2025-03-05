@@ -84,6 +84,15 @@ const paymentLink = await stripe.checkout.sessions.create({
 });
 ```
 
+Example: Invoice
+```js
+const invoice = await stripe.invoices.create({
+  metadata: {
+    growi_affiliate_code: window.growi.affiliate_code,
+  }
+});
+```
+
 React Example For those using React, we have
 a repository demonstrating our Stripe integration: [React Stripe Integration
 Example](https://github.com/Growi-Inc/stripe-integration-example).

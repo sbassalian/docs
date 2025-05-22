@@ -71,6 +71,1042 @@
           }
         }
       }
+    },
+    "/stats/snapshots": {
+      "get": {
+        "description": "Retrieves time-series data for content engagement metrics within a specified date range",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Snapshots retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Snapshots data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/content_platform_composition": {
+      "get": {
+        "description": "Retrieves a breakdown of content by platform within a specified date range",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Content platform composition retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Content platform composition data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/content_24h_data": {
+      "get": {
+        "description": "Retrieves 24-hour views and engagement metrics with comparison to previous period",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Content 24h data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Content 24h data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/creators_24h": {
+      "get": {
+        "description": "Retrieves newly joined creators data with comparison to previous period",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Creators 24h data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Creators 24h data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/top_creators_by_engagement": {
+      "get": {
+        "description": "Retrieves your top-performing creators ranked by total engagement within a specified date range",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Top creators by engagement retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Top creators by engagement data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/top_creators_by_gmv": {
+      "get": {
+        "description": "Retrieves your top-performing creators ranked by GMV within a specified date range",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Top creators by GMV retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Top creators by GMV data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/top_posts_by_views": {
+      "get": {
+        "description": "Retrieves your top-performing posts ranked by views within a specified date range",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Top posts by views retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Top posts by views data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/tik_tok_shop_gmv_24h": {
+      "get": {
+        "description": "Retrieves TikTok Shop GMV data for the last 24 hours",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "TikTok Shop GMV 24h data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "TikTok Shop GMV 24h data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/manual_campaign_progress": {
+      "get": {
+        "description": "Retrieves the progress of manual campaigns",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Manual campaign progress data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Manual campaign progress data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/top_connected_accounts_by_engagement": {
+      "get": {
+        "description": "Retrieves your top-performing social accounts ranked by engagement within a specified date range",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Top connected accounts by engagement retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Top connected accounts by engagement data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/top_creators_by_posts": {
+      "get": {
+        "description": "Retrieves your most active creators ranked by post count within a specified date range",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Top creators by posts retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Top creators by posts data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/top_earning_creators": {
+      "get": {
+        "description": "Retrieves your top creators ranked by earnings within a specified date range",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Top earning creators retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Top earning creators data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/payouts_24h": {
+      "get": {
+        "description": "Retrieves payout data with comparison to previous period",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payouts 24h data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Payouts 24h data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/user_contents": {
+      "get": {
+        "description": "Retrieves all user content creation data within a date range",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "05/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "05/08/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "05/08/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "example": 4,
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User contents data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "User contents data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -322,6 +1358,19 @@
           },
           "message": {
             "type": "string"
+          }
+        }
+      },
+      "StatsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "description": "Endpoint-specific data"
           }
         }
       }

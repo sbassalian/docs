@@ -38,7 +38,26 @@
     },
     {
       "group": "API Documentation",
-      "pages": ["api-reference/introduction", "api-reference/endpoint/create"]
+      "pages": ["api-reference/introduction"]
+    },
+    {
+      "group": "Tracking Events",
+      "pages": ["api-reference/endpoint/create"]
+    },
+    {
+      "group": "Stats API",
+      "pages": [
+        "api-reference/endpoint/get-snapshots",
+        "api-reference/endpoint/get-content-platform-composition",
+        "api-reference/endpoint/get-content-24h-data",
+        "api-reference/endpoint/get-creators-24h",
+        "api-reference/endpoint/get-top-creators",
+        "api-reference/endpoint/get-top-creators-by-posts",
+        "api-reference/endpoint/get-top-creators-by-gmv",
+        "api-reference/endpoint/get-top-connected-accounts-by-engagement",
+        "api-reference/endpoint/get-top-posts-by-views",
+        "api-reference/endpoint/get-user-contents"
+      ]
     }
   ],
   "footerSocials": {}

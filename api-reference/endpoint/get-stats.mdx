@@ -1,0 +1,48 @@
+---
+title: 'Get Stats'
+openapi: 'GET /stats/{endpoint}'
+---
+
+This endpoint allows you to retrieve various statistics data from the Growi platform. Replace `{endpoint}` with the specific stats endpoint you want to access.
+
+## Available Stats Endpoints
+
+| Endpoint | Description |
+| --- | --- |
+| `/stats/content_platform_composition` | Get a breakdown of content by platform |
+| `/stats/snapshots` | Get time-series data for content engagement metrics |
+| `/stats/content_24h_data` | Get 24-hour views and engagement metrics with comparison to previous period |
+| `/stats/creators_24h` | Get creator acquisition data with comparison to previous period |
+| `/stats/top_creators_by_engagement` | Get your top-performing creators ranked by total engagement |
+| `/stats/top_creators_by_posts` | Get your most active creators ranked by post count |
+| `/stats/top_connected_accounts_by_engagement` | Get your top-performing social accounts ranked by engagement |
+| `/stats/top_earning_creators` | Get your top creators ranked by earnings |
+| `/stats/payouts_24h` | Get payout data with comparison to previous period |
+| `/stats/user_contents` | Get all user content creation data within a date range |
+| `/stats/tik_tok_shop_gmv_24h` | Get TikTok Shop GMV data with comparison to previous period |
+| `/stats/top_posts_by_views` | Get your top-performing posts ranked by views |
+| `/stats/manual_campaign_progress` | Get progress metrics for your manual campaigns |
+| `/stats/top_creators_by_gmv` | Get your top-performing creators ranked by Gross Merchandise Value (GMV) |
+
+## Request Parameters
+
+All stats endpoints require the following parameters:
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
+| `end_date` | String | End date in MM/DD/YYYY format | Yes |
+| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
+
+## Response Format
+
+Responses are returned in JSON format. A successful response includes:
+
+```json
+{
+  "success": true,
+  "data": {
+    // Endpoint-specific data
+  }
+}
+``` 

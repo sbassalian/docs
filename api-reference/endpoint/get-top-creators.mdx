@@ -1,0 +1,81 @@
+---
+title: 'Get Top Creators By Engagement'
+openapi: 'GET /stats/top_creators_by_engagement'
+---
+
+Retrieves your top-performing creators ranked by total engagement within a specified date range.
+
+## Request Parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
+| `end_date` | String | End date in MM/DD/YYYY format | Yes |
+| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
+
+## Request Example```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_engagement?start_date=01/01/2023&end_date=01/31/2023&limit=5" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "success": true,
+  "data": {
+    "top_creators_by_engagement": [
+      {
+        "id": 100001,
+        "name": "Ella Matthews",
+        "email": "ella.matthews@example.com",
+        "metrics": {
+          "views": 1771846,
+          "likes": 40279,
+          "comments": 840,
+          "shares": 16436,
+          "total_engagement": 1829401
+        }
+      },
+      {
+        "id": 100002,
+        "name": "Carlos Bennett",
+        "email": "carlos.bennett@example.com",
+        "metrics": {
+          "views": 801298,
+          "likes": 23163,
+          "comments": 514,
+          "shares": 1877,
+          "total_engagement": 826852
+        }
+      },
+      {
+        "id": 100003,
+        "name": "Zara Patel",
+        "email": "zara.patel@example.com",
+        "metrics": {
+          "views": 409630,
+          "likes": 13975,
+          "comments": 76,
+          "shares": 0,
+          "total_engagement": 423681
+        }
+      },
+      {
+        "id": 100004,
+        "name": "Leo Fischer",
+        "email": "leo.fischer@example.com",
+        "metrics": {
+          "views": 350616,
+          "likes": 20011,
+          "comments": 206,
+          "shares": 5930,
+          "total_engagement": 376763
+        }
+      }
+    ]
+  }
+}
+``` 
+

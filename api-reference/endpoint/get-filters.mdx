@@ -1,0 +1,75 @@
+---
+title: 'Get Filters'
+openapi: 'GET /stats/filters'
+---
+
+Retrieves available filters for your organization within a specified date range.
+
+## Request Parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
+| `end_date` | String | End date in MM/DD/YYYY format | Yes |
+| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/filters?start_date=01/01/2023&end_date=01/31/2023" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "success": true,
+  "data": {
+    "campaigns": [
+      {
+        "campaign_id": 123,
+        "name": "Summer Collection",
+        "status": "active",
+        "start_date": "2023-01-01",
+        "end_date": "2023-01-31"
+      },
+      {
+        "campaign_id": 124,
+        "name": "Back to School",
+        "status": "planned",
+        "start_date": "2023-02-01",
+        "end_date": "2023-02-28"
+      }
+    ],
+    "platforms": [
+      "instagram",
+      "tiktok",
+      "youtube",
+      "facebook",
+      "twitter"
+    ],
+    "content_types": [
+      "video",
+      "image",
+      "carousel",
+      "story",
+      "reel"
+    ],
+    "creators": [
+      {
+        "creator_id": 1001,
+        "name": "Jane Smith",
+        "username": "@janesmith"
+      },
+      {
+        "creator_id": 1002,
+        "name": "John Doe",
+        "username": "@johndoe"
+      }
+    ],
+    "total_filters": 4
+  }
+}
+``` 

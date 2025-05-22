@@ -1,0 +1,203 @@
+---
+title: 'Get Manual Campaign Progress'
+openapi: 'GET /stats/manual_campaign_progress'
+---
+
+Retrieves progress metrics for your manual campaigns within a specified date range.
+
+## Request Parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
+| `end_date` | String | End date in MM/DD/YYYY format | Yes |
+| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/manual_campaign_progress?start_date=01/01/2023&end_date=01/31/2023&limit=5" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "success": true,
+  "data": {
+    "campaigns": [
+      {
+        "campaign_id": 567,
+        "name": "Summer Collection",
+        "start_date": "2023-01-01",
+        "end_date": "2023-01-31",
+        "status": "active",
+        "budget": {
+          "total": 50000.00,
+          "spent": 32458.75,
+          "remaining": 17541.25,
+          "percentage_used": 64.92
+        },
+        "creators": {
+          "total": 28,
+          "active": 25,
+          "pending": 3,
+          "completion_rate": 89.29
+        },
+        "content": {
+          "total_planned": 84,
+          "total_created": 68,
+          "total_approved": 65,
+          "total_published": 62,
+          "completion_rate": 73.81
+        },
+        "metrics": {
+          "total_views": 3867542,
+          "unique_views": 2154328,
+          "engagement": 423758,
+          "engagement_rate": 10.96,
+          "roi": 345.82
+        }
+      },
+      {
+        "campaign_id": 568,
+        "name": "New Product Launch",
+        "start_date": "2023-01-15",
+        "end_date": "2023-02-15",
+        "status": "active",
+        "budget": {
+          "total": 75000.00,
+          "spent": 28754.25,
+          "remaining": 46245.75,
+          "percentage_used": 38.34
+        },
+        "creators": {
+          "total": 35,
+          "active": 32,
+          "pending": 3,
+          "completion_rate": 91.43
+        },
+        "content": {
+          "total_planned": 105,
+          "total_created": 48,
+          "total_approved": 45,
+          "total_published": 42,
+          "completion_rate": 40.00
+        },
+        "metrics": {
+          "total_views": 2584762,
+          "unique_views": 1457823,
+          "engagement": 287645,
+          "engagement_rate": 11.13,
+          "roi": 278.52
+        }
+      },
+      {
+        "campaign_id": 569,
+        "name": "Holiday Special",
+        "start_date": "2022-12-01",
+        "end_date": "2023-01-15",
+        "status": "completed",
+        "budget": {
+          "total": 65000.00,
+          "spent": 62845.75,
+          "remaining": 2154.25,
+          "percentage_used": 96.69
+        },
+        "creators": {
+          "total": 30,
+          "active": 28,
+          "pending": 0,
+          "completion_rate": 93.33
+        },
+        "content": {
+          "total_planned": 90,
+          "total_created": 88,
+          "total_approved": 85,
+          "total_published": 85,
+          "completion_rate": 94.44
+        },
+        "metrics": {
+          "total_views": 4872543,
+          "unique_views": 2587432,
+          "engagement": 542876,
+          "engagement_rate": 11.14,
+          "roi": 387.42
+        }
+      },
+      {
+        "campaign_id": 570,
+        "name": "Back to School",
+        "start_date": "2023-01-20",
+        "end_date": "2023-02-28",
+        "status": "active",
+        "budget": {
+          "total": 55000.00,
+          "spent": 12457.50,
+          "remaining": 42542.50,
+          "percentage_used": 22.65
+        },
+        "creators": {
+          "total": 25,
+          "active": 22,
+          "pending": 3,
+          "completion_rate": 88.00
+        },
+        "content": {
+          "total_planned": 75,
+          "total_created": 28,
+          "total_approved": 25,
+          "total_published": 22,
+          "completion_rate": 29.33
+        },
+        "metrics": {
+          "total_views": 1254876,
+          "unique_views": 742865,
+          "engagement": 145287,
+          "engagement_rate": 11.58,
+          "roi": 302.45
+        }
+      },
+      {
+        "campaign_id": 571,
+        "name": "Spring Preview",
+        "start_date": "2023-01-25",
+        "end_date": "2023-03-10",
+        "status": "active",
+        "budget": {
+          "total": 60000.00,
+          "spent": 8754.25,
+          "remaining": 51245.75,
+          "percentage_used": 14.59
+        },
+        "creators": {
+          "total": 28,
+          "active": 25,
+          "pending": 3,
+          "completion_rate": 89.29
+        },
+        "content": {
+          "total_planned": 84,
+          "total_created": 18,
+          "total_approved": 15,
+          "total_published": 12,
+          "completion_rate": 14.29
+        },
+        "metrics": {
+          "total_views": 584762,
+          "unique_views": 345287,
+          "engagement": 68542,
+          "engagement_rate": 11.72,
+          "roi": 285.43
+        }
+      }
+      // Additional campaigns...
+    ],
+    "total_count": 8,
+    "page": 1,
+    "limit": 5
+  }
+}
+``` 

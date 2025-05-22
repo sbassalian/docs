@@ -1,0 +1,89 @@
+---
+title: 'Get Payouts 24h'
+openapi: 'GET /stats/payouts_24h'
+---
+
+Retrieves payout data with comparison to previous period.
+
+## Request Parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
+| `end_date` | String | End date in MM/DD/YYYY format | Yes |
+| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/payouts_24h?start_date=01/01/2023&end_date=01/31/2023" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "success": true,
+  "data": {
+    "current_period": {
+      "date_range": "2023-01-30 to 2023-01-31",
+      "total_payouts": 28450.75,
+      "currency": "USD",
+      "payout_count": 42,
+      "avg_payout": 677.40,
+      "unique_creators_paid": 37,
+      "total_content_rewarded": 156,
+      "payment_processing_fees": 712.27,
+      "successful_payments": 42,
+      "failed_payments": 0
+    },
+    "previous_period": {
+      "date_range": "2023-01-28 to 2023-01-29",
+      "total_payouts": 25780.42,
+      "currency": "USD",
+      "payout_count": 38,
+      "avg_payout": 678.43,
+      "unique_creators_paid": 34,
+      "total_content_rewarded": 142,
+      "payment_processing_fees": 644.51,
+      "successful_payments": 37,
+      "failed_payments": 1
+    },
+    "changes": {
+      "total_payouts": {
+        "value": 2670.33,
+        "percentage": 10.4
+      },
+      "payout_count": {
+        "value": 4,
+        "percentage": 10.5
+      },
+      "avg_payout": {
+        "value": -1.03,
+        "percentage": -0.15
+      },
+      "unique_creators_paid": {
+        "value": 3,
+        "percentage": 8.8
+      },
+      "total_content_rewarded": {
+        "value": 14,
+        "percentage": 9.9
+      },
+      "payment_processing_fees": {
+        "value": 67.76,
+        "percentage": 10.5
+      },
+      "successful_payments": {
+        "value": 5,
+        "percentage": 13.5
+      },
+      "failed_payments": {
+        "value": -1,
+        "percentage": -100
+      }
+    }
+  }
+} 

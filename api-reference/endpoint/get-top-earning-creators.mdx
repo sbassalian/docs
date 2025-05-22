@@ -1,0 +1,122 @@
+---
+title: 'Get Top Earning Creators'
+openapi: 'GET /stats/top_earning_creators'
+---
+
+Retrieves your top creators ranked by earnings within a specified date range.
+
+## Request Parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
+| `end_date` | String | End date in MM/DD/YYYY format | Yes |
+| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/top_earning_creators?start_date=01/01/2023&end_date=01/31/2023&limit=5" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "success": true,
+  "data": {
+    "top_creators": [
+      {
+        "creator_id": 12353,
+        "creator_name": "Alex Taylor",
+        "username": "@alextaylor",
+        "profile_image_url": "https://example.com/profile/alextaylor.jpg",
+        "total_earnings": 15870.42,
+        "currency": "USD",
+        "total_content": 28,
+        "earnings_per_post": 566.80,
+        "performance_score": 92.4,
+        "primary_platform": "tiktok",
+        "top_earning_campaign": {
+          "campaign_id": 567,
+          "name": "Summer Collection",
+          "earnings": 8450.75
+        }
+      },
+      {
+        "creator_id": 12354,
+        "creator_name": "Olivia Garcia",
+        "username": "@oliviagarcia",
+        "profile_image_url": "https://example.com/profile/oliviagarcia.jpg",
+        "total_earnings": 12485.68,
+        "currency": "USD",
+        "total_content": 34,
+        "earnings_per_post": 367.22,
+        "performance_score": 89.7,
+        "primary_platform": "instagram",
+        "top_earning_campaign": {
+          "campaign_id": 572,
+          "name": "Fall Fashion",
+          "earnings": 5840.25
+        }
+      },
+      {
+        "creator_id": 12355,
+        "creator_name": "James Wilson",
+        "username": "@jameswilson",
+        "profile_image_url": "https://example.com/profile/jameswilson.jpg",
+        "total_earnings": 10965.23,
+        "currency": "USD",
+        "total_content": 19,
+        "earnings_per_post": 577.12,
+        "performance_score": 91.2,
+        "primary_platform": "youtube",
+        "top_earning_campaign": {
+          "campaign_id": 567,
+          "name": "Summer Collection",
+          "earnings": 6780.40
+        }
+      },
+      {
+        "creator_id": 12356,
+        "creator_name": "Sophia Martinez",
+        "username": "@sophiamartinez",
+        "profile_image_url": "https://example.com/profile/sophiamartinez.jpg",
+        "total_earnings": 9876.51,
+        "currency": "USD",
+        "total_content": 25,
+        "earnings_per_post": 395.06,
+        "performance_score": 87.5,
+        "primary_platform": "instagram",
+        "top_earning_campaign": {
+          "campaign_id": 569,
+          "name": "Holiday Special",
+          "earnings": 4250.80
+        }
+      },
+      {
+        "creator_id": 12357,
+        "creator_name": "Daniel Lee",
+        "username": "@daniellee",
+        "profile_image_url": "https://example.com/profile/daniellee.jpg",
+        "total_earnings": 8745.32,
+        "currency": "USD",
+        "total_content": 22,
+        "earnings_per_post": 397.51,
+        "performance_score": 86.9,
+        "primary_platform": "tiktok",
+        "top_earning_campaign": {
+          "campaign_id": 570,
+          "name": "Back to School",
+          "earnings": 3980.15
+        }
+      }
+      // Additional creators...
+    ],
+    "total_count": 95,
+    "page": 1,
+    "limit": 5
+  }
+} 

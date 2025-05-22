@@ -1,0 +1,89 @@
+---
+title: 'Get Top Posts By Views'
+openapi: 'GET /stats/top_posts_by_views'
+---
+
+Retrieves your top-performing posts ranked by views within a specified date range.
+
+## Request Parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
+| `end_date` | String | End date in MM/DD/YYYY format | Yes |
+| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/top_posts_by_views?start_date=01/01/2023&end_date=01/31/2023&limit=5" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "success": true,
+  "data": {
+    "top_posts_by_views": [
+      {
+        "id": 100001,
+        "title": "Latest tech trends for 2024! 🚀\n\nJoin our tech community discord in bio for exclusive updates 📱\n\nFollow for daily tech insights and reviews ✅\n\n#tech #gadgets #innovation #technology #technews #review #smartphone #ai #artificialintelligence #future",
+        "share_url": "https://www.instagram.com/p/ABC123xyz/",
+        "platform": "instagram",
+        "content_type": "image",
+        "username": "tech.trends",
+        "metrics": {
+          "views": 365558,
+          "likes": 12460,
+          "comments": 37,
+          "shares": 5970
+        }
+      },
+      {
+        "id": 100002,
+        "title": "Breaking: Major tech company announces revolutionary AI breakthrough in sustainable energy solutions.\n\nResearchers have developed an AI system that optimizes energy consumption, potentially reducing costs by up to 40%.\n\nThis development marks a significant step forward in combining artificial intelligence with environmental sustainability.\n\nJoin our tech community discord in bio for detailed analysis 📱\n\nFollow for daily tech updates ✅\n\n#technology #ai #sustainability #innovation #energy #future",
+        "share_url": "https://www.instagram.com/p/DEF456uvw/",
+        "platform": "instagram",
+        "content_type": "image",
+        "username": "future.tech",
+        "metrics": {
+          "views": 314195,
+          "likes": 6165,
+          "comments": 123,
+          "shares": 3348
+        }
+      },
+      {
+        "id": 100003,
+        "title": "The evolution of smartphones #viral #tech #smartphone #innovation #future #trending #technology #gadgets #review",
+        "share_url": "https://www.tiktok.com/@tech.trends/video/123456789",
+        "platform": "tik_tok",
+        "content_type": "video",
+        "username": "tech.trends",
+        "metrics": {
+          "views": 216222,
+          "likes": 4695,
+          "comments": 85,
+          "shares": 216
+        }
+      },
+      {
+        "id": 100004,
+        "title": "Industry experts predict a major shift in consumer technology trends for 2024, with AI-powered personal assistants leading the way.\n\nNew research suggests that 75% of households will have smart home devices by 2025.\n\nThis transformation is reshaping how we interact with technology in our daily lives.\n\nJoin our tech community discord in bio for insights 📱\n\nFollow for daily tech updates ✅\n\n#technology #ai #smarthome #innovation #future #tech",
+        "share_url": "https://www.instagram.com/p/GHI789klm/",
+        "platform": "instagram",
+        "content_type": "image",
+        "username": "tech.daily",
+        "metrics": {
+          "views": 195485,
+          "likes": 2058,
+          "comments": 37,
+          "shares": 263
+        }
+      }
+    ]
+  }
+} 

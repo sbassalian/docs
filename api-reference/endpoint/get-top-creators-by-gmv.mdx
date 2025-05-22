@@ -1,0 +1,63 @@
+---
+title: 'Get Top Creators By GMV'
+openapi: 'GET /stats/top_creators_by_gmv'
+---
+
+Retrieves your top-performing creators ranked by Gross Merchandise Value (GMV) within a specified date range.
+
+## Request Parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
+| `end_date` | String | End date in MM/DD/YYYY format | Yes |
+| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_gmv?start_date=01/01/2023&end_date=01/31/2023&limit=5" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "success": true,
+  "data": {
+    "top_creators_by_gmv": [
+      {
+        "id": 100001,
+        "name": "Alex Thompson",
+        "email": "alex.thompson@example.com",
+        "total_gmv": 187542.75
+      },
+      {
+        "id": 100002,
+        "name": "Sarah Miller",
+        "email": "sarah.miller@example.com",
+        "total_gmv": 156874.32
+      },
+      {
+        "id": 100003,
+        "name": "James Wilson",
+        "email": "james.wilson@example.com",
+        "total_gmv": 132547.84
+      },
+      {
+        "id": 100004,
+        "name": "Emily Davis",
+        "email": "emily.davis@example.com",
+        "total_gmv": 98754.67
+      },
+      {
+        "id": 100005,
+        "name": "Michael Chen",
+        "email": "michael.chen@example.com",
+        "total_gmv": 87542.28
+      }
+    ]
+  }
+} 

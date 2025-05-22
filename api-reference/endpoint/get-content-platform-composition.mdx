@@ -1,0 +1,39 @@
+---
+title: 'Get Content Platform Composition'
+openapi: 'GET /stats/content_platform_composition'
+---
+
+Retrieves a breakdown of content by platform within a specified date range.
+
+## Request Parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
+| `end_date` | String | End date in MM/DD/YYYY format | Yes |
+| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/content_platform_composition?start_date=01/01/2023&end_date=01/31/2023" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "success": true,
+  "data": {
+    "content_platform_composition": {
+      "tik_tok": 216,
+      "instagram": 416,
+      "twitter": 2,
+      "youtube": 0,
+      "unknown": 2
+    }
+  }
+}
+``` 

@@ -1,0 +1,112 @@
+---
+title: 'Get TikTok Shop GMV 24h'
+openapi: 'GET /stats/tik_tok_shop_gmv_24h'
+---
+
+Retrieves TikTok Shop Gross Merchandise Value (GMV) data with comparison to previous period.
+
+## Request Parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
+| `end_date` | String | End date in MM/DD/YYYY format | Yes |
+| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/tik_tok_shop_gmv_24h?start_date=01/01/2023&end_date=01/31/2023" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "success": true,
+  "data": {
+    "current_period": {
+      "date_range": "2023-01-30 to 2023-01-31",
+      "total_gmv": 85421.76,
+      "currency": "USD",
+      "total_orders": 1247,
+      "average_order_value": 68.50,
+      "conversion_rate": 3.8,
+      "unique_customers": 1185,
+      "total_units_sold": 2418,
+      "product_views": 58743,
+      "abandoned_carts": 856
+    },
+    "previous_period": {
+      "date_range": "2023-01-28 to 2023-01-29",
+      "total_gmv": 74582.32,
+      "currency": "USD",
+      "total_orders": 1142,
+      "average_order_value": 65.31,
+      "conversion_rate": 3.5,
+      "unique_customers": 1087,
+      "total_units_sold": 2189,
+      "product_views": 54287,
+      "abandoned_carts": 832
+    },
+    "changes": {
+      "total_gmv": {
+        "value": 10839.44,
+        "percentage": 14.5
+      },
+      "total_orders": {
+        "value": 105,
+        "percentage": 9.2
+      },
+      "average_order_value": {
+        "value": 3.19,
+        "percentage": 4.9
+      },
+      "conversion_rate": {
+        "value": 0.3,
+        "percentage": 8.6
+      },
+      "unique_customers": {
+        "value": 98,
+        "percentage": 9.0
+      },
+      "total_units_sold": {
+        "value": 229,
+        "percentage": 10.5
+      },
+      "product_views": {
+        "value": 4456,
+        "percentage": 8.2
+      },
+      "abandoned_carts": {
+        "value": 24,
+        "percentage": 2.9
+      }
+    },
+    "top_selling_products": [
+      {
+        "product_id": "p12345",
+        "name": "Wireless Earbuds",
+        "units_sold": 287,
+        "revenue": 11480.00,
+        "average_price": 40.00
+      },
+      {
+        "product_id": "p12346",
+        "name": "Portable Charger",
+        "units_sold": 242,
+        "revenue": 8470.00,
+        "average_price": 35.00
+      },
+      {
+        "product_id": "p12347",
+        "name": "Phone Case",
+        "units_sold": 215,
+        "revenue": 3225.00,
+        "average_price": 15.00
+      }
+    ]
+  }
+} 

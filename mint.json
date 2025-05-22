@@ -34,7 +34,7 @@
     },
     {
       "group": "Essentials",
-      "pages": ["essentials/stripe-integration"]
+      "pages": ["essentials/stripe-integration", "essentials/get-stats"]
     },
     {
       "group": "API Documentation",

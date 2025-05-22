@@ -1,0 +1,260 @@
+---
+title: "Stats API"
+description: "Learn how to use the Growi Stats API"
+---
+
+<Info>
+  **Prerequisite** You should have a Growi account and access to your Public API
+  key.
+</Info>
+
+# Growi Stats API
+
+The Growi Stats API allows you to access analytics and performance data from your Growi campaigns programmatically. This enables you to build custom dashboards, integrate with your own systems, or perform advanced data analysis.
+
+## Authentication
+
+All API requests require authentication using a Public API key. You can find your Public API key in the Growi dashboard under "Settings" → "API Keys".
+
+Include your API key in the request headers:
+
+```http
+Authorization: Bearer YOUR_PUBLIC_API_KEY
+```
+
+## Base URL
+
+All API endpoints are prefixed with:
+
+```
+https://api.growi.io/api/public/v1
+```
+
+## Available Endpoints
+
+The Stats API provides the following endpoints:
+
+### Filters
+
+Get available filters for your organization.
+
+```http
+GET /stats/filters?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
+```
+
+### Content Platform Composition
+
+Get a breakdown of content by platform.
+
+```http
+GET /stats/content_platform_composition?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
+```
+
+### Snapshots
+
+Get time-series data for content engagement metrics.
+
+```http
+GET /stats/snapshots?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
+```
+
+### Content 24h Data
+
+Get 24-hour views and engagement metrics with comparison to previous period.
+
+```http
+GET /stats/content_24h_data?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
+```
+
+### Creators 24h
+
+Get creator acquisition data with comparison to previous period.
+
+```http
+GET /stats/creators_24h?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
+```
+
+### Top Creators by Engagement
+
+Get your top-performing creators ranked by total engagement.
+
+```http
+GET /stats/top_creators_by_engagement?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
+```
+
+### Top Creators by Posts
+
+Get your most active creators ranked by post count.
+
+```http
+GET /stats/top_creators_by_posts?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
+```
+
+### Top Connected Accounts by Engagement
+
+Get your top-performing social accounts ranked by engagement.
+
+```http
+GET /stats/top_connected_accounts_by_engagement?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
+```
+
+### Top Earning Creators
+
+Get your top creators ranked by earnings.
+
+```http
+GET /stats/top_earning_creators?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
+```
+
+### Payouts 24h
+
+Get payout data with comparison to previous period.
+
+```http
+GET /stats/payouts_24h?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
+```
+
+### User Contents
+
+Get all user content creation data within a date range.
+
+```http
+GET /stats/user_contents?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
+```
+
+### TikTok Shop GMV 24h
+
+Get TikTok Shop GMV data with comparison to previous period.
+
+```http
+GET /stats/tik_tok_shop_gmv_24h?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
+```
+
+### Top Posts by Views
+
+Get your top-performing posts ranked by views.
+
+```http
+GET /stats/top_posts_by_views?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
+```
+
+### Manual Campaign Progress
+
+Get progress metrics for your manual campaigns.
+
+```http
+GET /stats/manual_campaign_progress?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
+```
+
+### Top Creators by GMV
+
+Get your top-performing creators ranked by Gross Merchandise Value (GMV).
+
+```http
+GET /stats/top_creators_by_gmv?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
+```
+
+## Request Parameters
+
+All endpoints require the following parameters:
+
+| Parameter     | Type    | Description                              | Required |
+| ------------- | ------- | ---------------------------------------- | -------- |
+| `start_date`  | String  | Start date in MM/DD/YYYY format          | Yes      |
+| `end_date`    | String  | End date in MM/DD/YYYY format            | Yes      |
+| `campaign_id` | Integer | Filter by specific campaign              | No       |
+| `user_id`     | Integer | Filter by specific creator               | No       |
+| `limit`       | Integer | Limit the number of results (default: 4) | No       |
+
+## Response Format
+
+Responses are returned in JSON format. A successful response includes:
+
+```json
+{
+  "success": true,
+  "data": {
+    // Endpoint-specific data
+  }
+}
+```
+
+## Example Usage
+
+### JavaScript/TypeScript
+
+```typescript
+async function fetchTopCreatorsByEngagement() {
+  const startDate = "01/01/2023";
+  const endDate = "01/31/2023";
+
+  const response = await fetch(
+    `https://api.growi.io/api/public/v1/stats/top_creators_by_engagement?start_date=${startDate}&end_date=${endDate}&limit=10`,
+    {
+      headers: {
+        Authorization: "Bearer YOUR_PUBLIC_API_KEY",
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  const data = await response.json();
+  return data;
+}
+```
+
+### Python
+
+```python
+import requests
+from datetime import datetime
+
+def fetch_content_platform_composition():
+    start_date = "01/01/2023"
+    end_date = "01/31/2023"
+
+    url = f"https://api.growi.io/api/public/v1/stats/content_platform_composition"
+
+    headers = {
+        "Authorization": "Bearer YOUR_PUBLIC_API_KEY",
+        "Content-Type": "application/json"
+    }
+
+    params = {
+        "start_date": start_date,
+        "end_date": end_date
+    }
+
+    response = requests.get(url, headers=headers, params=params)
+    return response.json()
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="API returns 401 Unauthorized">
+    Verify that you're using the correct Public API key and that it's being
+    passed correctly in the Authorization header.
+  </Accordion>
+  <Accordion title="API returns 400 Bad Request">
+    Check that you're providing all required parameters and that they're in the
+    correct format. Dates should be in MM/DD/YYYY format.
+  </Accordion>
+  <Accordion title="Empty or unexpected results">
+    Verify that there is data available in the date range you specified, and
+    that any campaign_id or user_id filters are correct.
+  </Accordion>
+  <Accordion title="Rate limit errors">
+    The API has rate limits in place. If you receive a 429 Too Many Requests
+    response, reduce your request frequency.
+  </Accordion>
+</AccordionGroup>
+
+## Additional Resources
+
+- [API Reference](/api-reference)
+- [Authentication Guide](/authentication)
+- [Tracking Events API](/tracking-events-api)
+- [Campaign Affiliates API](/campaign-affiliates-api)
+
+For any questions or issues with the API, please contact support@growi.io.

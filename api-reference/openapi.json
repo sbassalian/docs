@@ -1107,6 +1107,39 @@
           }
         }
       }
+    },
+    "/stats/refresh_data": {
+      "post": {
+        "description": "Refreshes and re-syncs all creator social accounts data. This endpoint triggers a background job to update content snapshots and synchronize creator data across all connected platforms.",
+        "responses": {
+          "200": {
+            "description": "Data refresh initiated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

@@ -1,0 +1,22 @@
+---
+title: 'Refresh Data'
+openapi: 'POST /stats/refresh_data'
+---
+
+Refreshes and re-syncs all creator social accounts data. This endpoint triggers a background job to update content snapshots and synchronize creator data across all connected platforms.
+
+## Request Example
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/stats/refresh_data" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "success": true
+}
+```

@@ -1236,6 +1236,10 @@
           "subscription_end_date": {
             "type": "integer",
             "description": "UTC integer timestamp for the end of the subscription. Required only for subscription events."
+          },
+          "product_id": {
+            "type": "string",
+            "description": "The product or plan ID associated with the purchase. Required only for payment events."
           }
         }
       },

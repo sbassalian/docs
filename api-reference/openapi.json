@@ -1190,13 +1190,15 @@
           },
           "currency": {
             "type": "string",
-            "enum": [
-              "usd",
-              "eur",
-              "gbp"
-            ],
+            "enum": ["usd", "eur", "gbp"],
             "description": "Currency of the transaction",
             "nullable": true
+          },
+          "conversion_platform": {
+            "type": "string",
+            "enum": ["shopify", "tik_tok_shop", "ios", "stripe", "whop"],
+            "description": "Which platform the conversion happened on",
+            "nullable": false
           },
           "order_id": {
             "type": "string",

@@ -1228,6 +1228,14 @@
           "campaign_affiliate_id": {
             "type": "string",
             "description": "Tag of the campaign affiliate associated with the event. Not required when `order_id` is present and the order is a recurring subscription."
+          },
+          "subscription_start_date": {
+            "type": "integer",
+            "description": "UTC integer timestamp for the start of the subscription. Required only for subscription events."
+          },
+          "subscription_end_date": {
+            "type": "integer",
+            "description": "UTC integer timestamp for the end of the subscription. Required only for subscription events."
           }
         }
       },

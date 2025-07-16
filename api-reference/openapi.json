@@ -1200,7 +1200,7 @@
             "description": "Which platform the conversion happened on",
             "nullable": false
           },
-          "external_order_id": {
+          "order_id": {
             "type": "string",
             "description": "ID of the order",
             "nullable": true

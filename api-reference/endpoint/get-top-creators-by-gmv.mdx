@@ -12,11 +12,12 @@ Retrieves your top-performing creators ranked by Gross Merchandise Value (GMV) w
 | `start_date` | String | Start date in MM/DD/YYYY format | Yes |
 | `end_date` | String | End date in MM/DD/YYYY format | Yes |
 | `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
+| `include_discord` | Boolean | Include Discord account ID and username for creators. Default is false. | No |
 
 ## Request Example
 
 ```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_gmv?start_date=01/01/2023&end_date=01/31/2023&limit=5" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_gmv?start_date=01/01/2023&end_date=01/31/2023&limit=5&include_discord=true" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
@@ -32,31 +33,41 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_gmv?start_
         "id": 100001,
         "name": "Alex Thompson",
         "email": "alex.thompson@example.com",
-        "total_gmv": 187542.75
+        "total_gmv": 187542.75,
+        "discord_id": "123456789012345678",
+        "discord_username": "alexthompson#1234"
       },
       {
         "id": 100002,
         "name": "Sarah Miller",
         "email": "sarah.miller@example.com",
-        "total_gmv": 156874.32
+        "total_gmv": 156874.32,
+        "discord_id": "234567890123456789",
+        "discord_username": "sarahmiller#5678"
       },
       {
         "id": 100003,
         "name": "James Wilson",
         "email": "james.wilson@example.com",
-        "total_gmv": 132547.84
+        "total_gmv": 132547.84,
+        "discord_id": "345678901234567890",
+        "discord_username": "jameswilson#9012"
       },
       {
         "id": 100004,
         "name": "Emily Davis",
         "email": "emily.davis@example.com",
-        "total_gmv": 98754.67
+        "total_gmv": 98754.67,
+        "discord_id": "456789012345678901",
+        "discord_username": "emilydavis#3456"
       },
       {
         "id": 100005,
         "name": "Michael Chen",
         "email": "michael.chen@example.com",
-        "total_gmv": 87542.28
+        "total_gmv": 87542.28,
+        "discord_id": "567890123456789012",
+        "discord_username": "michaelchen#7890"
       }
     ]
   }

@@ -1,0 +1,109 @@
+---
+title: "Shopify Headless Integration"
+description: "Learn how to set up Shopify Headless with Growi"
+---
+
+<Info>
+  **Prerequisite** You should have a Shopify store and administrative access to
+  your Growi dashboard.
+</Info>
+
+# How to Set Up Shopify Headless with Growi
+
+In a few simple steps, you can set up Growi with your Shopify Headless integration to track affiliate sales and enable automated discount codes.
+
+## 1. Add Tracking Scripts to Your Root File
+
+Insert the following two scripts in the `<head>` section of your root HTML file:
+
+```html
+<script src="https://shopify.growi.io/embed.js" defer="defer"></script>
+<script src="https://shopify.growi.io/cookie-utils.js" defer="defer"></script>
+```
+
+This step sets up affiliate sales tracking on Shopify and enables automated discount codes if available.
+
+<Frame>
+  <img
+    src="/images/shopify-headless1.png"
+    alt="Shopify Headless Script Setup"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+## 2. Embed the Signup Form (Optional)
+
+If you want to allow visitors to sign up as ambassadors directly on your site, you can embed the signup form on your dashboard.
+
+Place the following code in the div on the page where you would like to embed the ambassador signup form:
+
+```html
+<div data-growi-signup data-program="PROGRAM_ID"></div>
+<script src="https://shopify.growi.io/embed-signup.js" defer></script>
+```
+
+### Getting Your Program ID
+
+To obtain the Program ID:
+
+1. Navigate to your Growi dashboard
+2. Go to **Shopify > Ambassadors Program > Setup**
+3. Click the clipboard icon next to your program to copy the ID
+
+<Frame>
+  <img
+    src="/images/shopify-program-id.png"
+    alt="Shopify Program ID Location"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+Replace `PROGRAM_ID` in the code above with your actual program ID.
+
+## Example Implementation
+
+Here's a complete example of how to implement both steps:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Shopify Store</title>
+  
+  <!-- Growi Tracking Scripts -->
+  <script src="https://shopify.growi.io/embed.js" defer="defer"></script>
+  <script src="https://shopify.growi.io/cookie-utils.js" defer="defer"></script>
+</head>
+<body>
+  <!-- Your page content -->
+  
+  <!-- Ambassador Signup Form (Optional) -->
+  <div class="ambassador-signup-section">
+    <h2>Become an Ambassador</h2>
+    <div data-growi-signup data-program="your_program_id_here"></div>
+    <script src="https://shopify.growi.io/embed-signup.js" defer></script>
+  </div>
+</body>
+</html>
+```
+
+## Troubleshooting
+
+Here's how to solve some common problems when setting up Shopify Headless with Growi.
+
+<AccordionGroup>
+  <Accordion title="Scripts Not Loading">
+    Ensure the scripts are placed in the `<head>` section of your root HTML file and that the URLs are correct. Check your browser's developer console for any error messages.
+  </Accordion>
+  <Accordion title="Affiliate Tracking Not Working">
+    Verify that both tracking scripts are properly loaded and that there are no JavaScript errors preventing them from executing. The scripts should load after the page is fully rendered due to the `defer` attribute.
+  </Accordion>
+  <Accordion title="Signup Form Not Appearing">
+    Double-check that you have the correct Program ID and that the signup form scripts are properly included. Ensure you have administrative access to your Growi dashboard to retrieve the Program ID.
+  </Accordion>
+  <Accordion title="Program ID Not Found">
+    Navigate to **Shopify > Ambassadors Program > Setup** in your Growi dashboard. If you don't see the program, ensure you have created an ambassador program first.
+  </Accordion>
+</AccordionGroup>

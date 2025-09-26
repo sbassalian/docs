@@ -1,23 +1,24 @@
 ---
-title: 'Get Top Creators By GMV'
-openapi: 'GET /stats/top_creators_by_gmv'
+title: "Get Top Creators By GMV"
+openapi: "GET /stats/top_creators_by_gmv"
 ---
 
 Retrieves your top-performing creators ranked by Gross Merchandise Value (GMV) within a specified date range.
 
 ## Request Parameters
 
-| Parameter | Type | Description | Required |
-| --- | --- | --- | --- |
-| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
-| `end_date` | String | End date in MM/DD/YYYY format | Yes |
-| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
-| `include_discord` | Boolean | Include Discord account ID and username for creators. Default is false. | No |
+| Parameter         | Type    | Description                                                                                  | Required |
+| ----------------- | ------- | -------------------------------------------------------------------------------------------- | -------- |
+| `start_date`      | String  | Start date in MM/DD/YYYY format                                                              | Yes      |
+| `end_date`        | String  | End date in MM/DD/YYYY format                                                                | Yes      |
+| `limit`           | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No       |
+| `include_discord` | Boolean | Include Discord account ID and username for creators. Default is false.                      | No       |
+| `organization_id` | Integer | Filter results by specific organization ID                                                   | No       |
 
 ## Request Example
 
 ```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_gmv?start_date=01/01/2023&end_date=01/31/2023&limit=5&include_discord=true" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_gmv?start_date=01/01/2023&end_date=01/31/2023&limit=5&include_discord=true&organization_id=123" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
@@ -30,45 +31,78 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_gmv?start_
   "data": {
     "top_creators_by_gmv": [
       {
-        "id": 100001,
-        "name": "Alex Thompson",
-        "email": "alex.thompson@example.com",
-        "total_gmv": 187542.75,
+        "brand_name": "Example Brand",
+        "id": 12,
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "total_gmv": 15420.5,
+        "social_accounts": [
+          {
+            "platform_name": "Youtube",
+            "connected_account_username": "johndoe_official",
+            "share_url": "https://www.youtube.com/@johndoe_official",
+            "total_gmv": 8500.25
+          },
+          {
+            "platform_name": "Facebook Creator",
+            "connected_account_username": "johndoecreator",
+            "share_url": "https://www.facebook.com/johndoecreator",
+            "total_gmv": 3200.75
+          },
+          {
+            "platform_name": "Instagram",
+            "connected_account_username": "johndoe.creator",
+            "share_url": "https://www.instagram.com/johndoe.creator/",
+            "total_gmv": 3719.5
+          }
+        ],
         "discord_id": "123456789012345678",
-        "discord_username": "alexthompson#1234"
+        "discord_username": "johndoe#1234"
       },
       {
-        "id": 100002,
-        "name": "Sarah Miller",
-        "email": "sarah.miller@example.com",
-        "total_gmv": 156874.32,
+        "brand_name": "Example Brand",
+        "id": 118,
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "total_gmv": 12850.75,
+        "social_accounts": [
+          {
+            "platform_name": "Tik Tok",
+            "connected_account_username": "janesmith_creator",
+            "share_url": "https://www.tiktok.com/@janesmith_creator",
+            "total_gmv": 7200.25
+          },
+          {
+            "platform_name": "Tik Tok",
+            "connected_account_username": "janesmith_official",
+            "share_url": "https://www.tiktok.com/@janesmith_official",
+            "total_gmv": 5650.5
+          }
+        ],
         "discord_id": "234567890123456789",
-        "discord_username": "sarahmiller#5678"
-      },
-      {
-        "id": 100003,
-        "name": "James Wilson",
-        "email": "james.wilson@example.com",
-        "total_gmv": 132547.84,
-        "discord_id": "345678901234567890",
-        "discord_username": "jameswilson#9012"
-      },
-      {
-        "id": 100004,
-        "name": "Emily Davis",
-        "email": "emily.davis@example.com",
-        "total_gmv": 98754.67,
-        "discord_id": "456789012345678901",
-        "discord_username": "emilydavis#3456"
-      },
-      {
-        "id": 100005,
-        "name": "Michael Chen",
-        "email": "michael.chen@example.com",
-        "total_gmv": 87542.28,
-        "discord_id": "567890123456789012",
-        "discord_username": "michaelchen#7890"
+        "discord_username": "janesmith#5678"
       }
     ]
   }
-} 
+}
+```
+
+## Response Fields
+
+| Field                                                                     | Type        | Description                                             |
+| ------------------------------------------------------------------------- | ----------- | ------------------------------------------------------- |
+| `success`                                                                 | Boolean     | Indicates whether the request was successful            |
+| `data`                                                                    | Object      | Container for the response data                         |
+| `data.top_creators_by_gmv`                                                | Array       | Array of creator objects ranked by GMV                  |
+| `data.top_creators_by_gmv[].brand_name`                                   | String      | Name of the brand the creator is associated with        |
+| `data.top_creators_by_gmv[].id`                                           | Integer     | Unique identifier for the creator                       |
+| `data.top_creators_by_gmv[].name`                                         | String      | Display name of the creator                             |
+| `data.top_creators_by_gmv[].email`                                        | String      | Email address of the creator                            |
+| `data.top_creators_by_gmv[].total_gmv`                                    | Number      | Total GMV generated by the creator                      |
+| `data.top_creators_by_gmv[].social_accounts`                              | Array       | Array of connected social media accounts                |
+| `data.top_creators_by_gmv[].social_accounts[].platform_name`              | String      | Name of the social media platform                       |
+| `data.top_creators_by_gmv[].social_accounts[].connected_account_username` | String      | Username on the social media platform                   |
+| `data.top_creators_by_gmv[].social_accounts[].share_url`                  | String      | Direct URL to the creator's profile                     |
+| `data.top_creators_by_gmv[].social_accounts[].gmv`                        | Number      | GMV generated through this specific social account      |
+| `data.top_creators_by_gmv[].discord_id`                                   | String/Null | Discord user ID (included when `include_discord=true`)  |
+| `data.top_creators_by_gmv[].discord_username`                             | String/Null | Discord username (included when `include_discord=true`) |

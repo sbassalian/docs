@@ -479,7 +479,7 @@
               "type": "integer",
               "default": 4
             },
-            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+            "description": "Limit the number of results. Default is 4. Maximum is 20."
           },
           {
             "name": "include_discord",

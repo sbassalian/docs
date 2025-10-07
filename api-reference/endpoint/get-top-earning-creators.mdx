@@ -1,22 +1,24 @@
 ---
-title: 'Get Top Earning Creators'
-openapi: 'GET /stats/top_earning_creators'
+title: "Get Top Earning Creators"
+openapi: "GET /stats/top_earning_creators"
 ---
 
 Retrieves your top creators ranked by earnings within a specified date range.
 
 ## Request Parameters
 
-| Parameter | Type | Description | Required |
-| --- | --- | --- | --- |
-| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
-| `end_date` | String | End date in MM/DD/YYYY format | Yes |
-| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
+| Parameter    | Type    | Description                                                                                  | Required |
+| ------------ | ------- | -------------------------------------------------------------------------------------------- | -------- |
+| `start_date` | String  | Start date in MM/DD/YYYY format                                                              | Yes      |
+| `end_date`   | String  | End date in MM/DD/YYYY format                                                                | Yes      |
+| `limit`      | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No       |
+| `page`       | Integer | Page number for pagination. Default is 1.                                                    | No       |
+| `per_page`   | Integer | Number of results per page. Default is 40. Maximum is 100.                                   | No       |
 
 ## Request Example
 
 ```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/top_earning_creators?start_date=01/01/2023&end_date=01/31/2023&limit=5" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/top_earning_creators?start_date=01/01/2023&end_date=01/31/2023&limit=5&page=1&per_page=20" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
@@ -36,7 +38,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_earning_creators?start
         "total_earnings": 15870.42,
         "currency": "USD",
         "total_content": 28,
-        "earnings_per_post": 566.80,
+        "earnings_per_post": 566.8,
         "performance_score": 92.4,
         "primary_platform": "tiktok",
         "top_earning_campaign": {
@@ -76,7 +78,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_earning_creators?start
         "top_earning_campaign": {
           "campaign_id": 567,
           "name": "Summer Collection",
-          "earnings": 6780.40
+          "earnings": 6780.4
         }
       },
       {
@@ -93,7 +95,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_earning_creators?start
         "top_earning_campaign": {
           "campaign_id": 569,
           "name": "Holiday Special",
-          "earnings": 4250.80
+          "earnings": 4250.8
         }
       },
       {
@@ -114,9 +116,14 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_earning_creators?start
         }
       }
       // Additional creators...
-    ],
-    "total_count": 95,
-    "page": 1,
-    "limit": 5
+    ]
+  },
+  "meta": {
+    "current_page": 1,
+    "per_page": 20,
+    "row_count": 95,
+    "page_count": 5,
+    "has_more": true
   }
-} 
+}
+```

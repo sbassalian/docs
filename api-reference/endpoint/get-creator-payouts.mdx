@@ -1,0 +1,152 @@
+---
+title: "Get Creator Payouts"
+openapi: "GET /stats/creator_payouts"
+---
+
+Retrieves creator payout information including payment amounts, deal dates, and campaign details.
+
+## Request Parameters
+
+| Parameter  | Type    | Description                                                | Required |
+| ---------- | ------- | ---------------------------------------------------------- | -------- |
+| `page`     | Integer | Page number for pagination. Default is 1.                  | No       |
+| `per_page` | Integer | Number of results per page. Default is 40. Maximum is 100. | No       |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?page=1&per_page=20" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 158207,
+      "creator_name": "Alex Johnson",
+      "creator_avatar_url": "https://avatar.vercel.sh/184935",
+      "creator_id": 184935,
+      "amount": "$500.00",
+      "deal_date": "01/31/2024",
+      "since_date": "01/01/2024",
+      "campaign_category": "Campaign",
+      "campaign_name": "Winter Collection",
+      "documents": null,
+      "views": "Completed",
+      "status": "Pending",
+      "contents_delivered": 8,
+      "contents_required": 10
+    },
+    {
+      "id": 158208,
+      "creator_name": "Sarah Miller",
+      "creator_avatar_url": "https://avatar.vercel.sh/182279",
+      "creator_id": 182279,
+      "amount": "$500.00",
+      "deal_date": "01/31/2024",
+      "since_date": "01/01/2024",
+      "campaign_category": "Campaign",
+      "campaign_name": "Winter Collection",
+      "documents": null,
+      "views": "Completed",
+      "status": "Paid",
+      "contents_delivered": 10,
+      "contents_required": 10
+    },
+    {
+      "id": 158209,
+      "creator_name": "Michael Chen",
+      "creator_avatar_url": "https://avatar.vercel.sh/42114",
+      "creator_id": 42114,
+      "amount": "$750.00",
+      "deal_date": "01/31/2024",
+      "since_date": "01/01/2024",
+      "campaign_category": "Campaign",
+      "campaign_name": "Winter Collection",
+      "documents": null,
+      "views": "Completed",
+      "status": "Pending",
+      "contents_delivered": 7,
+      "contents_required": 10
+    },
+    {
+      "id": 158210,
+      "creator_name": "Emma Davis",
+      "creator_avatar_url": "https://avatar.vercel.sh/94434",
+      "creator_id": 94434,
+      "amount": "$1,000.00",
+      "deal_date": "01/31/2024",
+      "since_date": "01/01/2024",
+      "campaign_category": "Campaign",
+      "campaign_name": "Winter Collection",
+      "documents": null,
+      "views": "Completed",
+      "status": "Pending",
+      "contents_delivered": 9,
+      "contents_required": 10
+    },
+    {
+      "id": 158211,
+      "creator_name": "David Wilson",
+      "creator_avatar_url": "https://avatar.vercel.sh/267678",
+      "creator_id": 267678,
+      "amount": "$1,000.00",
+      "deal_date": "01/31/2024",
+      "since_date": "01/01/2024",
+      "campaign_category": "Campaign",
+      "campaign_name": "Winter Collection",
+      "documents": null,
+      "views": "Completed",
+      "status": "Paid",
+      "contents_delivered": 10,
+      "contents_required": 10
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "per_page": 20,
+    "row_count": 256,
+    "page_count": 13,
+    "has_more": true
+  },
+  "additional_data": {
+    "total_paid": 0,
+    "total_owed": 57614.14
+  }
+}
+```
+
+## Response Fields
+
+| Field                        | Type    | Description                                           |
+| ---------------------------- | ------- | ----------------------------------------------------- |
+| `success`                    | Boolean | Indicates whether the request was successful          |
+| `data`                       | Array   | Array of creator payout objects                       |
+| `data[].id`                  | Integer | Unique identifier for the payout record               |
+| `data[].creator_name`        | String  | Display name of the creator                           |
+| `data[].creator_avatar_url`  | String  | URL to the creator's avatar image                     |
+| `data[].creator_id`          | Integer | Unique identifier for the creator                     |
+| `data[].amount`              | String  | Payout amount in formatted currency                   |
+| `data[].deal_date`           | String  | Date when the deal was completed (MM/DD/YYYY format)  |
+| `data[].since_date`          | String  | Start date of the campaign period (MM/DD/YYYY format) |
+| `data[].campaign_category`   | String  | Category of the campaign                              |
+| `data[].campaign_name`       | String  | Name of the associated campaign                       |
+| `data[].documents`           | String  | Associated documents (null if none)                   |
+| `data[].views`               | String  | View status or completion status                      |
+| `data[].status`              | String  | Current payout status (e.g., "Pending", "Paid")       |
+| `data[].contents_delivered`  | Integer | Number of content pieces delivered by the creator     |
+| `data[].contents_required`   | Integer | Number of content pieces required for the campaign    |
+| `meta`                       | Object  | Pagination metadata                                   |
+| `meta.current_page`          | Integer | Current page number                                   |
+| `meta.per_page`              | Integer | Number of results per page                            |
+| `meta.row_count`             | Integer | Total number of rows/records                          |
+| `meta.page_count`            | Integer | Total number of pages                                 |
+| `meta.has_more`              | Boolean | Whether there are more pages available                |
+| `additional_data`            | Object  | Summary financial information                         |
+| `additional_data.total_paid` | Number  | Total amount already paid to creators                 |
+| `additional_data.total_owed` | Number  | Total amount still owed to creators                   |

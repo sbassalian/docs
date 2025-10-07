@@ -61,6 +61,7 @@
         "api-reference/endpoint/get-top-connected-accounts-by-engagement",
         "api-reference/endpoint/get-top-posts-by-views",
         "api-reference/endpoint/get-user-contents",
+        "api-reference/endpoint/get-creator-payouts",
         "api-reference/endpoint/refresh-data"
       ]
     },

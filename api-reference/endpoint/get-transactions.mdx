@@ -1,0 +1,231 @@
+---
+title: "Get Transactions"
+openapi: "GET /transactions"
+---
+
+Retrieves transaction history including payments, payouts, deposits, withdrawals, and disputes with detailed financial information.
+
+## Request Parameters
+
+| Parameter                | Type    | Description                                                          | Required |
+| ------------------------ | ------- | -------------------------------------------------------------------- | -------- |
+| `page`                   | Integer | Page number for pagination. Default is 1.                           | No       |
+| `per_page`               | Integer | Number of results per page. Default is 10. Maximum is 100.          | No       |
+| `child_organization_id`  | Integer | Filter transactions by specific child organization ID                | No       |
+| `start_date`             | String  | Filter transactions from this date (MM/DD/YYYY format)              | No       |
+| `end_date`               | String  | Filter transactions until this date (MM/DD/YYYY format)             | No       |
+| `transaction_type`       | String  | Filter by transaction type (payment, payout, deposit, withdrawal, dispute) | No |
+| `search`                 | String  | Search transactions by creator name                                  | No       |
+| `export`                 | String  | Set to "true" to export results as CSV                              | No       |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/transactions?page=1&per_page=20&transaction_type=payout&start_date=10/01/25&end_date=10/31/25" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "data": [
+    {
+      "id": 5525,
+      "formatted_amount": "-$1,250.00",
+      "transaction_type": "Payout",
+      "currency": "usd",
+      "formatted_fee_amount": "$0.00",
+      "formatted_total": "-$1,250.00",
+      "status": "Paid",
+      "balance": 0,
+      "pending_balance": 0,
+      "description": "",
+      "organization_id": 12077,
+      "creator_payout_id": null,
+      "invoice_id": 14438,
+      "payment_method_id": null,
+      "external_id": "8cbb9e8b-0a5b-4a39-92c6-c166fd067136",
+      "source": "Balance",
+      "destination": "Multiple Creators",
+      "created": 1759952556,
+      "organization_name": "M3 Naturals",
+      "organization_logo_url": "https://imagedelivery.net/BFyhPbEwK3CmNvljb-vAxA/3cd500ed-879f-4eb4-ae82-8dbd539d6b00/public",
+      "invoice": {
+        "id": 14438,
+        "currency": "usd",
+        "hosted_invoice_url": null,
+        "status": "paid",
+        "total_formatted": 1250,
+        "created_at_formatted": "10/08/25",
+        "description": "brand manager - mo #2 - 50% upfront - retainer bump",
+        "pretty_status": "Paid",
+        "line_items": [
+          {
+            "id": 40958,
+            "amount": 1250,
+            "user_name": "Sophia Ericksen",
+            "campaign_name": "SV x M3",
+            "user_id": 162177,
+            "order_id": null,
+            "status": "sent_from_account",
+            "creator_payout_id": 164340,
+            "description": "brand manager - mo #2 - 50% upfront - retainer bump",
+            "refunded": false
+          }
+        ],
+        "organization_slug": "m3-naturals-111f5516",
+        "organization_name": "M3 Naturals",
+        "invoice_contract_document_status": null,
+        "download_invoice_contract_document": null,
+        "summary": null,
+        "processing_fee": null,
+        "paid_at": "2025-10-08T19:42:36.661Z",
+        "payment_method": "Balance",
+        "organization_location": null,
+        "organization_vat_number": null,
+        "organization_company_registration": null
+      },
+      "organization_slug": "m3-naturals-111f5516",
+      "invoice_description": "brand manager - mo #2 - 50% upfront - retainer bump"
+    }
+  ],
+  "meta": {
+    "row_count": 42,
+    "page_count": 3,
+    "current_page": 1
+  },
+  "additional_data": {
+    "amount_sum": 7283.73,
+    "fee_sum": -557.4,
+    "payout_sum": -11916.27,
+    "payment_sum": 19200,
+    "deposit_sum": 0,
+    "withdrawal_sum": 0,
+    "dispute_sum": 0,
+    "payout_other_sum": 0,
+    "payout_balance_sum": -11916.27
+  }
+}
+```
+
+## CSV Export
+
+When `export=true` is specified, the endpoint returns CSV data instead of JSON:
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/transactions?export=true" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+**CSV Response:**
+```json
+{
+  "csv_data": "ID,Type,Amount,Status,Created,Description\n5525,payout,12.50,paid,1759952556,brand manager - mo #2\n...",
+  "filename": "transactions-20251009143022.csv",
+  "type": "text/csv"
+}
+```
+
+## Response Fields
+
+### Transaction Object
+
+| Field                    | Type    | Description                                              |
+| ------------------------ | ------- | -------------------------------------------------------- |
+| `id`                     | Integer | Unique identifier for the transaction                    |
+| `formatted_amount`       | String  | Transaction amount in formatted currency with sign       |
+| `transaction_type`       | String  | Type of transaction (Payment, Payout, Deposit, etc.)    |
+| `currency`               | String  | Currency code (e.g., "usd")                             |
+| `formatted_fee_amount`   | String  | Processing fee amount in formatted currency              |
+| `formatted_total`        | String  | Total amount including fees in formatted currency        |
+| `status`                 | String  | Transaction status (Paid, Available, Failed, etc.)      |
+| `balance`                | Number  | Account balance after transaction                        |
+| `pending_balance`        | Number  | Pending balance amount                                   |
+| `description`            | String  | Transaction description                                  |
+| `organization_id`        | Integer | ID of the organization                                   |
+| `creator_payout_id`      | Integer | Associated creator payout ID (null if not applicable)   |
+| `invoice_id`             | Integer | Associated invoice ID (null if not applicable)          |
+| `payment_method_id`      | Integer | Payment method ID (null if not applicable)              |
+| `external_id`            | String  | External system identifier                               |
+| `source`                 | String  | Transaction source (Balance, External, etc.)            |
+| `destination`            | String  | Transaction destination                                  |
+| `created`                | Integer | Unix timestamp of transaction creation                   |
+| `organization_name`      | String  | Name of the organization                                 |
+| `organization_logo_url`  | String  | URL to organization logo                                 |
+| `organization_slug`      | String  | Organization slug identifier                             |
+| `invoice_description`    | String  | Description from associated invoice                      |
+
+### Invoice Object (when applicable)
+
+| Field                                    | Type    | Description                                    |
+| ---------------------------------------- | ------- | ---------------------------------------------- |
+| `invoice.id`                             | Integer | Invoice unique identifier                      |
+| `invoice.currency`                       | String  | Invoice currency                               |
+| `invoice.hosted_invoice_url`             | String  | URL to hosted invoice (null if not available) |
+| `invoice.status`                         | String  | Invoice status                                 |
+| `invoice.total_formatted`                | Number  | Invoice total amount                           |
+| `invoice.created_at_formatted`           | String  | Invoice creation date (MM/DD/YY format)        |
+| `invoice.description`                    | String  | Invoice description                            |
+| `invoice.pretty_status`                  | String  | Human-readable status                          |
+| `invoice.paid_at`                        | String  | ISO timestamp when invoice was paid            |
+| `invoice.payment_method`                 | String  | Payment method used                            |
+| `invoice.line_items`                     | Array   | Array of line item objects                     |
+
+### Line Item Object
+
+| Field                          | Type    | Description                           |
+| ------------------------------ | ------- | ------------------------------------- |
+| `line_items[].id`              | Integer | Line item unique identifier           |
+| `line_items[].amount`          | Number  | Line item amount                      |
+| `line_items[].user_name`       | String  | Creator/user name                     |
+| `line_items[].campaign_name`   | String  | Associated campaign name              |
+| `line_items[].user_id`         | Integer | Creator/user ID                       |
+| `line_items[].status`          | String  | Line item status                      |
+| `line_items[].creator_payout_id` | Integer | Associated creator payout ID        |
+| `line_items[].description`     | String  | Line item description                 |
+| `line_items[].refunded`        | Boolean | Whether the item was refunded         |
+
+### Metadata
+
+| Field                | Type    | Description                    |
+| -------------------- | ------- | ------------------------------ |
+| `meta.row_count`     | Integer | Total number of transactions   |
+| `meta.page_count`    | Integer | Total number of pages          |
+| `meta.current_page`  | Integer | Current page number            |
+
+### Additional Data (Financial Summary)
+
+| Field                              | Type   | Description                                      |
+| ---------------------------------- | ------ | ------------------------------------------------ |
+| `additional_data.amount_sum`       | Number | Total available balance amount                   |
+| `additional_data.fee_sum`          | Number | Total fees collected                             |
+| `additional_data.payout_sum`       | Number | Total payout amount (negative value)             |
+| `additional_data.payment_sum`      | Number | Total payment amount received                    |
+| `additional_data.deposit_sum`      | Number | Total deposit amount                             |
+| `additional_data.withdrawal_sum`   | Number | Total withdrawal amount                          |
+| `additional_data.dispute_sum`      | Number | Total dispute amount                             |
+| `additional_data.payout_other_sum` | Number | Total payouts from payment methods              |
+| `additional_data.payout_balance_sum` | Number | Total payouts from balance                     |
+
+## Transaction Types
+
+- **Payment**: Incoming payments from customers
+- **Payout**: Outgoing payments to creators or external accounts
+- **Deposit**: Manual deposits to account balance
+- **Withdrawal**: Manual withdrawals from account balance  
+- **Dispute**: Chargebacks or disputed transactions
+
+## Authorization
+
+This endpoint requires viewer role or higher. Users with 'viewer' role will receive a 401 Unauthorized error.
+
+## Error Responses
+
+| Status Code | Description                                    |
+| ----------- | ---------------------------------------------- |
+| 401         | Unauthorized - Invalid API key or viewer role  |
+| 400         | Bad Request - Invalid parameters               |
+| 500         | Internal Server Error                          |

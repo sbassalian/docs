@@ -62,6 +62,7 @@
         "api-reference/endpoint/get-top-posts-by-views",
         "api-reference/endpoint/get-user-contents",
         "api-reference/endpoint/get-creator-payouts",
+        "api-reference/endpoint/get-transactions",
         "api-reference/endpoint/refresh-data"
       ]
     },

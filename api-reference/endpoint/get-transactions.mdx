@@ -16,7 +16,6 @@ Retrieves transaction history including payments, payouts, deposits, withdrawals
 | `end_date`               | String  | Filter transactions until this date (MM/DD/YYYY format)             | No       |
 | `transaction_type`       | String  | Filter by transaction type (payment, payout, deposit, withdrawal, dispute) | No |
 | `search`                 | String  | Search transactions by creator name                                  | No       |
-| `export`                 | String  | Set to "true" to export results as CSV                              | No       |
 
 ## Request Example
 
@@ -50,7 +49,7 @@ curl -X GET "https://api.growi.io/api/public/v1/transactions?page=1&per_page=20&
       "source": "Balance",
       "destination": "Multiple Creators",
       "created": 1759952556,
-      "organization_name": "M3 Naturals",
+      "organization_name": "Growi",
       "organization_logo_url": "https://imagedelivery.net/BFyhPbEwK3CmNvljb-vAxA/3cd500ed-879f-4eb4-ae82-8dbd539d6b00/public",
       "invoice": {
         "id": 14438,
@@ -65,18 +64,18 @@ curl -X GET "https://api.growi.io/api/public/v1/transactions?page=1&per_page=20&
           {
             "id": 40958,
             "amount": 1250,
-            "user_name": "Sophia Ericksen",
-            "campaign_name": "SV x M3",
+            "user_name": "Sophia",
+            "campaign_name": "Growi campaign",
             "user_id": 162177,
             "order_id": null,
             "status": "sent_from_account",
             "creator_payout_id": 164340,
-            "description": "brand manager - mo #2 - 50% upfront - retainer bump",
+            "description": "",
             "refunded": false
           }
         ],
-        "organization_slug": "m3-naturals-111f5516",
-        "organization_name": "M3 Naturals",
+        "organization_slug": "growi",
+        "organization_name": "Growi",
         "invoice_contract_document_status": null,
         "download_invoice_contract_document": null,
         "summary": null,
@@ -87,8 +86,8 @@ curl -X GET "https://api.growi.io/api/public/v1/transactions?page=1&per_page=20&
         "organization_vat_number": null,
         "organization_company_registration": null
       },
-      "organization_slug": "m3-naturals-111f5516",
-      "invoice_description": "brand manager - mo #2 - 50% upfront - retainer bump"
+      "organization_slug": "growi",
+      "invoice_description": ""
     }
   ],
   "meta": {
@@ -107,25 +106,6 @@ curl -X GET "https://api.growi.io/api/public/v1/transactions?page=1&per_page=20&
     "payout_other_sum": 0,
     "payout_balance_sum": -11916.27
   }
-}
-```
-
-## CSV Export
-
-When `export=true` is specified, the endpoint returns CSV data instead of JSON:
-
-```bash
-curl -X GET "https://api.growi.io/api/public/v1/transactions?export=true" \
-     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
-     -H "Content-Type: application/json"
-```
-
-**CSV Response:**
-```json
-{
-  "csv_data": "ID,Type,Amount,Status,Created,Description\n5525,payout,12.50,paid,1759952556,brand manager - mo #2\n...",
-  "filename": "transactions-20251009143022.csv",
-  "type": "text/csv"
 }
 ```
 

@@ -27,6 +27,18 @@
   },
   "tabs": [],
   "anchors": [],
+  "api": {
+    "baseUrl": "https://api.growi.io/api/public/v1",
+    "auth": {
+      "method": "bearer",
+      "name": "Authorization",
+      "inputPrefix": "Bearer "
+    },
+    "playground": {
+      "mode": "show"
+    }
+  },
+  "openapi": "/api-reference/openapi.json",
   "navigation": [
     {
       "group": "Get Started",

@@ -116,14 +116,14 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
 | Field                    | Type    | Description                                              |
 | ------------------------ | ------- | -------------------------------------------------------- |
 | `id`                     | Integer | Unique identifier for the transaction                    |
-| `formatted_amount`       | String  | Transaction amount in formatted currency with sign       |
+| `formatted_amount`       | String  | Transaction amount in formatted currency with sign (amounts are in cents) |
 | `transaction_type`       | String  | Type of transaction (Payment, Payout, Deposit, etc.)    |
 | `currency`               | String  | Currency code (e.g., "usd")                             |
-| `formatted_fee_amount`   | String  | Processing fee amount in formatted currency              |
-| `formatted_total`        | String  | Total amount including fees in formatted currency        |
+| `formatted_fee_amount`   | String  | Processing fee amount in formatted currency (amounts are in cents) |
+| `formatted_total`        | String  | Total amount including fees in formatted currency (amounts are in cents) |
 | `status`                 | String  | Transaction status (Paid, Available, Failed, etc.)      |
-| `balance`                | Number  | Account balance after transaction                        |
-| `pending_balance`        | Number  | Pending balance amount                                   |
+| `balance`                | Number  | Account balance after transaction (in cents)            |
+| `pending_balance`        | Number  | Pending balance amount (in cents)                       |
 | `description`            | String  | Transaction description                                  |
 | `organization_id`        | Integer | ID of the organization                                   |
 | `creator_payout_id`      | Integer | Associated creator payout ID (null if not applicable)   |
@@ -146,7 +146,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
 | `invoice.currency`                       | String  | Invoice currency                               |
 | `invoice.hosted_invoice_url`             | String  | URL to hosted invoice (null if not available) |
 | `invoice.status`                         | String  | Invoice status                                 |
-| `invoice.total_formatted`                | Number  | Invoice total amount                           |
+| `invoice.total_formatted`                | Number  | Invoice total amount (in cents)               |
 | `invoice.created_at_formatted`           | String  | Invoice creation date (MM/DD/YY format)        |
 | `invoice.description`                    | String  | Invoice description                            |
 | `invoice.pretty_status`                  | String  | Human-readable status                          |
@@ -159,7 +159,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
 | Field                          | Type    | Description                           |
 | ------------------------------ | ------- | ------------------------------------- |
 | `line_items[].id`              | Integer | Line item unique identifier           |
-| `line_items[].amount`          | Number  | Line item amount                      |
+| `line_items[].amount`          | Number  | Line item amount (in cents)           |
 | `line_items[].user_name`       | String  | Creator/user name                     |
 | `line_items[].campaign_name`   | String  | Associated campaign name              |
 | `line_items[].user_id`         | Integer | Creator/user ID                       |
@@ -180,15 +180,15 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
 
 | Field                              | Type   | Description                                      |
 | ---------------------------------- | ------ | ------------------------------------------------ |
-| `additional_data.amount_sum`       | Number | Total available balance amount                   |
-| `additional_data.fee_sum`          | Number | Total fees collected                             |
-| `additional_data.payout_sum`       | Number | Total payout amount (negative value)             |
-| `additional_data.payment_sum`      | Number | Total payment amount received                    |
-| `additional_data.deposit_sum`      | Number | Total deposit amount                             |
-| `additional_data.withdrawal_sum`   | Number | Total withdrawal amount                          |
-| `additional_data.dispute_sum`      | Number | Total dispute amount                             |
-| `additional_data.payout_other_sum` | Number | Total payouts from payment methods              |
-| `additional_data.payout_balance_sum` | Number | Total payouts from balance                     |
+| `additional_data.amount_sum`       | Number | Total available balance amount (in cents)       |
+| `additional_data.fee_sum`          | Number | Total fees collected (in cents)                 |
+| `additional_data.payout_sum`       | Number | Total payout amount (negative value, in cents)  |
+| `additional_data.payment_sum`      | Number | Total payment amount received (in cents)        |
+| `additional_data.deposit_sum`      | Number | Total deposit amount (in cents)                 |
+| `additional_data.withdrawal_sum`   | Number | Total withdrawal amount (in cents)              |
+| `additional_data.dispute_sum`      | Number | Total dispute amount (in cents)                 |
+| `additional_data.payout_other_sum` | Number | Total payouts from payment methods (in cents)  |
+| `additional_data.payout_balance_sum` | Number | Total payouts from balance (in cents)         |
 
 ## Transaction Types
 

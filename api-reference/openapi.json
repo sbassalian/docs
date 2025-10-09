@@ -1264,6 +1264,221 @@
         }
       }
     },
+    "/transactions": {
+      "get": {
+        "description": "Retrieves transaction history including payments, payouts, deposits, withdrawals, and disputes with detailed financial information",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "example": 1,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number for pagination. Default is 1."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "example": 10,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "maximum": 100
+            },
+            "description": "Number of results per page. Default is 10. Maximum is 100."
+          },
+          {
+            "name": "child_organization_id",
+            "in": "query",
+            "required": false,
+            "example": 123,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter transactions by specific child organization ID"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "example": "10/01/25",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filter transactions from this date (MM/DD/YYYY format)"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "example": "10/31/25",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filter transactions until this date (MM/DD/YYYY format)"
+          },
+          {
+            "name": "transaction_type",
+            "in": "query",
+            "required": false,
+            "example": "payout",
+            "schema": {
+              "type": "string",
+              "enum": ["payment", "payout", "deposit", "withdrawal", "dispute"]
+            },
+            "description": "Filter by transaction type"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "example": "Sophia",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search transactions by creator name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transactions retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 5525,
+                            "description": "Unique identifier for the transaction"
+                          },
+                          "formatted_amount": {
+                            "type": "string",
+                            "example": "-$1,250.00",
+                            "description": "Transaction amount in formatted currency with sign"
+                          },
+                          "transaction_type": {
+                            "type": "string",
+                            "example": "Payout",
+                            "description": "Type of transaction"
+                          },
+                          "currency": {
+                            "type": "string",
+                            "example": "usd",
+                            "description": "Currency code"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "Paid",
+                            "description": "Transaction status"
+                          },
+                          "source": {
+                            "type": "string",
+                            "example": "Balance",
+                            "description": "Transaction source"
+                          },
+                          "destination": {
+                            "type": "string",
+                            "example": "Multiple Creators",
+                            "description": "Transaction destination"
+                          },
+                          "created": {
+                            "type": "integer",
+                            "example": 1759952556,
+                            "description": "Unix timestamp of transaction creation"
+                          },
+                          "organization_name": {
+                            "type": "string",
+                            "example": "Growi",
+                            "description": "Name of the organization"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "row_count": {
+                          "type": "integer",
+                          "example": 42,
+                          "description": "Total number of transactions"
+                        },
+                        "page_count": {
+                          "type": "integer",
+                          "example": 3,
+                          "description": "Total number of pages"
+                        },
+                        "current_page": {
+                          "type": "integer",
+                          "example": 1,
+                          "description": "Current page number"
+                        }
+                      }
+                    },
+                    "additional_data": {
+                      "type": "object",
+                      "properties": {
+                        "amount_sum": {
+                          "type": "number",
+                          "example": 7283.73,
+                          "description": "Total available balance amount"
+                        },
+                        "fee_sum": {
+                          "type": "number",
+                          "example": -557.4,
+                          "description": "Total fees collected"
+                        },
+                        "payout_sum": {
+                          "type": "number",
+                          "example": -11916.27,
+                          "description": "Total payout amount (negative value)"
+                        },
+                        "payment_sum": {
+                          "type": "number",
+                          "example": 19200,
+                          "description": "Total payment amount received"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key or viewer role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/organizations/brands": {
       "get": {
         "description": "Retrieves a list of all available brands for your organization",

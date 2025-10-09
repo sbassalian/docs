@@ -1264,7 +1264,7 @@
         }
       }
     },
-    "/transactions": {
+    "/stats/transactions": {
       "get": {
         "description": "Retrieves transaction history including payments, payouts, deposits, withdrawals, and disputes with detailed financial information",
         "parameters": [

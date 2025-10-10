@@ -1482,67 +1482,98 @@
     "/stats/query_ambassador_sales": {
       "get": {
         "description": "Retrieves detailed ambassador sales data including order information, commission amounts, and program details within a specified date range",
-        "parameters": [
-          {
-            "name": "start_date",
-            "in": "query",
-            "required": true,
-            "example": "09/01/2025",
-            "schema": {
-              "type": "string",
-              "format": "date",
-              "default": "09/01/2025"
-            },
-            "description": "Start date in MM/DD/YYYY format"
-          },
-          {
-            "name": "end_date",
-            "in": "query",
-            "required": true,
-            "example": "09/30/2025",
-            "schema": {
-              "type": "string",
-              "format": "date",
-              "default": "09/30/2025"
-            },
-            "description": "End date in MM/DD/YYYY format"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "example": 1,
-            "schema": {
-              "type": "integer",
-              "default": 1
-            },
-            "description": "Page number for pagination. Default is 1."
-          },
-          {
-            "name": "per_page",
-            "in": "query",
-            "required": false,
-            "example": 20,
-            "schema": {
-              "type": "integer",
-              "default": 20,
-              "maximum": 100
-            },
-            "description": "Number of results per page. Default is 20. Maximum is 100."
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "example": "all",
-            "schema": {
-              "type": "string",
-              "enum": ["all", "paid", "due", "pending", "canceled", "refunded"],
-              "default": "all"
-            },
-            "description": "Filter by sale status"
-          }
-        ],
+            "parameters": [
+      {
+        "name": "start_date",
+        "in": "query",
+        "required": true,
+        "example": "09/01/2025",
+        "schema": {
+          "type": "string",
+          "format": "date",
+          "default": "09/01/2025"
+        },
+        "description": "Start date in MM/DD/YYYY format"
+      },
+      {
+        "name": "end_date",
+        "in": "query",
+        "required": true,
+        "example": "09/30/2025",
+        "schema": {
+          "type": "string",
+          "format": "date",
+          "default": "09/30/2025"
+        },
+        "description": "End date in MM/DD/YYYY format"
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "example": 1,
+        "schema": {
+          "type": "integer",
+          "default": 1
+        },
+        "description": "Page number for pagination. Default is 1."
+      },
+      {
+        "name": "per_page",
+        "in": "query",
+        "required": false,
+        "example": 20,
+        "schema": {
+          "type": "integer",
+          "default": 20,
+          "maximum": 100
+        },
+        "description": "Number of results per page. Default is 20. Maximum is 100."
+      },
+      {
+        "name": "status",
+        "in": "query",
+        "required": false,
+        "example": "all",
+        "schema": {
+          "type": "string",
+          "enum": ["all", "paid", "due", "pending", "canceled", "refunded"],
+          "default": "all"
+        },
+        "description": "Filter by sale status"
+      },
+      {
+        "name": "creator_email",
+        "in": "query",
+        "required": false,
+        "example": "example@gmail.com",
+        "schema": {
+          "type": "string",
+          "format": "email"
+        },
+        "description": "Filter results by the creator’s (ambassador’s) email address"
+      },
+      {
+        "name": "affiliate_tag",
+        "in": "query",
+        "required": false,
+        "example": "SUMMER2025",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Filter by affiliate tag"
+      },
+      {
+        "name": "order_id",
+        "in": "query",
+        "required": false,
+        "example": "1234567890",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Filter by a Shopify order ID"
+      }
+    ],
         "responses": {
           "200": {
             "description": "Ambassador sales retrieved successfully",

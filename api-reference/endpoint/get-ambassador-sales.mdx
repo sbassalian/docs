@@ -1,0 +1,161 @@
+---
+title: "Get Ambassador Sales"
+openapi: "GET /stats/query_ambassador_sales"
+---
+
+Retrieves detailed ambassador sales data including order information, commission amounts, and program details within a specified date range. This endpoint supports filtering by payment status and pagination.
+
+## Request Parameters
+
+| Parameter    | Type    | Description                                                           | Required |
+| ------------ | ------- | --------------------------------------------------------------------- | -------- |
+| `start_date` | String  | Start date in MM/DD/YYYY format                                       | Yes      |
+| `end_date`   | String  | End date in MM/DD/YYYY format                                         | Yes      |
+| `page`       | Integer | Page number for pagination. Default is 1.                             | No       |
+| `per_page`   | Integer | Number of results per page. Default is 20. Maximum is 100.            | No       |
+| `status`     | String  | Filter by status: `paid`, `due`, `pending`, `canceled`, or `refunded` | No       |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?start_date=09/01/2025&end_date=09/30/2025&page=1&per_page=20&status=pending" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "data": [
+    {
+      "id": 0,
+      "ambassador": {
+        "id": 0,
+        "name": "0",
+        "email": "example@example.com",
+        "avatar_url": null
+      },
+      "program": {
+        "id": 0,
+        "name": "Test Program",
+        "affiliate_status": "active"
+      },
+      "order": {
+        "id": 0,
+        "total": "$1.70",
+        "subtotal": "$1.50",
+        "logs": []
+      },
+      "sale_amount": {
+        "formatted": "$1.70",
+        "cents": 170
+      },
+      "commission": {
+        "amount": 1.75,
+        "formatted": "$1.75",
+        "original_amount": 1.75,
+        "original_formatted": "$1.75",
+        "override": 0.0,
+        "has_override": false
+      },
+      "occurred_at": "2025-09-30T23:55:29.000Z",
+      "due_in_days": 50,
+      "invoice": null,
+      "status": "pending",
+      "refunded": false,
+      "disable_attribution": false,
+      "self_referral": false
+    }
+  ],
+  "meta": {
+    "row_count": 0,
+    "page_count": 0,
+    "current_page": 1
+  },
+  "additional_data": {
+    "total_gmv": 0,
+    "total_commission": 0,
+    "paid_commission": 0.0,
+    "unpaid_commission": 0,
+    "total_orders": 0,
+    "total_quantity": 0,
+    "total_refunded_amount": 0,
+    "total_returned_amount": 0,
+    "total_posts": 0
+  },
+  "user_contents": []
+}
+```
+
+## Response Fields
+
+| Field                                   | Type    | Description                                                            |
+| --------------------------------------- | ------- | ---------------------------------------------------------------------- |
+| `data`                                  | Array   | Array of ambassador sale objects                                       |
+| `data[].id`                             | Integer | Unique identifier for the sale record                                  |
+| `data[].ambassador`                     | Object  | Ambassador information                                                 |
+| `data[].ambassador.name`                | String  | Display name of the ambassador                                         |
+| `data[].ambassador.email`               | String  | Email address of the ambassador                                        |
+| `data[].ambassador.avatar_url`          | String  | URL to the ambassador's avatar image (null if not available)           |
+| `data[].program`                        | Object  | Program information                                                    |
+| `data[].program.id`                     | Integer | Unique identifier for the program                                      |
+| `data[].program.name`                   | String  | Name of the ambassador program                                         |
+| `data[].program.affiliate_status`       | String  | Status of the affiliate (e.g., "active")                               |
+| `data[].order`                          | Object  | Order details                                                          |
+| `data[].order.id`                       | Integer | Unique identifier for the order                                        |
+| `data[].order.total`                    | String  | Total order amount in formatted currency                               |
+| `data[].order.subtotal`                 | String  | Order subtotal in formatted currency                                   |
+| `data[].order.logs`                     | Array   | Order activity logs                                                     |
+| `data[].sale_amount`                    | Object  | Sale amount details                                                    |
+| `data[].sale_amount.formatted`          | String  | Formatted sale amount with currency symbol                             |
+| `data[].sale_amount.cents`              | Integer | Sale amount in cents                                                   |
+| `data[].commission`                     | Object  | Commission details                                                     |
+| `data[].commission.amount`              | Number  | Commission amount in dollars                                           |
+| `data[].commission.formatted`           | String  | Formatted commission amount with currency symbol                       |
+| `data[].commission.original_amount`     | Number  | Original commission amount before any overrides                        |
+| `data[].commission.original_formatted`  | String  | Formatted original commission amount                                   |
+| `data[].commission.override`            | Number  | Override amount applied to commission                                  |
+| `data[].commission.has_override`        | Boolean | Whether commission has been manually overridden                        |
+| `data[].occurred_at`                    | String  | ISO 8601 timestamp when the sale occurred                              |
+| `data[].due_in_days`                    | Integer | Number of days until commission payment is due                         |
+| `data[].invoice`                        | String  | Associated invoice (null if none)                                      |
+| `data[].status`                         | String  | Sale status: `paid`, `due`, `pending`, `canceled`, or `refunded`       |
+| `data[].refunded`                       | Boolean | Whether the sale has been refunded                                     |
+| `data[].disable_attribution`            | Boolean | Whether attribution is disabled for this sale                          |
+| `data[].self_referral`                  | Boolean | Whether this is a self-referral (ambassador purchased from themselves) |
+| `meta`                                  | Object  | Pagination metadata                                                    |
+| `meta.row_count`                        | Integer | Total number of records matching the query                             |
+| `meta.page_count`                       | Integer | Total number of pages available                                        |
+| `meta.current_page`                     | Integer | Current page number                                                    |
+| `additional_data`                       | Object  | Summary statistics for the query results                               |
+| `additional_data.total_gmv`             | Number  | Total Gross Merchandise Value for all sales in the date range          |
+| `additional_data.total_commission`      | Number  | Total commission amount across all sales                               |
+| `additional_data.paid_commission`       | Number  | Total commission already paid out                                      |
+| `additional_data.unpaid_commission`     | Number  | Total commission not yet paid                                          |
+| `additional_data.total_orders`          | Integer | Total number of orders                                                 |
+| `additional_data.total_quantity`        | Integer | Total quantity of items sold                                           |
+| `additional_data.total_refunded_amount` | Number  | Total amount refunded                                                  |
+| `additional_data.total_returned_amount` | Number  | Total amount returned                                                  |
+| `additional_data.total_posts`           | Integer | Total number of posts associated with sales                            |
+
+## Status Filter Options
+
+The `status` parameter accepts the following values:
+
+- `all` - Returns all sales regardless of status
+- `paid` - Returns only sales where commission has been paid
+- `due` - Returns sales where commission payment is due
+- `pending` - Returns sales with pending commission payments
+- `canceled` - Returns canceled sales
+- `refunded` - Returns refunded sales
+
+## Use Cases
+
+This endpoint is useful for:
+
+- **Commission Reports**: Generate detailed commission reports for ambassadors
+- **Financial Analytics**: Track GMV, commission, and payment status across date ranges
+- **Ambassador Performance**: Monitor individual ambassador sales and earnings
+- **Payment Processing**: Identify due and pending commissions for payout processing
+- **Self-Referral Detection**: Filter out or identify self-referral transactions

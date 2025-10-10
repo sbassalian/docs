@@ -3,22 +3,23 @@ title: "Get Ambassador Sales"
 openapi: "GET /stats/query_ambassador_sales"
 ---
 
-Retrieves detailed ambassador sales data including order information, commission amounts, and program details within a specified date range. This endpoint supports filtering by payment status and pagination.
+Retrieves detailed ambassador sales data including order information, commission amounts, and program details within a specified date range. This endpoint supports filtering by payment status, creator email, and pagination.
 
 ## Request Parameters
 
-| Parameter    | Type    | Description                                                           | Required |
-| ------------ | ------- | --------------------------------------------------------------------- | -------- |
-| `start_date` | String  | Start date in MM/DD/YYYY format                                       | Yes      |
-| `end_date`   | String  | End date in MM/DD/YYYY format                                         | Yes      |
-| `page`       | Integer | Page number for pagination. Default is 1.                             | No       |
-| `per_page`   | Integer | Number of results per page. Default is 20. Maximum is 100.            | No       |
-| `status`     | String  | Filter by status: `paid`, `due`, `pending`, `canceled`, or `refunded` | No       |
+| Parameter        | Type    | Description                                                           | Required |
+| ---------------- | ------- | --------------------------------------------------------------------- | -------- |
+| `start_date`     | String  | Start date in MM/DD/YYYY format                                       | Yes      |
+| `end_date`       | String  | End date in MM/DD/YYYY format                                         | Yes      |
+| `page`           | Integer | Page number for pagination. Default is 1.                             | No       |
+| `per_page`       | Integer | Number of results per page. Default is 20. Maximum is 100.            | No       |
+| `status`         | String  | Filter by status: `paid`, `due`, `pending`, `canceled`, or `refunded` | No       |
+| `creator_email`  | String  | Filter results by the creator’s (ambassador’s) email address          | No       |
 
 ## Request Example
 
 ```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?start_date=09/01/2025&end_date=09/30/2025&page=1&per_page=20&status=pending" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?start_date=09/01/2025&end_date=09/30/2025&page=1&per_page=20&status=pending&creator_email=example@example.com" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
@@ -106,7 +107,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?sta
 | `data[].order.id`                       | Integer | Unique identifier for the order                                        |
 | `data[].order.total`                    | String  | Total order amount in formatted currency                               |
 | `data[].order.subtotal`                 | String  | Order subtotal in formatted currency                                   |
-| `data[].order.logs`                     | Array   | Order activity logs                                                     |
+| `data[].order.logs`                     | Array   | Order activity logs                                                    |
 | `data[].sale_amount`                    | Object  | Sale amount details                                                    |
 | `data[].sale_amount.formatted`          | String  | Formatted sale amount with currency symbol                             |
 | `data[].sale_amount.cents`              | Integer | Sale amount in cents                                                   |
@@ -159,3 +160,4 @@ This endpoint is useful for:
 - **Ambassador Performance**: Monitor individual ambassador sales and earnings
 - **Payment Processing**: Identify due and pending commissions for payout processing
 - **Self-Referral Detection**: Filter out or identify self-referral transactions
+- **Email Filtering**: Filter sales by ambassador’s email for precision reporting

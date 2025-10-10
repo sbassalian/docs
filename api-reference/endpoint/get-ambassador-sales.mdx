@@ -15,6 +15,8 @@ Retrieves detailed ambassador sales data including order information, commission
 | `per_page`       | Integer | Number of results per page. Default is 20. Maximum is 100.            | No       |
 | `status`         | String  | Filter by status: `paid`, `due`, `pending`, `canceled`, or `refunded` | No       |
 | `creator_email`  | String  | Filter results by the creator’s (ambassador’s) email address          | No       |
+| `affiliate_tag`  | String  | Filter by affiliate tag                                               | No       |
+| `order_id`       | String  | Filter by a Shopify order id                                          | No       |
 
 ## Request Example
 
@@ -161,3 +163,4 @@ This endpoint is useful for:
 - **Payment Processing**: Identify due and pending commissions for payout processing
 - **Self-Referral Detection**: Filter out or identify self-referral transactions
 - **Email Filtering**: Filter sales by ambassador’s email for precision reporting
+- **Affiliate Tag Filtering**: Find sales by affiliate tags

@@ -1479,6 +1479,355 @@
         }
       }
     },
+    "/stats/query_ambassador_sales": {
+      "get": {
+        "description": "Retrieves detailed ambassador sales data including order information, commission amounts, and program details within a specified date range",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "09/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "09/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "09/30/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "09/30/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "example": 1,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number for pagination. Default is 1."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "example": 20,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            },
+            "description": "Number of results per page. Default is 20. Maximum is 100."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "example": "all",
+            "schema": {
+              "type": "string",
+              "enum": ["all", "paid", "due", "pending", "canceled", "refunded"],
+              "default": "all"
+            },
+            "description": "Filter by sale status"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ambassador sales retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 1947457,
+                            "description": "Unique identifier for the sale record"
+                          },
+                          "ambassador": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "example": "Amanda Paradis",
+                                "description": "Display name of the ambassador"
+                              },
+                              "email": {
+                                "type": "string",
+                                "example": "amanda@example.com",
+                                "description": "Email address of the ambassador"
+                              },
+                              "avatar_url": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "URL to the ambassador's avatar image"
+                              }
+                            }
+                          },
+                          "program": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 16200,
+                                "description": "Unique identifier for the program"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Ambassador Program",
+                                "description": "Name of the ambassador program"
+                              },
+                              "affiliate_status": {
+                                "type": "string",
+                                "example": "active",
+                                "description": "Status of the affiliate"
+                              }
+                            }
+                          },
+                          "order": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 1024995,
+                                "description": "Unique identifier for the order"
+                              },
+                              "total": {
+                                "type": "string",
+                                "example": "$291.70",
+                                "description": "Total order amount"
+                              },
+                              "subtotal": {
+                                "type": "string",
+                                "example": "$276.50",
+                                "description": "Order subtotal"
+                              },
+                              "log": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object"
+                                },
+                                "description": "Order activity log"
+                              }
+                            }
+                          },
+                          "sale_amount": {
+                            "type": "object",
+                            "properties": {
+                              "formatted": {
+                                "type": "string",
+                                "example": "$291.70",
+                                "description": "Formatted sale amount"
+                              },
+                              "cents": {
+                                "type": "integer",
+                                "example": 29170,
+                                "description": "Sale amount in cents"
+                              }
+                            }
+                          },
+                          "commission": {
+                            "type": "object",
+                            "properties": {
+                              "amount": {
+                                "type": "number",
+                                "example": 8.75,
+                                "description": "Commission amount"
+                              },
+                              "formatted": {
+                                "type": "string",
+                                "example": "$8.75",
+                                "description": "Formatted commission amount"
+                              },
+                              "original_amount": {
+                                "type": "number",
+                                "example": 8.75,
+                                "description": "Original commission amount"
+                              },
+                              "original_formatted": {
+                                "type": "string",
+                                "example": "$8.75",
+                                "description": "Formatted original commission amount"
+                              },
+                              "override": {
+                                "type": "number",
+                                "example": 0.0,
+                                "description": "Override amount"
+                              },
+                              "has_override": {
+                                "type": "boolean",
+                                "example": false,
+                                "description": "Whether commission has been overridden"
+                              }
+                            }
+                          },
+                          "occurred_at": {
+                            "type": "string",
+                            "example": "2025-09-30T23:55:29.000Z",
+                            "description": "ISO 8601 timestamp when the sale occurred"
+                          },
+                          "due_in_days": {
+                            "type": "integer",
+                            "example": 50,
+                            "description": "Number of days until commission is due"
+                          },
+                          "invoice": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Associated invoice"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "pending",
+                            "enum": [
+                              "paid",
+                              "due",
+                              "pending",
+                              "canceled",
+                              "refunded"
+                            ],
+                            "description": "Sale status"
+                          },
+                          "refunded": {
+                            "type": "boolean",
+                            "example": false,
+                            "description": "Whether the sale has been refunded"
+                          },
+                          "disable_attribution": {
+                            "type": "boolean",
+                            "example": false,
+                            "description": "Whether attribution is disabled"
+                          },
+                          "self_referral": {
+                            "type": "boolean",
+                            "example": false,
+                            "description": "Whether this is a self-referral"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "row_count": {
+                          "type": "integer",
+                          "example": 12588,
+                          "description": "Total number of records"
+                        },
+                        "page_count": {
+                          "type": "integer",
+                          "example": 630,
+                          "description": "Total number of pages"
+                        },
+                        "current_page": {
+                          "type": "integer",
+                          "example": 1,
+                          "description": "Current page number"
+                        }
+                      }
+                    },
+                    "additional_data": {
+                      "type": "object",
+                      "properties": {
+                        "total_gmv": {
+                          "type": "number",
+                          "example": 1424557.53,
+                          "description": "Total Gross Merchandise Value"
+                        },
+                        "total_commission": {
+                          "type": "number",
+                          "example": 140331.24,
+                          "description": "Total commission amount"
+                        },
+                        "paid_commission": {
+                          "type": "number",
+                          "example": 0.0,
+                          "description": "Total paid commission"
+                        },
+                        "unpaid_commission": {
+                          "type": "number",
+                          "example": 140331.24,
+                          "description": "Total unpaid commission"
+                        },
+                        "total_orders": {
+                          "type": "integer",
+                          "example": 12588,
+                          "description": "Total number of orders"
+                        },
+                        "total_quantity": {
+                          "type": "integer",
+                          "example": 31386,
+                          "description": "Total quantity sold"
+                        },
+                        "total_refunded_amount": {
+                          "type": "number",
+                          "example": 0,
+                          "description": "Total refunded amount"
+                        },
+                        "total_returned_amount": {
+                          "type": "number",
+                          "example": 0,
+                          "description": "Total returned amount"
+                        },
+                        "total_posts": {
+                          "type": "integer",
+                          "example": 0,
+                          "description": "Total number of posts"
+                        }
+                      }
+                    },
+                    "user_contents": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      },
+                      "description": "User-generated content associated with sales"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/organizations/brands": {
       "get": {
         "description": "Retrieves a list of all available brands for your organization",

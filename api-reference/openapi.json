@@ -1967,7 +1967,7 @@
                           },
                           "name": {
                             "type": "string",
-                            "example": "Maxfem MVM",
+                            "example": "Campaign Name",
                             "description": "Display name of the campaign"
                           },
                           "campaign_type": {

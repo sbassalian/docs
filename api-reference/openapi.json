@@ -110,6 +110,16 @@
               "default": 4
             },
             "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "example": 16425,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter snapshots by specific campaign ID. You can get campaign IDs from the Get Campaigns endpoint."
           }
         ],
         "responses": {

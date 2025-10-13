@@ -69,7 +69,10 @@
     },
     {
       "group": "Organization API",
-      "pages": ["api-reference/endpoint/get-brands"]
+      "pages": [
+        "api-reference/endpoint/get-brands",
+        "api-reference/endpoint/get-campaigns"
+      ]
     }
   ],
   "footerSocials": {}

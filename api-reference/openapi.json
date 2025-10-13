@@ -1929,6 +1929,89 @@
           }
         }
       }
+    },
+    "/organizations/campaigns": {
+      "get": {
+        "description": "Retrieves a list of all available campaigns for your organization",
+        "responses": {
+          "200": {
+            "description": "Get your campaigns information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "campaigns": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 16425,
+                            "description": "Unique identifier for the campaign"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Maxfem MVM",
+                            "description": "Display name of the campaign"
+                          },
+                          "campaign_type": {
+                            "type": "string",
+                            "example": "Campaign",
+                            "enum": ["Campaign", "Contract", "Ambassador Program"],
+                            "description": "Type of campaign"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "Active",
+                            "enum": ["Active", "Paused", "Canceled", "Completed", "Archived", "Void"],
+                            "description": "Current status of the campaign"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Organization not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Organization not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

@@ -34,6 +34,8 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=0
         "create_time": 1750182815,
         "platform": "tik_tok",
         "connected_account_id": 821801,
+        "username": "random_user",
+        "profile_share_url": "https://www.tiktok.com/@random_user",
         "date": "Jun 17",
         "sorted_dates": [
           "Jan 01",
@@ -312,6 +314,8 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=0
         "create_time": 1750350254,
         "platform": "tik_tok",
         "connected_account_id": 34615,
+        "username": "kyliejenner",
+        "profile_share_url": "https://www.tiktok.com/@kyliejenner",
         "date": "Jun 19",
         "sorted_dates": [
           "Jan 01",
@@ -590,6 +594,8 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=0
         "create_time": 1753459065,
         "platform": "instagram",
         "connected_account_id": 15670,
+        "username": "growi.io",
+        "profile_share_url": "https://www.instagram.com/growi.io/",
         "date": "Jul 25",
         "sorted_dates": [
           "Jan 01",
@@ -868,6 +874,8 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=0
         "create_time": 1753459032,
         "platform": "instagram",
         "connected_account_id": 15670,
+        "username": "growi.io",
+        "profile_share_url": "https://www.instagram.com/growi.io/",
         "date": "Jul 25",
         "sorted_dates": [
           "Jan 01",
@@ -1163,6 +1171,8 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=0
 | `data.user_contents[].create_time`          | Integer | Unix timestamp of when the content was created                   |
 | `data.user_contents[].platform`             | String  | Platform where the content was posted (`tik_tok` or `instagram`) |
 | `data.user_contents[].connected_account_id` | Integer | ID of the connected account that posted the content              |
+| `data.user_contents[].username`             | String  | Username of the creator                                          |
+| `data.user_contents[].profile_share_url`    | String  | Direct URL to the creator's profile                              |
 | `data.user_contents[].date`                 | String  | Date when the content was posted (format: "MMM DD")              |
 | `data.user_contents[].sorted_dates`         | Array   | Array of all available dates in "MMM DD" format for filtering    |
 | `data.user_contents[].total_views`          | Integer | Total number of views the content has received                   |

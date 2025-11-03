@@ -5,6 +5,22 @@ openapi: 'GET /stats/snapshots'
 
 Retrieves time-series data for content engagement metrics within a specified date range.
 
+## Response Fields
+
+Each snapshot object contains the following fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `date` | String | The date for this snapshot in YYYY-MM-DD format |
+| `total_views` | Integer | Total number of views for all content on this date |
+| `total_likes` | Integer | Total number of likes for all content on this date |
+| `total_comments` | Integer | Total number of comments for all content on this date |
+| `total_shares` | Integer | Total number of shares for all content on this date |
+| `total_saves` | Integer | Total number of saves for all content on this date |
+| `total_posts_count` | Integer | Total number of posts created on this date |
+| `user_content_ids` | Array | List of user content IDs associated with this date |
+| `organization_id` | Integer/null | Organization ID if applicable |
+
 ## Request Parameters
 
 | Parameter | Type | Description | Required | Default |
@@ -17,7 +33,7 @@ Retrieves time-series data for content engagement metrics within a specified dat
 ## Request Example
 
 ```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/snapshots?start_date=05/12/2025&end_date=05/22/2025" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/snapshots?start_date=10/01/2025&end_date=11/14/2025" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
@@ -35,7 +51,10 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/snapshots?start_date=05/12
         "total_likes": 15382,
         "total_comments": 476,
         "total_shares": 2355,
-        "organization_id": null
+        "total_saves": 8924,
+        "organization_id": null,
+        "user_content_ids": [12345, 12346, 12347],
+        "total_posts_count": 3
       },
       {
         "date": "2025-05-13",
@@ -43,7 +62,10 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/snapshots?start_date=05/12
         "total_likes": 20915,
         "total_comments": 581,
         "total_shares": 4037,
-        "organization_id": null
+        "total_saves": 11254,
+        "organization_id": null,
+        "user_content_ids": [12348, 12349],
+        "total_posts_count": 2
       },
       {
         "date": "2025-05-14",
@@ -51,7 +73,10 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/snapshots?start_date=05/12
         "total_likes": 35385,
         "total_comments": 789,
         "total_shares": 9539,
-        "organization_id": null
+        "total_saves": 19847,
+        "organization_id": null,
+        "user_content_ids": [12350, 12351, 12352, 12353],
+        "total_posts_count": 4
       }
       // Additional daily snapshots...
     ]

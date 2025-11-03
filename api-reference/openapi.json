@@ -80,11 +80,11 @@
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/01/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/01/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -92,11 +92,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/14/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },
@@ -164,11 +164,11 @@
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/01/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/01/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -176,11 +176,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/14/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },
@@ -238,11 +238,11 @@
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/01/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/01/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -250,11 +250,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/14/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },
@@ -312,11 +312,11 @@
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/01/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/01/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -324,11 +324,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/14/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },
@@ -386,11 +386,11 @@
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/01/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/01/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -398,11 +398,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/14/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },
@@ -460,11 +460,11 @@
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/01/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/01/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -472,11 +472,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/14/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },
@@ -657,11 +657,11 @@
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/01/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/01/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -669,11 +669,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/14/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },
@@ -853,11 +853,11 @@
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/01/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/01/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -865,11 +865,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/14/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },
@@ -927,11 +927,11 @@
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/01/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/01/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -939,11 +939,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/14/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },
@@ -1001,11 +1001,11 @@
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/01/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/01/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -1013,11 +1013,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/14/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },
@@ -1075,11 +1075,11 @@
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/01/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/01/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -1087,11 +1087,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/14/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },
@@ -1149,11 +1149,11 @@
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/01/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/01/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -1161,11 +1161,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/14/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },
@@ -1223,11 +1223,11 @@
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/01/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/01/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -1235,11 +1235,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/14/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },

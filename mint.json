@@ -63,6 +63,7 @@
         "api-reference/endpoint/get-user-contents",
         "api-reference/endpoint/get-creator-payouts",
         "api-reference/endpoint/get-transactions",
+        "api-reference/endpoint/get-tik-tok-shop-gmv-24h",
         "api-reference/endpoint/refresh-data",
         "api-reference/endpoint/get-ambassador-sales"
       ]

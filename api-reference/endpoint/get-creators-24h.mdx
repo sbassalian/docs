@@ -3,7 +3,12 @@ title: 'Get Creators 24h'
 openapi: 'GET /stats/creators_24h'
 ---
 
-Retrieves newly joined creators data with comparison to previous period. For each date, you get that day's new creator metrics along with the corresponding data from a period before for comparison.
+Retrieves daily creator metrics with comparison to previous period. This endpoint tracks both new creators (who joined your database) and active creators (who made posts) for each date.
+
+## Key Definitions
+
+- **New Creators**: Creators who joined your database on that specific date
+- **Active Creators**: Creators who made at least one post on that specific date
 
 ## Request Parameters
 
@@ -17,12 +22,16 @@ Retrieves newly joined creators data with comparison to previous period. For eac
 
 | Field | Description |
 | --- | --- |
-| `date` | Unix timestamp for the current day |
-| `last_date` | Unix timestamp for the comparison day (1 week before) |
-| `current` | Number of new creators for the current day |
-| `last` | Number of new creators for the comparison day |
-| `total` | Running total of creators as of the latest date |
-| `last_total` | Running total of creators as of the comparison period's latest date |
+| `date` | Date string for the current day (YYYY-MM-DD format) |
+| `last_date` | Date string for the comparison day from the previous period (YYYY-MM-DD format) |
+| `current_new` | Number of new creators who joined on the current date |
+| `last_new` | Number of new creators who joined on the comparison date |
+| `total_new` | Cumulative total of new creators in the current period |
+| `last_total_new` | Cumulative total of new creators in the comparison period |
+| `current_active` | Number of creators who made posts on the current date |
+| `last_active` | Number of creators who made posts on the comparison date |
+| `total_active` | Cumulative total of active creators in the current period |
+| `last_total_active` | Cumulative total of active creators in the comparison period |
 
 ## Request Example
 
@@ -38,68 +47,42 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/creators_24h?start_date=01
 {
   "success": true,
   "data": {
-    "current_period": {
-      "date_range": "2023-01-30 to 2023-01-31",
-      "new_creators": 18,
-      "active_creators": 142,
-      "dormant_creators": 8,
-      "creator_retention_rate": 94.3,
-      "avg_posts_per_creator": 2.4,
-      "avg_engagement_per_creator": 876
-    },
-    "previous_period": {
-      "date_range": "2023-01-28 to 2023-01-29",
-      "new_creators": 15,
-      "active_creators": 135,
-      "dormant_creators": 12,
-      "creator_retention_rate": 91.2,
-      "avg_posts_per_creator": 2.2,
-      "avg_engagement_per_creator": 821
-    },
-    "changes": {
-      "new_creators": {
-        "value": 3,
-        "percentage": 20.0
-      },
-      "active_creators": {
-        "value": 7,
-        "percentage": 5.2
-      },
-      "dormant_creators": {
-        "value": -4,
-        "percentage": -33.3
-      },
-      "creator_retention_rate": {
-        "value": 3.1,
-        "percentage": 3.4
-      },
-      "avg_posts_per_creator": {
-        "value": 0.2,
-        "percentage": 9.1
-      },
-      "avg_engagement_per_creator": {
-        "value": 55,
-        "percentage": 6.7
-      }
-    },
     "creators_24h": [
       {
-        "date": 1747267200,
-        "last_date": 1746662400,
-        "current": 18,
-        "last": 15,
-        "name": "New Creators",
-        "total": 142,
-        "last_total": 135
+        "date": "2025-09-06",
+        "last_date": "2025-06-29",
+        "current_new": 16,
+        "last_new": 0,
+        "total_new": 27,
+        "last_total_new": 24,
+        "current_active": 0,
+        "last_active": 0,
+        "total_active": 1,
+        "last_total_active": 1
       },
       {
-        "date": 1747353600,
-        "last_date": 1746748800,
-        "current": 16,
-        "last": 12,
-        "name": "New Creators",
-        "total": 158,
-        "last_total": 147
+        "date": "2025-09-07",
+        "last_date": "2025-06-30",
+        "current_new": 5,
+        "last_new": 0,
+        "total_new": 27,
+        "last_total_new": 24,
+        "current_active": 0,
+        "last_active": 0,
+        "total_active": 1,
+        "last_total_active": 1
+      },
+      {
+        "date": "2025-09-17",
+        "last_date": "2025-07-10",
+        "current_new": 0,
+        "last_new": 1,
+        "total_new": 27,
+        "last_total_new": 24,
+        "current_active": 1,
+        "last_active": 0,
+        "total_active": 1,
+        "last_total_active": 1
       }
     ]
   }

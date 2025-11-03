@@ -306,7 +306,7 @@
     },
     "/stats/creators_24h": {
       "get": {
-        "description": "Retrieves newly joined creators data with comparison to previous period",
+        "description": "Retrieves daily creator metrics tracking both new creators (who joined your database) and active creators (who made posts) with comparison to previous period",
         "parameters": [
           {
             "name": "start_date",
@@ -358,7 +358,66 @@
                     },
                     "data": {
                       "type": "object",
-                      "description": "Creators 24h data"
+                      "properties": {
+                        "creators_24h": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "date": {
+                                "type": "string",
+                                "example": "2025-09-06",
+                                "description": "Date for the current day (YYYY-MM-DD format)"
+                              },
+                              "last_date": {
+                                "type": "string",
+                                "example": "2025-06-29",
+                                "description": "Date for the comparison day from the previous period (YYYY-MM-DD format)"
+                              },
+                              "current_new": {
+                                "type": "integer",
+                                "example": 16,
+                                "description": "Number of new creators who joined on the current date"
+                              },
+                              "last_new": {
+                                "type": "integer",
+                                "example": 0,
+                                "description": "Number of new creators who joined on the comparison date"
+                              },
+                              "total_new": {
+                                "type": "integer",
+                                "example": 27,
+                                "description": "Cumulative total of new creators in the current period"
+                              },
+                              "last_total_new": {
+                                "type": "integer",
+                                "example": 24,
+                                "description": "Cumulative total of new creators in the comparison period"
+                              },
+                              "current_active": {
+                                "type": "integer",
+                                "example": 0,
+                                "description": "Number of creators who made posts on the current date"
+                              },
+                              "last_active": {
+                                "type": "integer",
+                                "example": 0,
+                                "description": "Number of creators who made posts on the comparison date"
+                              },
+                              "total_active": {
+                                "type": "integer",
+                                "example": 1,
+                                "description": "Cumulative total of active creators in the current period"
+                              },
+                              "last_total_active": {
+                                "type": "integer",
+                                "example": 1,
+                                "description": "Cumulative total of active creators in the comparison period"
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -687,6 +746,17 @@
               "default": 4
             },
             "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          },
+          {
+            "name": "include_gmv",
+            "in": "query",
+            "required": false,
+            "example": true,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Include GMV (Gross Merchandise Value) data for each post. Default is false."
           }
         ],
         "responses": {
@@ -703,7 +773,92 @@
                     },
                     "data": {
                       "type": "object",
-                      "description": "Top posts by views data"
+                      "properties": {
+                        "top_posts_by_views": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 100001,
+                                "description": "Unique identifier for the post"
+                              },
+                              "title": {
+                                "type": "string",
+                                "example": "Latest tech trends for 2024!",
+                                "description": "Post title or caption"
+                              },
+                              "share_url": {
+                                "type": "string",
+                                "example": "https://www.instagram.com/p/ABC123xyz/",
+                                "description": "Direct URL to the post"
+                              },
+                              "platform": {
+                                "type": "string",
+                                "example": "instagram",
+                                "description": "Social media platform"
+                              },
+                              "content_type": {
+                                "type": "string",
+                                "example": "image",
+                                "description": "Type of content (e.g., video, image)"
+                              },
+                              "external_id": {
+                                "type": "string",
+                                "example": "ABC123xyz",
+                                "description": "External platform identifier for the post"
+                              },
+                              "username": {
+                                "type": "string",
+                                "example": "tech.trends",
+                                "description": "Username of the creator"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Tech Trends",
+                                "description": "Display name of the creator"
+                              },
+                              "profile_share_url": {
+                                "type": "string",
+                                "example": "https://www.instagram.com/tech.trends",
+                                "description": "URL to the creator's profile"
+                              },
+                              "metrics": {
+                                "type": "object",
+                                "properties": {
+                                  "views": {
+                                    "type": "integer",
+                                    "example": 365558,
+                                    "description": "Total views for the post"
+                                  },
+                                  "likes": {
+                                    "type": "integer",
+                                    "example": 12460,
+                                    "description": "Total likes for the post"
+                                  },
+                                  "comments": {
+                                    "type": "integer",
+                                    "example": 37,
+                                    "description": "Total comments for the post"
+                                  },
+                                  "shares": {
+                                    "type": "integer",
+                                    "example": 5970,
+                                    "description": "Total shares for the post"
+                                  }
+                                },
+                                "description": "Engagement metrics for the post"
+                              },
+                              "gmv": {
+                                "type": "string",
+                                "example": "$1,284.53",
+                                "description": "Gross Merchandise Value for the post (only included when include_gmv=true)"
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }

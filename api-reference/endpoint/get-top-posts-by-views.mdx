@@ -7,18 +7,35 @@ Retrieves your top-performing posts ranked by views within a specified date rang
 
 ## Request Parameters
 
-| Parameter    | Type    | Description                                                                                  | Required |
-| ------------ | ------- | -------------------------------------------------------------------------------------------- | -------- |
-| `start_date` | String  | Start date in MM/DD/YYYY format                                                              | Yes      |
-| `end_date`   | String  | End date in MM/DD/YYYY format                                                                | Yes      |
-| `limit`      | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No       |
-| `page`       | Integer | Page number for pagination. Default is 1.                                                    | No       |
-| `per_page`   | Integer | Number of results per page. Default is 40. Maximum is 100.                                   | No       |
+| Parameter     | Type    | Description                                                                                  | Required |
+| ------------- | ------- | -------------------------------------------------------------------------------------------- | -------- |
+| `start_date`  | String  | Start date in MM/DD/YYYY format                                                              | Yes      |
+| `end_date`    | String  | End date in MM/DD/YYYY format                                                                | Yes      |
+| `limit`       | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No       |
+| `page`        | Integer | Page number for pagination. Default is 1.                                                    | No       |
+| `per_page`    | Integer | Number of results per page. Default is 40. Maximum is 100.                                   | No       |
+| `include_gmv` | Boolean | Include GMV (Gross Merchandise Value) data for each post. Default is false.                  | No       |
+
+## Response Fields
+
+| Field               | Description                                                                  |
+| ------------------- | ---------------------------------------------------------------------------- |
+| `id`                | Unique identifier for the post                                               |
+| `title`             | Post title or caption                                                        |
+| `share_url`         | Direct URL to the post                                                       |
+| `platform`          | Social media platform (e.g., "tik_tok", "instagram", "youtube")              |
+| `content_type`      | Type of content (e.g., "video", "image")                                     |
+| `external_id`       | External platform identifier for the post                                    |
+| `username`          | Username of the creator                                                      |
+| `name`              | Display name of the creator                                                  |
+| `profile_share_url` | URL to the creator's profile                                                 |
+| `metrics`           | Object containing engagement metrics (views, likes, comments, shares)        |
+| `gmv`               | Gross Merchandise Value for the post (only included when `include_gmv=true`) |
 
 ## Request Example
 
 ```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/top_posts_by_views?start_date=01/01/2023&end_date=01/31/2023&limit=5&page=1&per_page=20" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/top_posts_by_views?start_date=01/01/2023&end_date=01/31/2023&limit=5&page=1&per_page=20&include_gmv=true" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
@@ -36,7 +53,10 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_posts_by_views?start_d
         "share_url": "https://www.instagram.com/p/ABC123xyz/",
         "platform": "instagram",
         "content_type": "image",
+        "external_id": "ABC123xyz",
         "username": "tech.trends",
+        "name": "Tech Trends",
+        "profile_share_url": "https://www.instagram.com/tech.trends",
         "metrics": {
           "views": 365558,
           "likes": 12460,
@@ -50,7 +70,10 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_posts_by_views?start_d
         "share_url": "https://www.instagram.com/p/DEF456uvw/",
         "platform": "instagram",
         "content_type": "image",
+        "external_id": "DEF456uvw",
         "username": "future.tech",
+        "name": "Future Tech",
+        "profile_share_url": "https://www.instagram.com/future.tech",
         "metrics": {
           "views": 314195,
           "likes": 6165,
@@ -64,13 +87,17 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_posts_by_views?start_d
         "share_url": "https://www.tiktok.com/@tech.trends/video/123456789",
         "platform": "tik_tok",
         "content_type": "video",
+        "external_id": "123456789",
         "username": "tech.trends",
+        "name": "Tech Trends",
+        "profile_share_url": "https://www.tiktok.com/@tech.trends",
         "metrics": {
           "views": 216222,
           "likes": 4695,
           "comments": 85,
           "shares": 216
-        }
+        },
+        "gmv": "$2,145.89"
       },
       {
         "id": 100004,
@@ -78,7 +105,10 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_posts_by_views?start_d
         "share_url": "https://www.instagram.com/p/GHI789klm/",
         "platform": "instagram",
         "content_type": "image",
+        "external_id": "GHI789klm",
         "username": "tech.daily",
+        "name": "Tech Daily",
+        "profile_share_url": "https://www.instagram.com/tech.daily",
         "metrics": {
           "views": 195485,
           "likes": 2058,

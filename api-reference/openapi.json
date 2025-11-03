@@ -725,17 +725,17 @@
     },
     "/stats/tik_tok_shop_gmv_24h": {
       "get": {
-        "description": "Retrieves TikTok Shop GMV data for the last 24 hours",
+        "description": "Retrieves TikTok Shop Gross Merchandise Value (GMV) data with daily breakdown and comparison to previous period",
         "parameters": [
           {
             "name": "start_date",
             "in": "query",
             "required": true,
-            "example": "05/01/2025",
+            "example": "10/04/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/01/2025"
+              "default": "10/04/2025"
             },
             "description": "Start date in MM/DD/YYYY format"
           },
@@ -743,11 +743,11 @@
             "name": "end_date",
             "in": "query",
             "required": true,
-            "example": "05/08/2025",
+            "example": "11/03/2025",
             "schema": {
               "type": "string",
               "format": "date",
-              "default": "05/08/2025"
+              "default": "11/03/2025"
             },
             "description": "End date in MM/DD/YYYY format"
           },
@@ -755,7 +755,7 @@
             "name": "limit",
             "in": "query",
             "required": false,
-            "example": 4,
+            "example": 20,
             "schema": {
               "type": "integer",
               "default": 4
@@ -777,7 +777,66 @@
                     },
                     "data": {
                       "type": "object",
-                      "description": "TikTok Shop GMV 24h data"
+                      "properties": {
+                        "tik_tok_shop_gmv_24h": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "date": {
+                                "type": "string",
+                                "example": "2025-10-04",
+                                "description": "The date for this data point (YYYY-MM-DD format)"
+                              },
+                              "last_date": {
+                                "type": "integer",
+                                "example": 1756872000,
+                                "description": "Unix timestamp for the corresponding date in the previous period"
+                              },
+                              "current": {
+                                "type": "string",
+                                "example": "$1,985.10",
+                                "description": "GMV for the current date (formatted as currency string)"
+                              },
+                              "last": {
+                                "type": "string",
+                                "example": "$2,684.88",
+                                "description": "GMV for the corresponding date in the previous period"
+                              },
+                              "total": {
+                                "type": "string",
+                                "example": "$55,991.01",
+                                "description": "Cumulative GMV total for the current period"
+                              },
+                              "last_total": {
+                                "type": "string",
+                                "example": "$78,445.73",
+                                "description": "Cumulative GMV total for the previous period"
+                              },
+                              "order_count": {
+                                "type": "integer",
+                                "example": 68,
+                                "description": "Number of orders on the current date"
+                              },
+                              "last_order_count": {
+                                "type": "integer",
+                                "example": 99,
+                                "description": "Number of orders on the corresponding date in the previous period"
+                              },
+                              "total_order_count": {
+                                "type": "integer",
+                                "example": 1759,
+                                "description": "Cumulative order count for the current period"
+                              },
+                              "last_total_order_count": {
+                                "type": "integer",
+                                "example": 2489,
+                                "description": "Cumulative order count for the previous period"
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }

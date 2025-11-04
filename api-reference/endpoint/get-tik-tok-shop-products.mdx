@@ -23,15 +23,11 @@ Each product object contains the following fields:
 | --- | --- | --- | --- | --- |
 | `start_date` | String | Start date in MM/DD/YYYY format | Yes | Current date - 30 days |
 | `end_date` | String | End date in MM/DD/YYYY format | Yes | Current date |
-| `limit` | Integer | Maximum number of products to return | No | 10 |
-| `page` | Integer | Page number for pagination | No | 1 |
-| `campaign_ids` | Array | Filter by specific campaign IDs. You can get campaign IDs from the [Get Campaigns](/api-reference/endpoint/get-campaigns) endpoint. | No | - |
-| `social_platform` | String | Filter by social platform (e.g., "tiktok", "all") | No | "all" |
 
 ## Request Example
 
 ```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/tik_tok_shop_products?start_date=10/04/2025&end_date=11/03/2025&limit=10" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/tik_tok_shop_products?start_date=10/04/2025&end_date=11/03/2025" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
@@ -88,5 +84,4 @@ This endpoint is useful for:
 - Products are returned sorted by `total_gmv` in descending order (highest GMV first)
 - The `unique_videos` count represents distinct videos that featured or promoted the product
 - GMV values represent actual revenue generated, not including refunds or cancellations
-- Use pagination parameters (`limit` and `page`) to retrieve large product catalogs
 

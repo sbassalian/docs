@@ -331,17 +331,6 @@
               "default": "11/14/2025"
             },
             "description": "End date in MM/DD/YYYY format"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "example": 4,
-            "schema": {
-              "type": "integer",
-              "default": 4
-            },
-            "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
           }
         ],
         "responses": {
@@ -1027,51 +1016,6 @@
               "default": "11/03/2025"
             },
             "description": "End date in MM/DD/YYYY format"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "example": 10,
-            "schema": {
-              "type": "integer",
-              "default": 10
-            },
-            "description": "Maximum number of products to return"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "example": 1,
-            "schema": {
-              "type": "integer",
-              "default": 1
-            },
-            "description": "Page number for pagination"
-          },
-          {
-            "name": "campaign_ids",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer"
-              }
-            },
-            "description": "Filter by specific campaign IDs"
-          },
-          {
-            "name": "social_platform",
-            "in": "query",
-            "required": false,
-            "example": "all",
-            "schema": {
-              "type": "string",
-              "default": "all"
-            },
-            "description": "Filter by social platform"
           }
         ],
         "responses": {

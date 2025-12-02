@@ -1,0 +1,476 @@
+---
+title: "Get Ambassador Stats"
+openapi: "GET /stats/query_ambassadors"
+---
+
+Retrieves aggregated statistics for campaign ambassadors, grouped by individual affiliate. This endpoint provides performance metrics including revenue, commission, order counts, and clicks for ambassadors within a specified date range.
+
+## Request Parameters
+
+| Parameter     | Type    | Description                                                           | Required |
+| ------------- | ------- | --------------------------------------------------------------------- | -------- |
+| `start_date`  | String  | Start date in MM/DD/YYYY format                                       | Yes      |
+| `end_date`    | String  | End date in MM/DD/YYYY format                                         | Yes      |
+| `campaign_id` | Integer | ID of the campaign to query                                           | Yes      |
+| `page`        | Integer | Page number for pagination. Default is 1.                             | No       |
+| `per_page`    | Integer | Number of results per page. Default is 20. Maximum is 100.            | No       |
+| `search`      | String  | Search across email, first name, last name, or full name              | No       |
+| `email`       | String  | Filter by ambassador email(s). Supports comma-separated values        | No       |
+| `first_name`  | String  | Filter by ambassador first name (case-insensitive, partial match)     | No       |
+| `last_name`   | String  | Filter by ambassador last name (case-insensitive, partial match)      | No       |
+| `status`      | String  | Filter by tracking event status: `paid`, `pending`, `canceled`, `all` | No       |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&page=1&per_page=20" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "data": [
+    {
+      "campaign_affiliate_id": 456,
+      "user_id": 789,
+      "email": "ambassador@example.com",
+      "first_name": "John",
+      "last_name": "Doe",
+      "creator_name": "John Doe",
+      "revenue": 5000.5,
+      "commission": 500.05,
+      "orders_count": 45,
+      "clicks": 1500,
+      "joined_campaign_date": "01/15/2024"
+    }
+  ],
+  "meta": {
+    "total_ambassadors": 150,
+    "current_page": 1,
+    "per_page": 20,
+    "total_pages": 8,
+    "start_date": "09/01/2025",
+    "end_date": "09/30/2025",
+    "campaign_id": "123"
+  }
+}
+```
+
+## Response Fields
+
+| Field                          | Type    | Description                                                       |
+| ------------------------------ | ------- | ----------------------------------------------------------------- |
+| `data`                         | Array   | Array of ambassador statistics objects                            |
+| `data[].campaign_affiliate_id` | Integer | Unique identifier for the campaign affiliate relationship         |
+| `data[].user_id`               | Integer | Unique identifier for the user/ambassador                         |
+| `data[].email`                 | String  | Ambassador's email address                                        |
+| `data[].first_name`            | String  | Ambassador's first name                                           |
+| `data[].last_name`             | String  | Ambassador's last name                                            |
+| `data[].creator_name`          | String  | Full name of the ambassador (first + last)                        |
+| `data[].revenue`               | Number  | Total revenue generated in dollars (for the specified date range) |
+| `data[].commission`            | Number  | Total commission earned in dollars                                |
+| `data[].orders_count`          | Integer | Total number of completed orders                                  |
+| `data[].clicks`                | Integer | Total number of link clicks (page views)                          |
+| `data[].joined_campaign_date`  | String  | Date the ambassador joined the campaign (MM/DD/YYYY format)       |
+| `meta`                         | Object  | Pagination and query metadata                                     |
+| `meta.total_ambassadors`       | Integer | Total number of ambassadors matching the query (across all pages) |
+| `meta.current_page`            | Integer | Current page number                                               |
+| `meta.per_page`                | Integer | Number of results per page                                        |
+| `meta.total_pages`             | Integer | Total number of pages available                                   |
+| `meta.start_date`              | String  | Query start date                                                  |
+| `meta.end_date`                | String  | Query end date                                                    |
+| `meta.campaign_id`             | String  | Campaign ID queried                                               |
+
+## Filter Examples
+
+### Search Filter
+
+The `search` parameter searches across email, first name, last name, and full name:
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&search=john" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+### Email Filter (Single)
+
+Filter by a specific ambassador email:
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&email=john@example.com" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+### Email Filter (Multiple - Comma Separated)
+
+Filter by multiple ambassador emails using comma-separated values:
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&email=john@example.com,jane@example.com,bob@example.com" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+### First Name Filter
+
+Filter by ambassador first name (case-insensitive, partial match):
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&first_name=John" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+### Last Name Filter
+
+Filter by ambassador last name (case-insensitive, partial match):
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&last_name=Smith" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+### Combined Filters
+
+You can combine multiple filters:
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&first_name=John&last_name=Doe" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+### Status Filter
+
+Filter by tracking event status to get specific types of orders:
+
+```bash
+# Get canceled/refunded orders
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&status=canceled" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+
+# Get paid orders
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&status=paid" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+### Pagination
+
+```bash
+# Get first page (20 results by default)
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&page=1" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+
+# Get second page
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&page=2" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+
+# Get 50 results per page
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&per_page=50" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+## Use Cases
+
+This endpoint is useful for:
+
+- **Performance Dashboards**: Build dashboards showing ambassador performance metrics
+- **Commission Calculations**: Calculate total commissions owed per ambassador
+- **ROI Analysis**: Analyze return on investment by comparing clicks to revenue
+- **Bulk Reporting**: Query multiple ambassadors at once using comma-separated emails
+- **Migration from Other Platforms**: Export data from platforms like UpPromote with similar data structure
+- **Time Period Analysis**: Compare ambassador performance across different date ranges
+- **Ambassador Segmentation**: Filter and analyze specific groups of ambassadors
+
+## Important Notes
+
+### Time Periods
+
+All metrics (revenue, commission, orders, clicks) are for the specified date range only. The `start_date` and `end_date` parameters filter tracking events by their `occurred_at` timestamp (when the sale or click happened), not by when the ambassador joined the campaign.
+
+To analyze different time periods, make separate API calls with different date ranges:
+
+- **This Month**: `start_date=12/01/2024&end_date=12/31/2024`
+- **Last Month**: `start_date=11/01/2024&end_date=11/30/2024`
+- **Year to Date**: `start_date=01/01/2024&end_date=12/31/2024`
+- **Custom Range**: Any range you specify
+
+### Refunds and Canceled Orders
+
+There is no separate "refund_amount" field in the response. To query refunded or canceled orders:
+
+1. Add `status=canceled` parameter to your request
+2. The response will show metrics for canceled orders only
+3. The `revenue` and `commission` fields will reflect the amounts for those canceled orders
+
+### Revenue Calculation
+
+- **Shopify stores**: Uses the `total` field from tracking events
+- **Other stores**: Uses the `subtotal` field from tracking events
+- All amounts are stored in cents and converted to dollars in the response
+
+### Clicks
+
+Clicks are counted as `page_viewed` events in the tracking system. Each page view where an ambassador's link was visited counts as one click.
+
+### Pagination
+
+- **Default**: 20 results per page
+- **Maximum**: 100 results per page
+- **Performance**: Always use pagination for campaigns with many ambassadors to avoid timeouts
+- Use `total_pages` in the meta response to iterate through all pages
+
+### Data Consistency
+
+This endpoint uses the `IndexTrackingEventsService` for data retrieval, ensuring:
+
+- Results are consistent with other tracking endpoints
+- Same filtering logic applies (dates, campaign, status, etc.)
+- Benefits from database optimizations and indexes
+
+## Error Responses
+
+### 400 Bad Request - Missing Required Parameters
+
+```json
+{
+  "error": "Missing required parameter(s): start_date, end_date, campaign_id"
+}
+```
+
+### 401 Unauthorized - Invalid API Key
+
+```json
+{
+  "error": "Not Authenticated"
+}
+```
+
+### 429 Too Many Requests - Rate Limit Exceeded
+
+```json
+{
+  "error": "Rate limit exceeded. Please wait 2 seconds between requests.",
+  "retry_after": 2
+}
+```
+
+## Rate Limiting
+
+This endpoint is subject to the standard Public API rate limits:
+
+- **Frequency Limit**: 2-second minimum interval between requests
+- **Hourly Limit**: 40 requests per hour (default, configurable per organization)
+
+## Performance Optimization
+
+To ensure fast response times:
+
+1. **Add Database Index**: Run the included migration to add an index for page_viewed events
+2. **Use Specific Date Ranges**: Narrower date ranges result in faster queries
+3. **Apply Filters**: Use email/name filters to reduce the result set
+4. **Pagination**: Always use pagination for large result sets
+
+### Database Migration
+
+To optimize click queries, run:
+
+```bash
+rails db:migrate
+```
+
+This adds an index on `(event_name, occurred_at, campaign_affiliate_id, shopify_store_id)` for `page_viewed` events.
+
+## Integration Examples
+
+### JavaScript/Node.js
+
+```javascript
+const axios = require("axios");
+
+async function getAmbassadorStats(
+  apiKey,
+  campaignId,
+  startDate,
+  endDate,
+  filters = {}
+) {
+  try {
+    const params = {
+      campaign_id: campaignId,
+      start_date: startDate,
+      end_date: endDate,
+      ...filters,
+    };
+
+    const response = await axios.get(
+      "https://api.growi.io/api/public/v1/stats/query_ambassadors",
+      {
+        headers: { Authorization: `Bearer ${apiKey}` },
+        params,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error:", error.response?.data || error.message);
+    throw error;
+  }
+}
+
+// Usage examples
+const stats = await getAmbassadorStats(
+  "growi-sk-YOUR_API_KEY",
+  123,
+  "09/01/2025",
+  "09/30/2025"
+);
+
+// With email filter
+const filtered = await getAmbassadorStats(
+  "growi-sk-YOUR_API_KEY",
+  123,
+  "09/01/2025",
+  "09/30/2025",
+  { email: "john@example.com" }
+);
+
+// With multiple emails
+const multiFiltered = await getAmbassadorStats(
+  "growi-sk-YOUR_API_KEY",
+  123,
+  "09/01/2025",
+  "09/30/2025",
+  { email: "john@example.com,jane@example.com" }
+);
+
+console.log(`Total Ambassadors: ${stats.meta.total_ambassadors}`);
+stats.data.forEach((ambassador) => {
+  console.log(
+    `${ambassador.creator_name}: $${ambassador.revenue} revenue, ${ambassador.orders_count} orders`
+  );
+});
+```
+
+### Python
+
+```python
+import requests
+
+def get_ambassador_stats(api_key, campaign_id, start_date, end_date, **filters):
+    url = 'https://api.growi.io/api/public/v1/stats/query_ambassadors'
+    headers = {'Authorization': f'Bearer {api_key}'}
+    params = {
+        'campaign_id': campaign_id,
+        'start_date': start_date,
+        'end_date': end_date,
+        **filters
+    }
+
+    response = requests.get(url, headers=headers, params=params)
+    response.raise_for_status()
+    return response.json()
+
+# Usage examples
+stats = get_ambassador_stats(
+    'growi-sk-YOUR_API_KEY',
+    123,
+    '09/01/2025',
+    '09/30/2025'
+)
+
+# With filters
+filtered_stats = get_ambassador_stats(
+    'growi-sk-YOUR_API_KEY',
+    123,
+    '09/01/2025',
+    '09/30/2025',
+    email='john@example.com,jane@example.com',
+    first_name='John'
+)
+
+print(f"Total Ambassadors: {stats['meta']['total_ambassadors']}")
+for ambassador in stats['data']:
+    print(f"{ambassador['creator_name']}: ${ambassador['revenue']} revenue, {ambassador['orders_count']} orders, {ambassador['clicks']} clicks")
+```
+
+### Ruby
+
+```ruby
+require 'net/http'
+require 'json'
+require 'cgi'
+
+def get_ambassador_stats(api_key, campaign_id, start_date, end_date, filters = {})
+  uri = URI('https://api.growi.io/api/public/v1/stats/query_ambassadors')
+  params = {
+    campaign_id: campaign_id,
+    start_date: start_date,
+    end_date: end_date
+  }.merge(filters)
+
+  uri.query = URI.encode_www_form(params)
+
+  request = Net::HTTP::Get.new(uri)
+  request['Authorization'] = "Bearer #{api_key}"
+
+  response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+    http.request(request)
+  end
+
+  JSON.parse(response.body)
+end
+
+# Usage examples
+stats = get_ambassador_stats(
+  'growi-sk-YOUR_API_KEY',
+  123,
+  '09/01/2025',
+  '09/30/2025'
+)
+
+# With multiple emails
+filtered = get_ambassador_stats(
+  'growi-sk-YOUR_API_KEY',
+  123,
+  '09/01/2025',
+  '09/30/2025',
+  email: 'john@example.com,jane@example.com'
+)
+
+puts "Total Ambassadors: #{stats['meta']['total_ambassadors']}"
+stats['data'].each do |ambassador|
+  puts "#{ambassador['creator_name']}: $#{ambassador['revenue']} revenue, #{ambassador['orders_count']} orders"
+end
+```
+
+## Filtering Best Practices
+
+### Multiple Emails
+
+When filtering by multiple emails, use comma-separated values without spaces (or with spaces - both work):
+
+```
+?email=user1@example.com,user2@example.com,user3@example.com
+```
+
+The system will:
+
+- Split on commas
+- Trim whitespace
+- Convert to lowercase for case-insensitive matching
+
+### Search vs Specific Filters
+
+- Use **`search`** for broad queries across all name/email fields
+- Use **`email`**, **`first_name`**, or **`last_name`** for precise filtering
+
+### Status Filter Options
+
+The `status` parameter accepts:
+
+- `all` - Returns all orders regardless of status
+- `paid` - Returns only orders where commission has been paid
+- `pending` - Returns orders with pending commission payments
+- `canceled` - Returns canceled/refunded orders
+- `due` - Returns orders where commission payment is due

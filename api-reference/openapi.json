@@ -1787,98 +1787,98 @@
     "/stats/query_ambassador_sales": {
       "get": {
         "description": "Retrieves detailed ambassador sales data including order information, commission amounts, and program details within a specified date range",
-            "parameters": [
-      {
-        "name": "start_date",
-        "in": "query",
-        "required": true,
-        "example": "09/01/2025",
-        "schema": {
-          "type": "string",
-          "format": "date",
-          "default": "09/01/2025"
-        },
-        "description": "Start date in MM/DD/YYYY format"
-      },
-      {
-        "name": "end_date",
-        "in": "query",
-        "required": true,
-        "example": "09/30/2025",
-        "schema": {
-          "type": "string",
-          "format": "date",
-          "default": "09/30/2025"
-        },
-        "description": "End date in MM/DD/YYYY format"
-      },
-      {
-        "name": "page",
-        "in": "query",
-        "required": false,
-        "example": 1,
-        "schema": {
-          "type": "integer",
-          "default": 1
-        },
-        "description": "Page number for pagination. Default is 1."
-      },
-      {
-        "name": "per_page",
-        "in": "query",
-        "required": false,
-        "example": 20,
-        "schema": {
-          "type": "integer",
-          "default": 20,
-          "maximum": 100
-        },
-        "description": "Number of results per page. Default is 20. Maximum is 100."
-      },
-      {
-        "name": "status",
-        "in": "query",
-        "required": false,
-        "example": "all",
-        "schema": {
-          "type": "string",
-          "enum": ["all", "paid", "due", "pending", "canceled", "refunded"],
-          "default": "all"
-        },
-        "description": "Filter by sale status"
-      },
-      {
-        "name": "creator_email",
-        "in": "query",
-        "required": false,
-        "example": "example@gmail.com",
-        "schema": {
-          "type": "string",
-          "format": "email"
-        },
-        "description": "Filter results by the creator’s (ambassador’s) email address"
-      },
-      {
-        "name": "affiliate_tag",
-        "in": "query",
-        "required": false,
-        "example": "SUMMER2025",
-        "schema": {
-          "type": "string"
-        },
-        "description": "Filter by affiliate tag"
-      },
-      {
-        "name": "order_id",
-        "in": "query",
-        "required": false,
-        "example": "1234567890",
-        "schema": {
-          "type": "string"
-        },
-        "description": "Filter by a Shopify order ID"
-      }
-    ],
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "09/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "09/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "09/30/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "09/30/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "example": 1,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number for pagination. Default is 1."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "example": 20,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            },
+            "description": "Number of results per page. Default is 20. Maximum is 100."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "example": "all",
+            "schema": {
+              "type": "string",
+              "enum": ["all", "paid", "due", "pending", "canceled", "refunded"],
+              "default": "all"
+            },
+            "description": "Filter by sale status"
+          },
+          {
+            "name": "creator_email",
+            "in": "query",
+            "required": false,
+            "example": "example@gmail.com",
+            "schema": {
+              "type": "string",
+              "format": "email"
+            },
+            "description": "Filter results by the creator’s (ambassador’s) email address"
+          },
+          {
+            "name": "affiliate_tag",
+            "in": "query",
+            "required": false,
+            "example": "SUMMER2025",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by affiliate tag"
+          },
+          {
+            "name": "order_id",
+            "in": "query",
+            "required": false,
+            "example": "1234567890",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by a Shopify order ID"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Ambassador sales retrieved successfully",
@@ -2164,6 +2164,280 @@
         }
       }
     },
+    "/stats/query_ambassadors": {
+      "get": {
+        "description": "Retrieves aggregated statistics for campaign ambassadors, grouped by individual affiliate. This endpoint provides performance metrics including revenue, commission, order counts, and clicks for ambassadors within a specified date range.",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "example": "09/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "09/01/2025"
+            },
+            "description": "Start date in MM/DD/YYYY format"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "example": "09/30/2025",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "09/30/2025"
+            },
+            "description": "End date in MM/DD/YYYY format"
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": true,
+            "example": 123,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the campaign to query"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "example": 1,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number for pagination. Default is 1."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "example": 20,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            },
+            "description": "Number of results per page. Default is 20. Maximum is 100."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "example": "john",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search across email, first name, last name, or full name"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "example": "ambassador@example.com",
+            "schema": {
+              "type": "string",
+              "format": "email"
+            },
+            "description": "Filter by ambassador email(s). Supports comma-separated values"
+          },
+          {
+            "name": "first_name",
+            "in": "query",
+            "required": false,
+            "example": "John",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by ambassador first name (case-insensitive, partial match)"
+          },
+          {
+            "name": "last_name",
+            "in": "query",
+            "required": false,
+            "example": "Doe",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by ambassador last name (case-insensitive, partial match)"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "example": "all",
+            "schema": {
+              "type": "string",
+              "enum": ["all", "paid", "pending", "canceled", "due"],
+              "default": "all"
+            },
+            "description": "Filter by tracking event status"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ambassador stats retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "campaign_affiliate_id": {
+                            "type": "integer",
+                            "example": 456,
+                            "description": "Unique identifier for the campaign affiliate relationship"
+                          },
+                          "user_id": {
+                            "type": "integer",
+                            "example": 789,
+                            "description": "Unique identifier for the user/ambassador"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "ambassador@example.com",
+                            "description": "Ambassador's email address"
+                          },
+                          "first_name": {
+                            "type": "string",
+                            "example": "John",
+                            "description": "Ambassador's first name"
+                          },
+                          "last_name": {
+                            "type": "string",
+                            "example": "Doe",
+                            "description": "Ambassador's last name"
+                          },
+                          "creator_name": {
+                            "type": "string",
+                            "example": "John Doe",
+                            "description": "Full name of the ambassador (first + last)"
+                          },
+                          "revenue": {
+                            "type": "number",
+                            "example": 5000.5,
+                            "description": "Total revenue generated in dollars (for the specified date range)"
+                          },
+                          "commission": {
+                            "type": "number",
+                            "example": 500.05,
+                            "description": "Total commission earned in dollars"
+                          },
+                          "orders_count": {
+                            "type": "integer",
+                            "example": 45,
+                            "description": "Total number of completed orders"
+                          },
+                          "clicks": {
+                            "type": "integer",
+                            "example": 1500,
+                            "description": "Total number of link clicks (page views)"
+                          },
+                          "joined_campaign_date": {
+                            "type": "string",
+                            "example": "01/15/2024",
+                            "description": "Date the ambassador joined the campaign (MM/DD/YYYY format)"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total_ambassadors": {
+                          "type": "integer",
+                          "example": 150,
+                          "description": "Total number of ambassadors matching the query (across all pages)"
+                        },
+                        "current_page": {
+                          "type": "integer",
+                          "example": 1,
+                          "description": "Current page number"
+                        },
+                        "per_page": {
+                          "type": "integer",
+                          "example": 20,
+                          "description": "Number of results per page"
+                        },
+                        "total_pages": {
+                          "type": "integer",
+                          "example": 8,
+                          "description": "Total number of pages available"
+                        },
+                        "start_date": {
+                          "type": "string",
+                          "example": "09/01/2025",
+                          "description": "Query start date"
+                        },
+                        "end_date": {
+                          "type": "string",
+                          "example": "09/30/2025",
+                          "description": "Query end date"
+                        },
+                        "campaign_id": {
+                          "type": "string",
+                          "example": "123",
+                          "description": "Campaign ID queried"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Missing required parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Rate limit exceeded. Please wait 2 seconds between requests."
+                    },
+                    "retry_after": {
+                      "type": "integer",
+                      "example": 2
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/organizations/brands": {
       "get": {
         "description": "Retrieves a list of all available brands for your organization",
@@ -2268,13 +2542,24 @@
                           "campaign_type": {
                             "type": "string",
                             "example": "Campaign",
-                            "enum": ["Campaign", "Contract", "Ambassador Program"],
+                            "enum": [
+                              "Campaign",
+                              "Contract",
+                              "Ambassador Program"
+                            ],
                             "description": "Type of campaign"
                           },
                           "status": {
                             "type": "string",
                             "example": "Active",
-                            "enum": ["Active", "Paused", "Canceled", "Completed", "Archived", "Void"],
+                            "enum": [
+                              "Active",
+                              "Paused",
+                              "Canceled",
+                              "Completed",
+                              "Archived",
+                              "Void"
+                            ],
                             "description": "Current status of the campaign"
                           }
                         }

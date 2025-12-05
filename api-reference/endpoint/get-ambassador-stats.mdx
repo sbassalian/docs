@@ -177,16 +177,6 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
 
 ## Important Notes
 
-### Refund Amount
-
-The `refund_amount` field includes:
-
-- Orders marked as `refunded: true`
-- Orders with `status: 'cancelled'`
-- Orders with `disable_attribution: true` (attribution disabled)
-
-This amount is automatically calculated for the specified date range and represents the total value of refunded/canceled orders attributed to the ambassador.
-
 ### Time Periods
 
 All metrics (revenue, commission, orders, clicks, refunds) are filtered by the specified date range. The `start_date` and `end_date` parameters filter tracking events by their `occurred_at` timestamp (when the sale or click happened), not by when the ambassador joined the campaign.
@@ -198,12 +188,6 @@ To analyze different time periods, make separate API calls with different date r
 - **Year to Date**: `start_date=01/01/2024&end_date=12/31/2024`
 - **Custom Range**: Any range you specify
 
-### Revenue Calculation
-
-- **Shopify stores**: Uses the `total` field from tracking events
-- **Other stores**: Uses the `subtotal` field from tracking events
-- All amounts are stored in cents and converted to dollars in the response
-
 ### Pagination
 
 - **Default**: 20 results per page
@@ -211,10 +195,6 @@ To analyze different time periods, make separate API calls with different date r
 - **Performance**: Always use pagination for campaigns with many ambassadors
 - **All ambassadors shown**: Even ambassadors with 0 sales appear in results if they match filters
 - Use `total_pages` in the meta response to iterate through all pages
-
-### Data Consistency
-
-All data is calculated from tracking events in real-time and filtered at the database level for optimal performance. Results are consistent with the data shown in the Growi dashboard.
 
 ## Error Responses
 

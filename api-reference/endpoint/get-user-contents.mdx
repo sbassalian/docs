@@ -7,18 +7,27 @@ Retrieves all user content creation data within a specified date range.
 
 ## Request Parameters
 
-| Parameter    | Type    | Description                                                                                  | Required |
-| ------------ | ------- | -------------------------------------------------------------------------------------------- | -------- |
-| `start_date` | String  | Start date in MM/DD/YYYY format                                                              | Yes      |
-| `end_date`   | String  | End date in MM/DD/YYYY format                                                                | Yes      |
-| `limit`      | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No       |
-| `page`       | Integer | Page number for pagination. Default is 1.                                                    | No       |
-| `per_page`   | Integer | Number of results per page. Default is 40. Maximum is 100.                                   | No       |
+| Parameter              | Type    | Description                                                                                  | Required |
+| ---------------------- | ------- | -------------------------------------------------------------------------------------------- | -------- |
+| `start_date`           | String  | Start date in MM/DD/YYYY format                                                              | Yes      |
+| `end_date`             | String  | End date in MM/DD/YYYY format                                                                | Yes      |
+| `limit`                | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No       |
+| `page`                 | Integer | Page number for pagination. Default is 1.                                                    | No       |
+| `per_page`             | Integer | Number of results per page. Default is 40. Maximum is 100.                                   | No       |
+| `include_all_time_views` | Boolean | Include the post's current all-time views in the response. Default is false.               | No       |
 
 ## Request Example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=01/01/2023&end_date=01/31/2023&limit=5&page=1&per_page=20" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+To include all-time views for each post, add `include_all_time_views=true`:
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=01/01/2023&end_date=01/31/2023&include_all_time_views=true" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
@@ -1175,7 +1184,8 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=0
 | `data.user_contents[].profile_share_url`    | String  | Direct URL to the creator's profile                              |
 | `data.user_contents[].date`                 | String  | Date when the content was posted (format: "MMM DD")              |
 | `data.user_contents[].sorted_dates`         | Array   | Array of all available dates in "MMM DD" format for filtering    |
-| `data.user_contents[].total_views`          | Integer | Total number of views the content has received                   |
+| `data.user_contents[].total_views`          | Integer | Total views within the specified date range (start_date to end_date) |
+| `data.user_contents[].all_time_views`       | Integer | The post's current all-time views (only included when `include_all_time_views=true`) |
 | `data.user_contents[].share_url`            | String  | Direct URL to the content on the platform                        |
 | `meta.current_page`                         | Integer | Current page number for pagination                               |
 | `meta.per_page`                             | Integer | Number of results per page                                       |

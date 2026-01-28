@@ -1,0 +1,113 @@
+---
+title: "Get Ambassadors"
+openapi: "GET /stats/ambassadors"
+---
+
+Retrieves all ambassadors from ambassador program campaigns for the organization. Returns ambassador profile information including their social accounts, custom field answers from their application, and contact details.
+
+## Request Parameters
+
+| Parameter             | Type    | Description                                                                                      | Required |
+| --------------------- | ------- | ------------------------------------------------------------------------------------------------ | -------- |
+| `require_application` | String  | Filter to only ambassadors who submitted an application. Pass `false` to include all ambassadors. Default is `true`. | No       |
+| `page`                | Integer | Page number for pagination. Default is 1.                                                        | No       |
+| `per_page`            | Integer | Number of results per page. Default is 20. Maximum is 100.                                       | No       |
+| `email`               | String  | Filter by email (comma-separated for multiple)                                                   | No       |
+| `first_name`          | String  | Filter by first name (partial match)                                                             | No       |
+| `last_name`           | String  | Filter by last name (partial match)                                                              | No       |
+| `search`              | String  | Search by email or name                                                                          | No       |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/ambassadors?page=1&per_page=20" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+## Response Example
+
+```json
+{
+  "data": [
+    {
+      "campaign_affiliate_id": 3490313,
+      "user_id": 2628998,
+      "email": "creator@example.com",
+      "first_name": "Natalie",
+      "last_name": "Garay",
+      "name": "Natalie Garay",
+      "joined_at": "2026-01-16T20:15:36Z",
+      "social_accounts": [
+        {
+          "username": "nataliemgaray",
+          "platform": "Instagram",
+          "profile_share_url": "https://www.instagram.com/nataliemgaray/"
+        },
+        {
+          "username": "dancingnatnat",
+          "platform": "Tik Tok",
+          "profile_share_url": "https://www.tiktok.com/@dancingnatnat"
+        }
+      ],
+      "custom_field_answers": [
+        {
+          "question": "What college do you attend?",
+          "answer": "UCLA",
+          "field_type": "text"
+        },
+        {
+          "question": "Upload your best photo",
+          "answer": "https://imagedelivery.net/...",
+          "field_type": "image"
+        }
+      ],
+      "user_location": "Temecula, CA 92591, US",
+      "user_phone_number": "+15551234567"
+    }
+  ],
+  "meta": {
+    "total_ambassadors": 150,
+    "current_page": 1,
+    "per_page": 20,
+    "total_pages": 8
+  }
+}
+```
+
+## Response Fields
+
+| Field                                  | Type    | Description                                                      |
+| -------------------------------------- | ------- | ---------------------------------------------------------------- |
+| `data`                                 | Array   | Array of ambassador objects                                      |
+| `data[].campaign_affiliate_id`         | Integer | Unique identifier for the campaign affiliate                     |
+| `data[].user_id`                       | Integer | Unique identifier for the user                                   |
+| `data[].email`                         | String  | Ambassador's email address                                       |
+| `data[].first_name`                    | String  | Ambassador's first name                                          |
+| `data[].last_name`                     | String  | Ambassador's last name                                           |
+| `data[].name`                          | String  | Ambassador's full name                                           |
+| `data[].joined_at`                     | String  | ISO 8601 timestamp when the ambassador joined                    |
+| `data[].social_accounts`               | Array   | Array of connected social media accounts                         |
+| `data[].social_accounts[].username`    | String  | Username on the platform                                         |
+| `data[].social_accounts[].platform`    | String  | Platform name (e.g., "Instagram", "Tik Tok", "Youtube")          |
+| `data[].social_accounts[].profile_share_url` | String | Direct URL to the profile                                  |
+| `data[].custom_field_answers`          | Array   | Array of application custom field responses                      |
+| `data[].custom_field_answers[].question` | String | The custom field question                                      |
+| `data[].custom_field_answers[].answer` | String  | The ambassador's answer (can be text or image URL)               |
+| `data[].custom_field_answers[].field_type` | String | Type of field: "text", "image", "number", etc.               |
+| `data[].user_location`                 | String  | Ambassador's location                                            |
+| `data[].user_phone_number`             | String  | Ambassador's phone number (may be null)                          |
+| `meta`                                 | Object  | Pagination metadata                                              |
+| `meta.total_ambassadors`               | Integer | Total number of ambassadors matching the query                   |
+| `meta.current_page`                    | Integer | Current page number                                              |
+| `meta.per_page`                        | Integer | Number of results per page                                       |
+| `meta.total_pages`                     | Integer | Total number of pages available                                  |
+
+## Use Cases
+
+This endpoint is useful for:
+
+- **Ambassador Directory**: Build a roster/directory page of all your ambassadors
+- **CRM Integration**: Sync ambassador data to external CRM systems
+- **Profile Pages**: Populate individual ambassador profile pages with their info and social links
+- **Application Data**: Access custom field answers from applications (including uploaded images)
+- **Contact Management**: Retrieve ambassador contact details including phone numbers and locations

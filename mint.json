@@ -67,7 +67,8 @@
         "api-reference/endpoint/get-tik-tok-shop-products",
         "api-reference/endpoint/refresh-data",
         "api-reference/endpoint/get-ambassador-sales",
-        "api-reference/endpoint/get-ambassador-stats"
+        "api-reference/endpoint/get-ambassador-stats",
+        "api-reference/endpoint/get-ambassadors"
       ]
     },
     {

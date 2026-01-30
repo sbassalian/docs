@@ -1534,6 +1534,17 @@
               "default": false
             },
             "description": "Include the post's current all-time views in the response. Default is false."
+          },
+          {
+            "name": "posted_at_sort",
+            "in": "query",
+            "required": false,
+            "example": "desc",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            },
+            "description": "Sort results by posted date. Use 'asc' for oldest first or 'desc' for newest first. Case-insensitive. If not provided or invalid, no sorting is applied."
           }
         ],
         "responses": {

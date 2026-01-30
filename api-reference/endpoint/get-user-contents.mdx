@@ -15,6 +15,7 @@ Retrieves all user content creation data within a specified date range.
 | `page`                 | Integer | Page number for pagination. Default is 1.                                                    | No       |
 | `per_page`             | Integer | Number of results per page. Default is 40. Maximum is 100.                                   | No       |
 | `include_all_time_views` | Boolean | Include the post's current all-time views in the response. Default is false.               | No       |
+| `posted_at_sort`         | String  | Sort results by posted date. Valid values: `asc` (oldest first) or `desc` (newest first). Case-insensitive. If not provided or invalid, no sorting is applied. | No       |
 
 ## Request Example
 
@@ -31,6 +32,26 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=0
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
+
+To sort results by posted date (newest first):
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=01/01/2023&end_date=01/31/2023&posted_at_sort=desc" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Sorting Behavior
+
+The `posted_at_sort` parameter sorts results by the content's posted date (`create_time`):
+
+- `asc` - Oldest posts first
+- `desc` - Newest posts first
+
+Sorting is applied **before pagination**, ensuring consistent ordering across all pages. For example, if you have 100 posts and use `posted_at_sort=desc` with `limit=10`:
+- Page 1 shows the 10 newest posts
+- Page 2 shows the next 10 newest posts
+- And so on...
 
 ## Response Example
 

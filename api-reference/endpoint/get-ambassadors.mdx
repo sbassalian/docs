@@ -16,8 +16,6 @@ Retrieves all ambassadors from ambassador program campaigns for the organization
 | `first_name`          | String  | Filter by first name (partial match)                                                             | No       |
 | `last_name`           | String  | Filter by last name (partial match)                                                              | No       |
 | `search`              | String  | Search by email or name                                                                          | No       |
-| `approved_at_from`    | String  | Filter ambassadors approved on or after this date (YYYY-MM-DD format)                            | No       |
-| `approved_at_to`      | String  | Filter ambassadors approved on or before this date (YYYY-MM-DD format)                           | No       |
 
 ## Request Example
 
@@ -64,8 +62,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/ambassadors?page=1&per_pag
         }
       ],
       "user_location": "Temecula, CA 92591, US",
-      "user_phone_number": "+15551234567",
-      "approved_at": "2026-01-16T20:15:36Z"
+      "user_phone_number": "+15551234567"
     }
   ],
   "meta": {
@@ -99,7 +96,6 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/ambassadors?page=1&per_pag
 | `data[].custom_field_answers[].field_type` | String | Type of field: "text", "image", "number", etc.               |
 | `data[].user_location`                 | String  | Ambassador's location                                            |
 | `data[].user_phone_number`             | String  | Ambassador's phone number (may be null)                          |
-| `data[].approved_at`                   | String  | ISO 8601 timestamp when the ambassador application was approved  |
 | `meta`                                 | Object  | Pagination metadata                                              |
 | `meta.total_ambassadors`               | Integer | Total number of ambassadors matching the query                   |
 | `meta.current_page`                    | Integer | Current page number                                              |

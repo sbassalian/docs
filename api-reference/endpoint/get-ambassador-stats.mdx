@@ -19,8 +19,6 @@ Retrieves aggregated statistics for campaign ambassadors, grouped by individual 
 | `email`          | String  | Filter by ambassador email(s). Supports comma-separated values    | No       |
 | `first_name`     | String  | Filter by ambassador first name (case-insensitive, partial match) | No       |
 | `last_name`      | String  | Filter by ambassador last name (case-insensitive, partial match)  | No       |
-| `approved_at_from` | String | Filter ambassadors approved on or after this date (YYYY-MM-DD format) | No |
-| `approved_at_to` | String | Filter ambassadors approved on or before this date (YYYY-MM-DD format) | No |
 
 ## Request Examples
 
@@ -64,8 +62,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
       "orders_count": 45,
       "clicks": 1500,
       "refund_amount": 150.25,
-      "joined_campaign_date": "01/15/2024",
-      "approved_at": "2024-01-15T10:30:00Z"
+      "joined_campaign_date": "01/15/2024"
     }
   ],
   "meta": {
@@ -97,7 +94,6 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
 | `data[].clicks`                | Integer | Total number of unique link clicks. Default is 0 unless `include_clicks=true` |
 | `data[].refund_amount`         | Number  | Total refunded/canceled order amount in dollars                               |
 | `data[].joined_campaign_date`  | String  | Date the ambassador joined the campaign (MM/DD/YYYY format)                   |
-| `data[].approved_at`           | String  | Timestamp when the ambassador application was approved (ISO8601 format)       |
 | `meta`                         | Object  | Pagination and query metadata                                                 |
 | `meta.total_ambassadors`       | Integer | Total number of ambassadors matching the query (across all pages)             |
 | `meta.current_page`            | Integer | Current page number                                                           |
@@ -151,20 +147,6 @@ Filter by ambassador last name (case-insensitive, partial match):
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&last_name=Smith" \
-     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
-```
-
-### Approved Date Range Filter
-
-Filter ambassadors by their approval date. Both parameters are optional and can be used independently or together:
-
-```bash
-# Ambassadors approved in 2024
-curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&approved_at_from=2024-01-01&approved_at_to=2024-12-31" \
-     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
-
-# Ambassadors approved after a specific date
-curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&approved_at_from=2024-06-01" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 

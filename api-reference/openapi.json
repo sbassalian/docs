@@ -2554,6 +2554,28 @@
             "description": "Filter by ambassador last name (case-insensitive, partial match)"
           },
           {
+            "name": "approved_at_from",
+            "in": "query",
+            "required": false,
+            "example": "2024-01-01",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filter ambassadors approved on or after this date (YYYY-MM-DD format)"
+          },
+          {
+            "name": "approved_at_to",
+            "in": "query",
+            "required": false,
+            "example": "2024-12-31",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filter ambassadors approved on or before this date (YYYY-MM-DD format)"
+          },
+          {
             "name": "status",
             "in": "query",
             "required": false,
@@ -2633,6 +2655,12 @@
                             "type": "string",
                             "example": "01/15/2024",
                             "description": "Date the ambassador joined the campaign (MM/DD/YYYY format)"
+                          },
+                          "approved_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2024-01-15T10:30:00Z",
+                            "description": "Timestamp when the ambassador application was approved (ISO8601 format)"
                           }
                         }
                       }

@@ -1928,6 +1928,26 @@
               "format": "date"
             },
             "description": "Filter ambassadors approved on or before this date (YYYY-MM-DD format)"
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "example": 123,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              ]
+            },
+            "description": "Filter by campaign ID. Pass a single ID or array of IDs (e.g., campaign_id[]=123&campaign_id[]=456)"
           }
         ],
         "responses": {
@@ -2042,6 +2062,16 @@
                             "format": "date-time",
                             "example": "2026-01-16T20:15:36Z",
                             "description": "ISO 8601 timestamp when the ambassador application was approved"
+                          },
+                          "campaign_id": {
+                            "type": "integer",
+                            "example": 123,
+                            "description": "ID of the ambassador program campaign"
+                          },
+                          "campaign_name": {
+                            "type": "string",
+                            "example": "Ambassador Program",
+                            "description": "Name of the ambassador program campaign"
                           }
                         }
                       }
@@ -2237,7 +2267,7 @@
                             "properties": {
                               "id": {
                                 "type": "integer",
-                                "example": 16200,
+                                "example": 123,
                                 "description": "Unique identifier for the program"
                               },
                               "name": {

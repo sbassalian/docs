@@ -1935,17 +1935,7 @@
             "required": false,
             "example": 123,
             "schema": {
-              "oneOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "integer"
-                  }
-                }
-              ]
+              "type": "integer"
             },
             "description": "Filter by campaign ID. Pass a single ID or array of IDs (e.g., campaign_id[]=123&campaign_id[]=456)"
           }

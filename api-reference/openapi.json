@@ -3039,7 +3039,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["paid", "due", "pending", "canceled", "refunded"]
+              "enum": ["paid", "due", "unpaid", "canceled", "refunded"]
             },
             "description": "Filter by sale status"
           },
@@ -3121,34 +3121,39 @@
                       "type": "object",
                       "properties": {
                         "total_gmv": {
-                          "type": "integer",
-                          "example": 1424557,
-                          "description": "Total GMV in cents"
+                          "type": "number",
+                          "example": 14245.57,
+                          "description": "Total GMV in dollars"
                         },
                         "total_commission": {
-                          "type": "integer",
-                          "example": 140331,
-                          "description": "Total commission in cents"
+                          "type": "number",
+                          "example": 1403.31,
+                          "description": "Total commission in dollars"
                         },
                         "paid_commission": {
-                          "type": "integer",
-                          "example": 50000,
-                          "description": "Paid commission in cents"
+                          "type": "number",
+                          "example": 500.00,
+                          "description": "Paid commission in dollars"
                         },
                         "unpaid_commission": {
-                          "type": "integer",
-                          "example": 90331,
-                          "description": "Unpaid commission in cents"
+                          "type": "number",
+                          "example": 903.31,
+                          "description": "Unpaid commission in dollars"
+                        },
+                        "total_vat": {
+                          "type": "number",
+                          "example": 0.0,
+                          "description": "Total VAT amount in dollars"
                         },
                         "total_orders": {
                           "type": "integer",
                           "example": 150,
                           "description": "Total number of orders"
                         },
-                        "total_quantity": {
-                          "type": "integer",
-                          "example": 312,
-                          "description": "Total quantity sold"
+                        "total_refunded_amount": {
+                          "type": "number",
+                          "example": 0.0,
+                          "description": "Total refunded amount in dollars"
                         }
                       }
                     }
@@ -3207,22 +3212,19 @@
               }
             }
           },
-          "404": {
-            "description": "Campaign affiliate not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
           "422": {
-            "description": "Validation error",
+            "description": "Validation error or campaign affiliate not found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Order ID is required.",
+                      "description": "Error message"
+                    }
+                  }
                 }
               }
             }
@@ -3253,8 +3255,8 @@
           },
           "status": {
             "type": "string",
-            "example": "pending",
-            "enum": ["paid", "due", "pending", "canceled", "refunded"],
+            "example": "unpaid",
+            "enum": ["paid", "due", "unpaid", "canceled", "refunded"],
             "description": "Sale status"
           },
           "occurred_at": {
@@ -3268,11 +3270,6 @@
             "example": 9999,
             "description": "Total amount in cents"
           },
-          "subtotal": {
-            "type": "integer",
-            "example": 9499,
-            "description": "Subtotal in cents"
-          },
           "commission": {
             "type": "integer",
             "example": 500,
@@ -3282,59 +3279,12 @@
             "type": "string",
             "example": "usd",
             "description": "Currency code"
-          },
-          "customer_email": {
-            "type": "string",
-            "example": "customer@example.com",
-            "nullable": true,
-            "description": "Customer email"
-          },
-          "customer_name": {
-            "type": "string",
-            "example": "John Doe",
-            "nullable": true,
-            "description": "Customer name"
-          },
-          "affiliate_tag": {
-            "type": "string",
-            "example": "SUMMER2025",
-            "description": "Affiliate tag used for attribution"
-          },
-          "creator": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "integer",
-                "example": 12345
-              },
-              "name": {
-                "type": "string",
-                "example": "Jane Creator"
-              },
-              "email": {
-                "type": "string",
-                "example": "jane@example.com"
-              }
-            }
-          },
-          "campaign": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "integer",
-                "example": 16200
-              },
-              "name": {
-                "type": "string",
-                "example": "Summer Ambassador Program"
-              }
-            }
           }
         }
       },
       "NewAffiliateSale": {
         "type": "object",
-        "required": ["order_id", "total", "subtotal", "currency"],
+        "required": ["order_id", "currency"],
         "properties": {
           "order_id": {
             "type": "string",
@@ -3342,11 +3292,11 @@
           },
           "total": {
             "type": "integer",
-            "description": "Total order amount in cents"
+            "description": "Total order amount in cents. At least one of total or subtotal is required."
           },
           "subtotal": {
             "type": "integer",
-            "description": "Order subtotal in cents"
+            "description": "Order subtotal in cents. At least one of total or subtotal is required."
           },
           "currency": {
             "type": "string",

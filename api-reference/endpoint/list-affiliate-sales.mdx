@@ -22,7 +22,7 @@ The response includes `data` (array of sales), `meta` (pagination info), and `ad
 | `creator_email`     | String  | Filter by creator's email address                                                                     | No       |
 | `campaign_id`       | Integer | Filter by campaign ID                                                                                 | No       |
 | `order_id`          | String  | Filter by external order ID                                                                           | No       |
-| `status`            | String  | Filter by status: `paid`, `due`, `pending`, `canceled`, or `refunded`                                 | No       |
+| `status`            | String  | Filter by status: `paid`, `due`, `unpaid`, `canceled`, or `refunded`                                  | No       |
 | `affiliate_tag`     | String  | Filter by affiliate tag (campaign_affiliate_id tag)                                                   | No       |
 | `store_id`          | String  | Store identifier (required for Shopify, not needed for website)                                       | No       |
 | `store_platform`    | String  | Platform type: `website` or `shopify_store`. Use `website` for website-sourced conversions.           | No       |
@@ -38,7 +38,7 @@ curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=w
 With date range and status filter:
 
 ```bash
-curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=website&start_date=01/01/2025&end_date=01/31/2025&status=pending" \
+curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=website&start_date=01/01/2025&end_date=01/31/2025&status=unpaid" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 
@@ -51,24 +51,11 @@ curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=w
       "id": 1947457,
       "external_id": "ORD-12345",
       "platform": "website",
-      "status": "pending",
+      "status": "unpaid",
       "occurred_at": "2025-09-30T23:55:29.000Z",
       "total": 9999,
-      "subtotal": 9499,
       "commission": 500,
-      "currency": "usd",
-      "customer_email": "customer@example.com",
-      "customer_name": "John Doe",
-      "affiliate_tag": "SUMMER2025",
-      "creator": {
-        "id": 12345,
-        "name": "Jane Creator",
-        "email": "jane@example.com"
-      },
-      "campaign": {
-        "id": 16200,
-        "name": "Summer Ambassador Program"
-      }
+      "currency": "usd"
     }
   ],
   "meta": {
@@ -77,51 +64,42 @@ curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=w
     "current_page": 1
   },
   "additional_data": {
-    "total_gmv": 1424557,
-    "total_commission": 140331,
-    "paid_commission": 50000,
-    "unpaid_commission": 90331,
+    "total_gmv": 14245.57,
+    "total_commission": 1403.31,
+    "paid_commission": 500.00,
+    "unpaid_commission": 903.31,
+    "total_vat": 0.0,
     "total_orders": 150,
-    "total_quantity": 312
+    "total_refunded_amount": 0.0
   }
 }
 ```
 
 ## Response Fields
 
-| Field                              | Type    | Description                                                      |
-| ---------------------------------- | ------- | ---------------------------------------------------------------- |
-| `data`                             | Array   | Array of affiliate sale objects                                  |
-| `data[].id`                        | Integer | Unique Growi identifier for the sale                             |
-| `data[].external_id`               | String  | External order ID (your system's order identifier)               |
-| `data[].platform`                  | String  | Source platform: `website`, `shopify`, etc.                      |
-| `data[].status`                    | String  | Sale status: `paid`, `due`, `pending`, `canceled`, or `refunded` |
-| `data[].occurred_at`               | String  | ISO 8601 timestamp when the sale occurred                        |
-| `data[].total`                     | Integer | Total order amount in cents                                      |
-| `data[].subtotal`                  | Integer | Order subtotal in cents (before shipping/tax)                    |
-| `data[].commission`                | Integer | Commission amount in cents                                       |
-| `data[].currency`                  | String  | Currency code (e.g., `usd`, `eur`)                               |
-| `data[].customer_email`            | String  | Customer's email address (may be null)                           |
-| `data[].customer_name`             | String  | Customer's name (may be null)                                    |
-| `data[].affiliate_tag`             | String  | The affiliate tag used for attribution                           |
-| `data[].creator`                   | Object  | Creator/ambassador information                                   |
-| `data[].creator.id`                | Integer | Growi user ID of the creator                                     |
-| `data[].creator.name`              | String  | Creator's name                                                   |
-| `data[].creator.email`             | String  | Creator's email                                                  |
-| `data[].campaign`                  | Object  | Campaign information                                             |
-| `data[].campaign.id`               | Integer | Campaign ID                                                      |
-| `data[].campaign.name`             | String  | Campaign name                                                    |
-| `meta`                             | Object  | Pagination metadata                                              |
-| `meta.row_count`                   | Integer | Total number of sales matching the query                         |
-| `meta.page_count`                  | Integer | Total number of pages available                                  |
-| `meta.current_page`                | Integer | Current page number                                              |
-| `additional_data`                  | Object  | Aggregate totals for the query                                   |
-| `additional_data.total_gmv`        | Integer | Total Gross Merchandise Value in cents                           |
-| `additional_data.total_commission` | Integer | Total commission amount in cents                                 |
-| `additional_data.paid_commission`  | Integer | Commission already paid out in cents                             |
-| `additional_data.unpaid_commission`| Integer | Commission not yet paid in cents                                 |
-| `additional_data.total_orders`     | Integer | Total number of orders                                           |
-| `additional_data.total_quantity`   | Integer | Total quantity of items sold                                     |
+| Field                               | Type    | Description                                                       |
+| ----------------------------------- | ------- | ----------------------------------------------------------------- |
+| `data`                              | Array   | Array of affiliate sale objects                                   |
+| `data[].id`                         | Integer | Unique Growi identifier for the sale                              |
+| `data[].external_id`                | String  | External order ID (your system's order identifier)                |
+| `data[].platform`                   | String  | Source platform: `website`, `shopify`, etc.                       |
+| `data[].status`                     | String  | Sale status: `paid`, `due`, `unpaid`, `canceled`, or `refunded`   |
+| `data[].occurred_at`                | String  | ISO 8601 timestamp when the sale occurred                         |
+| `data[].total`                      | Integer | Total order amount in cents                                       |
+| `data[].commission`                 | Integer | Commission amount in cents                                        |
+| `data[].currency`                   | String  | Currency code (e.g., `usd`, `eur`)                                |
+| `meta`                              | Object  | Pagination metadata                                               |
+| `meta.row_count`                    | Integer | Total number of sales matching the query                          |
+| `meta.page_count`                   | Integer | Total number of pages available                                   |
+| `meta.current_page`                 | Integer | Current page number                                               |
+| `additional_data`                   | Object  | Aggregate totals for the query                                    |
+| `additional_data.total_gmv`         | Number  | Total Gross Merchandise Value in dollars                          |
+| `additional_data.total_commission`  | Number  | Total commission amount in dollars                                |
+| `additional_data.paid_commission`   | Number  | Commission already paid out in dollars                            |
+| `additional_data.unpaid_commission` | Number  | Commission not yet paid in dollars                                |
+| `additional_data.total_vat`         | Number  | Total VAT amount in dollars                                       |
+| `additional_data.total_orders`      | Integer | Total number of orders                                            |
+| `additional_data.total_refunded_amount` | Number | Total refunded amount in dollars                              |
 
 ## Use Cases
 

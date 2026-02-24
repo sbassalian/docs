@@ -19,8 +19,8 @@ You can attribute the sale using one of two methods:
 | Field                  | Type    | Description                                                                           | Required |
 | ---------------------- | ------- | ------------------------------------------------------------------------------------- | -------- |
 | `order_id`             | String  | Your unique order/transaction identifier                                              | Yes      |
-| `total`                | Integer | Total order amount in **cents** (e.g., 9999 = $99.99)                                 | Yes      |
-| `subtotal`             | Integer | Order subtotal in **cents** (before shipping/tax)                                     | Yes      |
+| `total`                | Integer | Total order amount in **cents** (e.g., 9999 = $99.99). At least one of `total` or `subtotal` is required. | Conditional |
+| `subtotal`             | Integer | Order subtotal in **cents** (before shipping/tax). At least one of `total` or `subtotal` is required. | Conditional |
 | `currency`             | String  | Currency code: `usd`, `eur`, `gbp`, etc.                                              | Yes      |
 | `campaign_affiliate_id`| String  | Affiliate tag for attribution (required if not using growi_user_id + growi_campaign_id) | Conditional |
 | `growi_user_id`        | Integer | Growi user ID (required with growi_campaign_id if not using campaign_affiliate_id)    | Conditional |
@@ -44,12 +44,9 @@ curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
      -d '{
        "order_id": "ORD-12345",
        "total": 9999,
-       "subtotal": 9499,
        "currency": "usd",
        "campaign_affiliate_id": "SUMMER2025",
-       "occurred_at": "2025-09-30T12:00:00Z",
-       "customer_email": "customer@example.com",
-       "customer_name": "John Doe"
+       "occurred_at": "2025-09-30T12:00:00Z"
      }'
 ```
 
@@ -62,7 +59,6 @@ curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
      -d '{
        "order_id": "ORD-67890",
        "total": 4999,
-       "subtotal": 4999,
        "currency": "usd",
        "growi_user_id": 12345,
        "growi_campaign_id": 16200,
@@ -80,72 +76,60 @@ curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
     "id": 1947458,
     "external_id": "ORD-12345",
     "platform": "website",
-    "status": "pending",
+    "status": "unpaid",
     "occurred_at": "2025-09-30T12:00:00.000Z",
     "total": 9999,
-    "subtotal": 9499,
     "commission": 500,
-    "currency": "usd",
-    "customer_email": "customer@example.com",
-    "customer_name": "John Doe",
-    "affiliate_tag": "SUMMER2025",
-    "creator": {
-      "id": 12345,
-      "name": "Jane Creator",
-      "email": "jane@example.com"
-    },
-    "campaign": {
-      "id": 16200,
-      "name": "Summer Ambassador Program"
-    }
+    "currency": "usd"
   }
 }
 ```
 
 ## Response Fields
 
-| Field                | Type    | Description                                                      |
-| -------------------- | ------- | ---------------------------------------------------------------- |
-| `data`               | Object  | The created affiliate sale object                                |
-| `data.id`            | Integer | Unique Growi identifier for the sale                             |
-| `data.external_id`   | String  | Your order ID (same as the `order_id` you provided)              |
-| `data.platform`      | String  | Always `website` for sales created via this endpoint             |
-| `data.status`        | String  | Initial status (typically `pending`)                             |
-| `data.occurred_at`   | String  | ISO 8601 timestamp when the sale occurred                        |
-| `data.total`         | Integer | Total order amount in cents                                      |
-| `data.subtotal`      | Integer | Order subtotal in cents                                          |
-| `data.commission`    | Integer | Commission amount in cents (calculated or overridden)            |
-| `data.currency`      | String  | Currency code                                                    |
-| `data.customer_email`| String  | Customer's email (if provided)                                   |
-| `data.customer_name` | String  | Customer's name (if provided)                                    |
-| `data.affiliate_tag` | String  | The affiliate tag used for attribution                           |
-| `data.creator`       | Object  | Creator information                                              |
-| `data.campaign`      | Object  | Campaign information                                             |
+| Field              | Type    | Description                                                      |
+| ------------------ | ------- | ---------------------------------------------------------------- |
+| `data`             | Object  | The created affiliate sale object                                |
+| `data.id`          | Integer | Unique Growi identifier for the sale                             |
+| `data.external_id` | String  | Your order ID (same as the `order_id` you provided)              |
+| `data.platform`    | String  | Always `website` for sales created via this endpoint             |
+| `data.status`      | String  | Initial status: `unpaid`                                         |
+| `data.occurred_at` | String  | ISO 8601 timestamp when the sale occurred                        |
+| `data.total`       | Integer | Total order amount in cents                                      |
+| `data.commission`  | Integer | Commission amount in cents (calculated or overridden)            |
+| `data.currency`    | String  | Currency code                                                    |
 
 ## Error Responses
 
-**422 Unprocessable Entity** - Missing required fields:
+**422 Unprocessable Entity** - Missing required fields or invalid attribution:
 
 ```json
 {
-  "error": "validation_error",
-  "message": "order_id is required"
+  "error": "Order ID is required."
 }
 ```
 
 ```json
 {
-  "error": "validation_error",
-  "message": "Attribution required: provide campaign_affiliate_id OR both growi_user_id and growi_campaign_id"
+  "error": "Currency is required."
 }
 ```
 
-**404 Not Found** - Invalid affiliate tag or Growi IDs:
+```json
+{
+  "error": "Total or subtotal is required."
+}
+```
 
 ```json
 {
-  "error": "not_found",
-  "message": "Campaign affiliate not found for tag: INVALID_TAG"
+  "error": "Attribution required: provide campaign_affiliate_id OR both growi_user_id and growi_campaign_id."
+}
+```
+
+```json
+{
+  "error": "Campaign affiliate not found."
 }
 ```
 

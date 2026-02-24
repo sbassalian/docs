@@ -3231,6 +3231,93 @@
           }
         }
       }
+    },
+    "/affiliate_sales/{id}": {
+      "patch": {
+        "description": "Updates an existing affiliate sale that was created via the Public API (website platform). Only sales created through POST /affiliate_sales can be updated. Commission is automatically recalculated if total is updated without specifying commission.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the affiliate sale to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAffiliateSale"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Affiliate sale updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AffiliateSale"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sale not found or not in this organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Sale not found",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation or business rule error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Only sales created via the public API (website platform) can be updated.",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3347,6 +3434,52 @@
           "commission": {
             "type": "integer",
             "description": "Override commission amount in cents"
+          }
+        }
+      },
+      "UpdateAffiliateSale": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "Total amount in cents. If provided without commission, commission is recalculated automatically."
+          },
+          "subtotal": {
+            "type": "integer",
+            "description": "Subtotal in cents"
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["usd", "eur", "gbp"],
+            "description": "Currency code"
+          },
+          "occurred_at": {
+            "type": "string",
+            "description": "When the sale occurred (ISO 8601 string or Unix timestamp)"
+          },
+          "due_at": {
+            "type": "string",
+            "description": "When the commission becomes due (ISO 8601 string or Unix timestamp)"
+          },
+          "customer_email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true,
+            "description": "Customer email address"
+          },
+          "customer_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Customer name"
+          },
+          "commission": {
+            "type": "integer",
+            "description": "Commission amount in cents. Omit to auto-recalculate when total is updated."
+          },
+          "status": {
+            "type": "string",
+            "enum": ["unpaid", "paid", "paid_externally", "cancelled"],
+            "description": "Sale status"
           }
         }
       },

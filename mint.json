@@ -82,7 +82,8 @@
       "group": "Conversions API",
       "pages": [
         "api-reference/endpoint/list-affiliate-sales",
-        "api-reference/endpoint/create-affiliate-sale"
+        "api-reference/endpoint/create-affiliate-sale",
+        "api-reference/endpoint/update-affiliate-sale"
       ]
     }
   ],

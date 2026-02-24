@@ -2937,10 +2937,469 @@
           }
         }
       }
+    },
+    "/affiliate_sales": {
+      "get": {
+        "description": "Retrieves paginated affiliate sales (conversions) for the organization. For website conversions, use store_platform=website. For Shopify, use store_platform=shopify_store with store_id.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "example": 1,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number for pagination. Default is 1."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "example": 20,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            },
+            "description": "Number of results per page. Default is 20. Maximum is 100."
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "example": "01/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filter sales from this date (MM/DD/YYYY format)"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "example": "01/31/2025",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filter sales until this date (MM/DD/YYYY format)"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search by customer name or email"
+          },
+          {
+            "name": "creator_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter by Growi creator/user ID"
+          },
+          {
+            "name": "creator_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "email"
+            },
+            "description": "Filter by creator's email address"
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter by campaign ID"
+          },
+          {
+            "name": "order_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by external order ID"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["paid", "due", "pending", "canceled", "refunded"]
+            },
+            "description": "Filter by sale status"
+          },
+          {
+            "name": "affiliate_tag",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by affiliate tag"
+          },
+          {
+            "name": "store_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Store identifier (required for Shopify, not needed for website)"
+          },
+          {
+            "name": "store_platform",
+            "in": "query",
+            "required": false,
+            "example": "website",
+            "schema": {
+              "type": "string",
+              "enum": ["website", "shopify_store"]
+            },
+            "description": "Platform type: website or shopify_store"
+          },
+          {
+            "name": "ambassador_program",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Filter to only ambassador program sales"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Affiliate sales retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AffiliateSale"
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "row_count": {
+                          "type": "integer",
+                          "example": 150,
+                          "description": "Total number of sales matching the query"
+                        },
+                        "page_count": {
+                          "type": "integer",
+                          "example": 8,
+                          "description": "Total number of pages"
+                        },
+                        "current_page": {
+                          "type": "integer",
+                          "example": 1,
+                          "description": "Current page number"
+                        }
+                      }
+                    },
+                    "additional_data": {
+                      "type": "object",
+                      "properties": {
+                        "total_gmv": {
+                          "type": "integer",
+                          "example": 1424557,
+                          "description": "Total GMV in cents"
+                        },
+                        "total_commission": {
+                          "type": "integer",
+                          "example": 140331,
+                          "description": "Total commission in cents"
+                        },
+                        "paid_commission": {
+                          "type": "integer",
+                          "example": 50000,
+                          "description": "Paid commission in cents"
+                        },
+                        "unpaid_commission": {
+                          "type": "integer",
+                          "example": 90331,
+                          "description": "Unpaid commission in cents"
+                        },
+                        "total_orders": {
+                          "type": "integer",
+                          "example": 150,
+                          "description": "Total number of orders"
+                        },
+                        "total_quantity": {
+                          "type": "integer",
+                          "example": 312,
+                          "description": "Total quantity sold"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a website conversion and attributes it to a campaign affiliate. Idempotent: sending the same order_id returns the existing sale.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewAffiliateSale"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Affiliate sale created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AffiliateSale"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign affiliate not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AffiliateSale": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1947457,
+            "description": "Unique Growi identifier for the sale"
+          },
+          "external_id": {
+            "type": "string",
+            "example": "ORD-12345",
+            "description": "External order ID"
+          },
+          "platform": {
+            "type": "string",
+            "example": "website",
+            "description": "Source platform"
+          },
+          "status": {
+            "type": "string",
+            "example": "pending",
+            "enum": ["paid", "due", "pending", "canceled", "refunded"],
+            "description": "Sale status"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-30T23:55:29.000Z",
+            "description": "When the sale occurred"
+          },
+          "total": {
+            "type": "integer",
+            "example": 9999,
+            "description": "Total amount in cents"
+          },
+          "subtotal": {
+            "type": "integer",
+            "example": 9499,
+            "description": "Subtotal in cents"
+          },
+          "commission": {
+            "type": "integer",
+            "example": 500,
+            "description": "Commission amount in cents"
+          },
+          "currency": {
+            "type": "string",
+            "example": "usd",
+            "description": "Currency code"
+          },
+          "customer_email": {
+            "type": "string",
+            "example": "customer@example.com",
+            "nullable": true,
+            "description": "Customer email"
+          },
+          "customer_name": {
+            "type": "string",
+            "example": "John Doe",
+            "nullable": true,
+            "description": "Customer name"
+          },
+          "affiliate_tag": {
+            "type": "string",
+            "example": "SUMMER2025",
+            "description": "Affiliate tag used for attribution"
+          },
+          "creator": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 12345
+              },
+              "name": {
+                "type": "string",
+                "example": "Jane Creator"
+              },
+              "email": {
+                "type": "string",
+                "example": "jane@example.com"
+              }
+            }
+          },
+          "campaign": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 16200
+              },
+              "name": {
+                "type": "string",
+                "example": "Summer Ambassador Program"
+              }
+            }
+          }
+        }
+      },
+      "NewAffiliateSale": {
+        "type": "object",
+        "required": ["order_id", "total", "subtotal", "currency"],
+        "properties": {
+          "order_id": {
+            "type": "string",
+            "description": "Your unique order/transaction identifier"
+          },
+          "total": {
+            "type": "integer",
+            "description": "Total order amount in cents"
+          },
+          "subtotal": {
+            "type": "integer",
+            "description": "Order subtotal in cents"
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["usd", "eur", "gbp"],
+            "description": "Currency code"
+          },
+          "campaign_affiliate_id": {
+            "type": "string",
+            "description": "Affiliate tag for attribution (required if not using growi_user_id + growi_campaign_id)"
+          },
+          "growi_user_id": {
+            "type": "integer",
+            "description": "Growi user ID (required with growi_campaign_id if not using campaign_affiliate_id)"
+          },
+          "growi_campaign_id": {
+            "type": "integer",
+            "description": "Growi campaign ID (required with growi_user_id if not using campaign_affiliate_id)"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the sale occurred (ISO 8601)"
+          },
+          "due_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When commission becomes due"
+          },
+          "customer_email": {
+            "type": "string",
+            "format": "email",
+            "description": "Customer email address"
+          },
+          "customer_name": {
+            "type": "string",
+            "description": "Customer name"
+          },
+          "visitor_uid": {
+            "type": "string",
+            "description": "Visitor unique identifier"
+          },
+          "sale_type": {
+            "type": "string",
+            "enum": ["one_time", "subscription"],
+            "default": "one_time",
+            "description": "Type of sale"
+          },
+          "commission": {
+            "type": "integer",
+            "description": "Override commission amount in cents"
+          }
+        }
+      },
       "NewTrackingEvent": {
         "type": "object",
         "required": ["event_name"],

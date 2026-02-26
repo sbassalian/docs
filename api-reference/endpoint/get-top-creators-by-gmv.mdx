@@ -14,11 +14,12 @@ Retrieves your top-performing creators ranked by Gross Merchandise Value (GMV) w
 | `limit`           | Integer | Limit the number of results. Default is 4. Maximum is 20.               | No       |
 | `include_discord` | Boolean | Include Discord account ID and username for creators. Default is false. | No       |
 | `organization_id` | Integer | Filter results by specific organization ID                              | No       |
+| `campaign_id`     | Integer | Filter results by specific campaign ID                                  | No       |
 
 ## Request Example
 
 ```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_gmv?start_date=01/01/2023&end_date=01/31/2023&limit=5&include_discord=true&organization_id=123" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_gmv?start_date=01/01/2023&end_date=01/31/2023&limit=5&include_discord=true&organization_id=123&campaign_id=16503" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```

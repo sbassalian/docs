@@ -77,6 +77,14 @@
         "api-reference/endpoint/get-brands",
         "api-reference/endpoint/get-campaigns"
       ]
+    },
+    {
+      "group": "Conversions API",
+      "pages": [
+        "api-reference/endpoint/list-affiliate-sales",
+        "api-reference/endpoint/create-affiliate-sale",
+        "api-reference/endpoint/update-affiliate-sale"
+      ]
     }
   ],
   "footerSocials": {}

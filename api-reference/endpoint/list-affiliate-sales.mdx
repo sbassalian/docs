@@ -1,0 +1,113 @@
+---
+title: "List Affiliate Sales"
+openapi: "GET /affiliate_sales"
+---
+
+Retrieves paginated affiliate sales (conversions) for the organization. These endpoints manage **conversions** (affiliate sales) attributed to your creators and ambassadors.
+
+For **website** conversions, call with `store_platform=website` (no `store_id` required). For **Shopify** conversions, use `store_platform=shopify_store` along with your `store_id`.
+
+The response includes `data` (array of sales), `meta` (pagination info), and `additional_data` (aggregate totals like total GMV, commission breakdown, and order counts).
+
+## Request Parameters
+
+| Parameter           | Type    | Description                                                                                           | Required |
+| ------------------- | ------- | ----------------------------------------------------------------------------------------------------- | -------- |
+| `page`              | Integer | Page number for pagination. Default is 1.                                                             | No       |
+| `per_page`          | Integer | Number of results per page. Default is 20. Maximum is 100.                                            | No       |
+| `start_date`        | String  | Filter sales from this date (MM/DD/YYYY format)                                                       | No       |
+| `end_date`          | String  | Filter sales until this date (MM/DD/YYYY format)                                                      | No       |
+| `search`            | String  | Search by customer name or email                                                                      | No       |
+| `creator_id`        | Integer | Filter by Growi creator/user ID                                                                       | No       |
+| `creator_email`     | String  | Filter by creator's email address                                                                     | No       |
+| `campaign_id`       | Integer | Filter by campaign ID                                                                                 | No       |
+| `order_id`          | String  | Filter by external order ID                                                                           | No       |
+| `status`            | String  | Filter by status: `paid`, `due`, `unpaid`, `canceled`, or `refunded`                                  | No       |
+| `affiliate_tag`     | String  | Filter by affiliate tag (campaign_affiliate_id tag)                                                   | No       |
+| `store_id`          | String  | Store identifier (required for Shopify, not needed for website)                                       | No       |
+| `store_platform`    | String  | Platform type: `website` or `shopify_store`. Use `website` for website-sourced conversions.           | No       |
+| `ambassador_program`| Boolean | Filter to only ambassador program sales. Default is false.                                            | No       |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=website&page=1&per_page=20" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+With date range and status filter:
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=website&start_date=01/01/2025&end_date=01/31/2025&status=unpaid" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+## Response Example
+
+```json
+{
+  "data": [
+    {
+      "id": 1947457,
+      "external_id": "ORD-12345",
+      "platform": "website",
+      "status": "unpaid",
+      "occurred_at": "2025-09-30T23:55:29.000Z",
+      "total": 9999,
+      "commission": 500,
+      "currency": "usd"
+    }
+  ],
+  "meta": {
+    "row_count": 150,
+    "page_count": 8,
+    "current_page": 1
+  },
+  "additional_data": {
+    "total_gmv": 14245.57,
+    "total_commission": 1403.31,
+    "paid_commission": 500.00,
+    "unpaid_commission": 903.31,
+    "total_vat": 0.0,
+    "total_orders": 150,
+    "total_refunded_amount": 0.0
+  }
+}
+```
+
+## Response Fields
+
+| Field                               | Type    | Description                                                       |
+| ----------------------------------- | ------- | ----------------------------------------------------------------- |
+| `data`                              | Array   | Array of affiliate sale objects                                   |
+| `data[].id`                         | Integer | Unique Growi identifier for the sale                              |
+| `data[].external_id`                | String  | External order ID (your system's order identifier)                |
+| `data[].platform`                   | String  | Source platform: `website`, `shopify`, etc.                       |
+| `data[].status`                     | String  | Sale status: `paid`, `due`, `unpaid`, `canceled`, or `refunded`   |
+| `data[].occurred_at`                | String  | ISO 8601 timestamp when the sale occurred                         |
+| `data[].total`                      | Integer | Total order amount in cents                                       |
+| `data[].commission`                 | Integer | Commission amount in cents                                        |
+| `data[].currency`                   | String  | Currency code (e.g., `usd`, `eur`)                                |
+| `meta`                              | Object  | Pagination metadata                                               |
+| `meta.row_count`                    | Integer | Total number of sales matching the query                          |
+| `meta.page_count`                   | Integer | Total number of pages available                                   |
+| `meta.current_page`                 | Integer | Current page number                                               |
+| `additional_data`                   | Object  | Aggregate totals for the query                                    |
+| `additional_data.total_gmv`         | Number  | Total Gross Merchandise Value in dollars                          |
+| `additional_data.total_commission`  | Number  | Total commission amount in dollars                                |
+| `additional_data.paid_commission`   | Number  | Commission already paid out in dollars                            |
+| `additional_data.unpaid_commission` | Number  | Commission not yet paid in dollars                                |
+| `additional_data.total_vat`         | Number  | Total VAT amount in dollars                                       |
+| `additional_data.total_orders`      | Integer | Total number of orders                                            |
+| `additional_data.total_refunded_amount` | Number | Total refunded amount in dollars                              |
+
+## Use Cases
+
+This endpoint is useful for:
+
+- **Conversions Dashboard**: Build a real-time dashboard showing all affiliate-attributed sales
+- **Data Warehouse Sync**: Export conversion data to your analytics or data warehouse
+- **Payout Reconciliation**: Verify commission amounts before processing creator payouts
+- **Creator Performance**: Filter by `creator_id` or `creator_email` to analyze individual creator performance
+- **Campaign Analytics**: Filter by `campaign_id` to measure campaign-specific conversion metrics
+- **Financial Reporting**: Use `additional_data` totals for GMV and commission reporting

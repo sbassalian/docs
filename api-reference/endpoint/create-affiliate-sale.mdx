@@ -1,0 +1,145 @@
+---
+title: "Create Affiliate Sale"
+openapi: "POST /affiliate_sales"
+---
+
+Creates a **website** conversion and attributes it to a campaign affiliate. Use this endpoint to report conversions from your website, custom checkout flows, or server-side integrations.
+
+This endpoint is **idempotent**: sending the same `order_id` again returns the existing sale with a 201 status code, making it safe for webhook handlers and retry logic.
+
+## Attribution Methods
+
+You can attribute the sale using one of two methods:
+
+1. **Affiliate Tag** (`campaign_affiliate_id`): Use the creator's unique affiliate tag/code
+2. **Growi IDs** (`growi_user_id` + `growi_campaign_id`): Use the Growi user ID and campaign ID directly
+
+## Request Body
+
+| Field                  | Type    | Description                                                                           | Required |
+| ---------------------- | ------- | ------------------------------------------------------------------------------------- | -------- |
+| `order_id`             | String  | Your unique order/transaction identifier                                              | Yes      |
+| `total`                | Integer | Total order amount in **cents** (e.g., 9999 = $99.99). At least one of `total` or `subtotal` is required. | Conditional |
+| `subtotal`             | Integer | Order subtotal in **cents** (before shipping/tax). At least one of `total` or `subtotal` is required. | Conditional |
+| `currency`             | String  | Currency code: `usd`, `eur`, `gbp`, etc.                                              | Yes      |
+| `campaign_affiliate_id`| String  | Affiliate tag for attribution (required if not using growi_user_id + growi_campaign_id) | Conditional |
+| `growi_user_id`        | Integer | Growi user ID (required with growi_campaign_id if not using campaign_affiliate_id)    | Conditional |
+| `growi_campaign_id`    | Integer | Growi campaign ID (required with growi_user_id if not using campaign_affiliate_id)    | Conditional |
+| `occurred_at`          | String  | ISO 8601 timestamp when the sale occurred. Defaults to current time.                  | No       |
+| `due_at`               | String  | ISO 8601 timestamp when commission becomes due                                        | No       |
+| `customer_email`       | String  | Customer's email address                                                              | No       |
+| `customer_name`        | String  | Customer's name                                                                       | No       |
+| `visitor_uid`          | String  | Visitor unique identifier (for tracking purposes)                                     | No       |
+| `sale_type`            | String  | Type of sale: `one_time` or `subscription`. Default is `one_time`.                    | No       |
+| `commission`           | Integer | Override commission amount in **cents**. If omitted, calculated from campaign rules.  | No       |
+
+## Request Example
+
+Using affiliate tag:
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "order_id": "ORD-12345",
+       "total": 9999,
+       "currency": "usd",
+       "campaign_affiliate_id": "SUMMER2025",
+       "occurred_at": "2025-09-30T12:00:00Z"
+     }'
+```
+
+Using Growi IDs:
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "order_id": "ORD-67890",
+       "total": 4999,
+       "currency": "usd",
+       "growi_user_id": 12345,
+       "growi_campaign_id": 16200,
+       "occurred_at": "2025-09-30T14:30:00Z"
+     }'
+```
+
+## Response Example
+
+**201 Created** - Sale created successfully (or already exists with same order_id):
+
+```json
+{
+  "data": {
+    "id": 1947458,
+    "external_id": "ORD-12345",
+    "platform": "website",
+    "status": "unpaid",
+    "occurred_at": "2025-09-30T12:00:00.000Z",
+    "total": 9999,
+    "commission": 500,
+    "currency": "usd"
+  }
+}
+```
+
+## Response Fields
+
+| Field              | Type    | Description                                                      |
+| ------------------ | ------- | ---------------------------------------------------------------- |
+| `data`             | Object  | The created affiliate sale object                                |
+| `data.id`          | Integer | Unique Growi identifier for the sale                             |
+| `data.external_id` | String  | Your order ID (same as the `order_id` you provided)              |
+| `data.platform`    | String  | Always `website` for sales created via this endpoint             |
+| `data.status`      | String  | Initial status: `unpaid`                                         |
+| `data.occurred_at` | String  | ISO 8601 timestamp when the sale occurred                        |
+| `data.total`       | Integer | Total order amount in cents                                      |
+| `data.commission`  | Integer | Commission amount in cents (calculated or overridden)            |
+| `data.currency`    | String  | Currency code                                                    |
+
+## Error Responses
+
+**422 Unprocessable Entity** - Missing required fields or invalid attribution:
+
+```json
+{
+  "error": "Order ID is required."
+}
+```
+
+```json
+{
+  "error": "Currency is required."
+}
+```
+
+```json
+{
+  "error": "Total or subtotal is required."
+}
+```
+
+```json
+{
+  "error": "Attribution required: provide campaign_affiliate_id OR both growi_user_id and growi_campaign_id."
+}
+```
+
+```json
+{
+  "error": "Campaign affiliate not found."
+}
+```
+
+## Use Cases
+
+This endpoint is useful for:
+
+- **Server-Side Conversion Tracking**: Report conversions from your backend after a successful checkout
+- **Custom Checkout Flows**: Integrate with headless commerce or custom payment systems
+- **Webhook Handlers**: Process payment webhooks (idempotent design ensures safe retries)
+- **CRM Integration**: Create conversions when deals close in your CRM
+- **Manual Attribution**: Attribute offline or phone sales to specific creators
+- **Commission Override**: Specify custom commission amounts for special promotions

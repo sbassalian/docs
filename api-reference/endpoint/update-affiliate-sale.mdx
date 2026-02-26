@@ -1,0 +1,140 @@
+---
+title: "Update Affiliate Sale"
+openapi: "PATCH /affiliate_sales/{id}"
+---
+
+Updates an existing affiliate sale that was created via the Public API. Use this endpoint to modify sale details such as the total amount, commission, status, or customer information.
+
+Only sales created through the public API (`POST /affiliate_sales`) can be updated with this endpoint. Sales from other platforms (e.g., Shopify) cannot be modified via this API.
+
+## Important Behavior
+
+- **Commission recalculation**: If you update `total` without providing `commission`, the commission will be automatically recalculated based on campaign rules.
+- **Audit logging**: Every successful update is recorded in an internal audit log for support and debugging purposes.
+- **Cancelled sales**: Sales with status `cancelled` cannot be updated.
+
+## Path Parameters
+
+| Parameter | Type    | Description                                           | Required |
+| --------- | ------- | ----------------------------------------------------- | -------- |
+| `id`      | Integer | ID of the affiliate sale to update                    | Yes      |
+
+## Request Body
+
+All fields are optional. Only include the fields you want to update.
+
+| Field            | Type    | Description                                                                                     |
+| ---------------- | ------- | ----------------------------------------------------------------------------------------------- |
+| `total`          | Integer | Total amount in **cents**. If provided without `commission`, commission is recalculated.        |
+| `subtotal`       | Integer | Subtotal in **cents**.                                                                          |
+| `currency`       | String  | Currency code (e.g., `usd`, `eur`, `gbp`).                                                      |
+| `occurred_at`    | String  | When the sale occurred (ISO 8601 string or Unix timestamp).                                     |
+| `due_at`         | String  | When the commission becomes due (ISO 8601 string or Unix timestamp).                            |
+| `customer_email` | String  | Customer's email address. Pass `null` to clear.                                                 |
+| `customer_name`  | String  | Customer's name. Pass `null` to clear.                                                          |
+| `commission`     | Integer | Commission amount in **cents**. Omit to auto-recalculate when `total` is updated.               |
+| `status`         | String  | Sale status: `unpaid`, `paid`, `paid_externally`, or `cancelled`.                               |
+
+## Request Example
+
+Update the total and let commission recalculate:
+
+```bash
+curl -X PATCH "https://api.growi.io/api/public/v1/affiliate_sales/1947458" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "total": 12999
+     }'
+```
+
+Update status to paid:
+
+```bash
+curl -X PATCH "https://api.growi.io/api/public/v1/affiliate_sales/1947458" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "status": "paid"
+     }'
+```
+
+Update multiple fields with explicit commission:
+
+```bash
+curl -X PATCH "https://api.growi.io/api/public/v1/affiliate_sales/1947458" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "total": 15000,
+       "commission": 750,
+       "customer_email": "updated@example.com"
+     }'
+```
+
+## Response Example
+
+**200 OK** - Sale updated successfully:
+
+```json
+{
+  "data": {
+    "id": 1947458,
+    "external_id": "ORD-12345",
+    "platform": "website",
+    "status": "unpaid",
+    "occurred_at": "2025-09-30T12:00:00.000Z",
+    "total": 12999,
+    "commission": 650,
+    "currency": "usd"
+  }
+}
+```
+
+## Response Fields
+
+| Field              | Type    | Description                                          |
+| ------------------ | ------- | ---------------------------------------------------- |
+| `data`             | Object  | The updated affiliate sale object                    |
+| `data.id`          | Integer | Unique Growi identifier for the sale                 |
+| `data.external_id` | String  | Your order ID                                        |
+| `data.platform`    | String  | Always `website` for sales updated via this endpoint |
+| `data.status`      | String  | Current status: `unpaid`, `paid`, `paid_externally`, `cancelled`, or `refunded` |
+| `data.occurred_at` | String  | ISO 8601 timestamp when the sale occurred            |
+| `data.total`       | Integer | Total order amount in cents                          |
+| `data.commission`  | Integer | Commission amount in cents                           |
+| `data.currency`    | String  | Currency code                                        |
+
+## Error Responses
+
+**404 Not Found** - Sale does not exist or does not belong to your organization:
+
+```json
+{
+  "error": "Sale not found"
+}
+```
+
+**422 Unprocessable Entity** - Validation or business rule error:
+
+```json
+{
+  "error": "Only sales created via the public API (website platform) can be updated."
+}
+```
+
+```json
+{
+  "error": "Cancelled sales cannot be updated."
+}
+```
+
+## Use Cases
+
+This endpoint is useful for:
+
+- **Order Adjustments**: Update the total when an order is modified (e.g., partial refund, add-ons)
+- **Commission Corrections**: Override the commission for special cases or promotions
+- **Status Management**: Mark sales as paid or cancelled
+- **Data Corrections**: Fix customer information or sale dates
+- **Sync with External Systems**: Keep Growi in sync when orders are modified in your system

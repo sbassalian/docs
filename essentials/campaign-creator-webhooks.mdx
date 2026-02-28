@@ -1,0 +1,150 @@
+---
+title: "Campaign Creator Webhooks"
+description: "Receive real-time notifications when creators are added or removed from campaigns"
+---
+
+<Info>
+  **Prerequisite** You need administrative access to your Growi dashboard to configure webhook URLs.
+</Info>
+
+## Overview
+
+When a brand has a **Webhook URL** configured, Growi will send an **HTTP POST** request with a JSON body whenever a campaign's creator affiliation changes state.
+
+## Configuration
+
+In the Organization settings, configure:
+
+- **Webhook URL**: A single HTTPS URL that will receive webhook POST requests.
+
+## Event Types
+
+The webhook payload includes an `event` field to differentiate between actions:
+
+| Event | Description |
+| --- | --- |
+| `campaign_affiliate.activated` | Creator was **added/activated** on the campaign |
+| `campaign_affiliate.removed` | Creator was **removed** from the campaign |
+| `campaign_affiliate.left` | Creator **left** the campaign |
+
+<Note>
+  If the system encounters an unknown status, it will fall back to `campaign_affiliate.<status>`.
+</Note>
+
+## Delivery Details
+
+| Setting | Value |
+| --- | --- |
+| **Method** | `POST` |
+| **Content-Type** | `application/json` |
+| **Connect Timeout** | 10 seconds |
+| **Read Timeout** | 10 seconds |
+| **Success Criteria** | Any `2xx` response |
+| **Retries** | Up to 3 retries on failure |
+
+Non-2xx responses are treated as failures and will be retried.
+
+## Payload Format
+
+The request body is a single JSON object with the following fields:
+
+<ResponseField name="event" type="string" required>
+  Event name that indicates what happened.
+</ResponseField>
+
+<ResponseField name="occurred_at" type="string" required>
+  ISO-8601 timestamp of the underlying record update.
+</ResponseField>
+
+<ResponseField name="campaign_affiliate_id" type="integer" required>
+  Internal ID of the campaign-creator association record.
+</ResponseField>
+
+<ResponseField name="campaign_id" type="integer" required>
+  Campaign ID.
+</ResponseField>
+
+<ResponseField name="organization_id" type="integer" required>
+  Organization ID.
+</ResponseField>
+
+<ResponseField name="user_id" type="integer" required>
+  Creator's user ID.
+</ResponseField>
+
+<ResponseField name="status" type="string" required>
+  The raw status value on the record (e.g., `active`, `removed`, `left`).
+</ResponseField>
+
+<ResponseField name="campaign_name" type="string">
+  Campaign name, when available.
+</ResponseField>
+
+<ResponseField name="organization_slug" type="string">
+  Brand slug, when available.
+</ResponseField>
+
+<ResponseField name="user_email" type="string">
+  Creator email, when available.
+</ResponseField>
+
+<ResponseField name="user_name" type="string">
+  Creator name, when available.
+</ResponseField>
+
+<ResponseField name="tag" type="string">
+  Default affiliate tag for the creator on this campaign, when available.
+</ResponseField>
+
+<Note>
+  Optional fields are omitted when values are not present. The `occurred_at` field uses the campaign affiliation record's `updated_at` timestamp.
+</Note>
+
+## Example Payloads
+
+### Creator Added to Campaign
+
+```json
+{
+  "event": "campaign_affiliate.activated",
+  "occurred_at": "2026-02-27T18:33:12-05:00",
+  "campaign_affiliate_id": 123,
+  "campaign_id": 456,
+  "organization_id": 789,
+  "user_id": 42,
+  "status": "active",
+  "campaign_name": "Spring Promo",
+  "organization_slug": "acme",
+  "user_email": "creator@example.com",
+  "user_name": "Creator Name",
+  "tag": "creator-default-tag"
+}
+```
+
+### Creator Removed from Campaign
+
+```json
+{
+  "event": "campaign_affiliate.removed",
+  "occurred_at": "2026-02-27T18:35:02-05:00",
+  "campaign_affiliate_id": 123,
+  "campaign_id": 456,
+  "organization_id": 789,
+  "user_id": 42,
+  "status": "removed"
+}
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Webhook Not Being Received">
+    Ensure your webhook URL is correctly configured in Organization settings and is publicly accessible over HTTPS.
+  </Accordion>
+  <Accordion title="Receiving Duplicate Events">
+    Implement idempotency in your webhook handler using the `campaign_affiliate_id` and `occurred_at` fields to deduplicate events.
+  </Accordion>
+  <Accordion title="Webhook Failing with Timeout">
+    Your endpoint must respond within 10 seconds. Consider processing webhooks asynchronously and returning a 200 response immediately.
+  </Accordion>
+</AccordionGroup>

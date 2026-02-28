@@ -37,6 +37,7 @@
       "pages": [
         "essentials/stripe-integration",
         "essentials/shopify-headless-integration",
+        "essentials/campaign-creator-webhooks",
         "essentials/get-stats"
       ]
     },

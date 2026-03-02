@@ -37,7 +37,6 @@
       "pages": [
         "essentials/stripe-integration",
         "essentials/shopify-headless-integration",
-        "essentials/campaign-creator-webhooks",
         "essentials/get-stats"
       ]
     },
@@ -84,7 +83,8 @@
       "pages": [
         "api-reference/endpoint/list-affiliate-sales",
         "api-reference/endpoint/create-affiliate-sale",
-        "api-reference/endpoint/update-affiliate-sale"
+        "api-reference/endpoint/update-affiliate-sale",
+        "essentials/campaign-creator-webhooks"
       ]
     }
   ],

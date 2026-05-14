@@ -721,7 +721,7 @@
               "format": "date",
               "default": "10/01/2025"
             },
-            "description": "Start date in MM/DD/YYYY format"
+            "description": "Start date in MM/DD/YYYY format. Defines the metrics-delta window (period over which view/like/comment/share gains are summed for ranking)."
           },
           {
             "name": "end_date",
@@ -733,7 +733,29 @@
               "format": "date",
               "default": "11/14/2025"
             },
-            "description": "End date in MM/DD/YYYY format"
+            "description": "End date in MM/DD/YYYY format. Defines the metrics-delta window (period over which view/like/comment/share gains are summed for ranking)."
+          },
+          {
+            "name": "posted_at_start_date",
+            "in": "query",
+            "required": false,
+            "example": "10/15/2025",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Start date in MM/DD/YYYY format. Restricts the ranked post set to posts created on or after this date (based on posted_at). Must be supplied together with posted_at_end_date."
+          },
+          {
+            "name": "posted_at_end_date",
+            "in": "query",
+            "required": false,
+            "example": "11/01/2025",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "End date in MM/DD/YYYY format. Restricts the ranked post set to posts created on or before this date (based on posted_at). Must be supplied together with posted_at_start_date."
           },
           {
             "name": "limit",

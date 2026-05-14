@@ -132,10 +132,11 @@ GET /stats/tik_tok_shop_gmv_24h?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 
 ### Top Posts by Views
 
-Get your top-performing posts ranked by views.
+Get your top-performing posts ranked by views. Optionally restrict the candidate post set by post creation time using `posted_at_start_date` and `posted_at_end_date` (both required together).
 
 ```http
 GET /stats/top_posts_by_views?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
+GET /stats/top_posts_by_views?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&posted_at_start_date=MM/DD/YYYY&posted_at_end_date=MM/DD/YYYY
 ```
 
 ### Manual Campaign Progress

@@ -7,14 +7,29 @@ Retrieves your top-performing posts ranked by views within a specified date rang
 
 ## Request Parameters
 
-| Parameter     | Type    | Description                                                                                  | Required |
-| ------------- | ------- | -------------------------------------------------------------------------------------------- | -------- |
-| `start_date`  | String  | Start date in MM/DD/YYYY format                                                              | Yes      |
-| `end_date`    | String  | End date in MM/DD/YYYY format                                                                | Yes      |
-| `limit`       | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No       |
-| `page`        | Integer | Page number for pagination. Default is 1.                                                    | No       |
-| `per_page`    | Integer | Number of results per page. Default is 40. Maximum is 100.                                   | No       |
-| `include_gmv` | Boolean | Include GMV (Gross Merchandise Value) data for each post. Default is false.                  | No       |
+| Parameter                | Type    | Description                                                                                                                                                                       | Required |
+| ------------------------ | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `start_date`             | String  | Start date in MM/DD/YYYY format. Defines the metrics-delta window (the period over which view/like/comment/share gains are summed for ranking).                                   | Yes      |
+| `end_date`               | String  | End date in MM/DD/YYYY format. Defines the metrics-delta window (the period over which view/like/comment/share gains are summed for ranking).                                     | Yes      |
+| `posted_at_start_date`   | String  | Start date in MM/DD/YYYY format. Restricts the ranked post set to posts created on or after this date (based on `posted_at`). Must be supplied together with `posted_at_end_date`. | No       |
+| `posted_at_end_date`     | String  | End date in MM/DD/YYYY format. Restricts the ranked post set to posts created on or before this date (based on `posted_at`). Must be supplied together with `posted_at_start_date`. | No       |
+| `limit`                  | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data.                                                                                      | No       |
+| `page`                   | Integer | Page number for pagination. Default is 1.                                                                                                                                         | No       |
+| `per_page`               | Integer | Number of results per page. Default is 40. Maximum is 100.                                                                                                                        | No       |
+| `include_gmv`            | Boolean | Include GMV (Gross Merchandise Value) data for each post. Default is false.                                                                                                       | No       |
+
+<Note>
+  `start_date` / `end_date` define the window over which view/like/comment/share deltas are summed (the ranking metric). `posted_at_start_date` / `posted_at_end_date` restrict the candidate post set by post creation time before ranking. Both `posted_at_*` bounds must be supplied together; supplying only one returns an error. When neither is provided, behavior is unchanged.
+</Note>
+
+### Example
+
+```
+?start_date=10/01/2025&end_date=11/14/2025
+ &posted_at_start_date=10/15/2025&posted_at_end_date=11/01/2025
+```
+
+Returns top posts created Oct 15 – Nov 1, 2025, ranked by their view delta Oct 1 – Nov 14, 2025.
 
 ## Response Fields
 

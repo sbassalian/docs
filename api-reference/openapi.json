@@ -2828,6 +2828,122 @@
         }
       }
     },
+    "/campaign_affiliates": {
+      "get": {
+        "description": "Retrieves the organization's enrolled creators (campaign affiliates). Pass campaign_id to restrict the list to the creators enrolled in a single campaign. Results are always scoped to the API key's organization.",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "example": 123,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Restrict results to creators enrolled in this campaign. Get IDs from GET /organizations/campaigns. An unknown or foreign campaign_id returns an empty list (HTTP 200), not a 404."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "example": "active",
+            "schema": {
+              "type": "string",
+              "default": "active",
+              "enum": [
+                "active",
+                "paused",
+                "left",
+                "removed",
+                "completed",
+                "archived",
+                "pending"
+              ]
+            },
+            "description": "Enrollment status filter. Default is active."
+          },
+          {
+            "name": "pagination",
+            "in": "query",
+            "required": false,
+            "example": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Set to true to paginate (25 results per page) and include a meta block in the response."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "example": 1,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number. Only used when pagination=true."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Campaign affiliates retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "affiliates": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CampaignAffiliate"
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "description": "Present only when pagination=true.",
+                      "properties": {
+                        "row_count": {
+                          "type": "integer",
+                          "example": 132,
+                          "description": "Total number of affiliates matching the query"
+                        },
+                        "page_count": {
+                          "type": "integer",
+                          "example": 6,
+                          "description": "Total number of pages"
+                        },
+                        "current_page": {
+                          "type": "integer",
+                          "example": 1,
+                          "description": "Current page number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Not Authenticated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/organizations/brands": {
       "get": {
         "description": "Retrieves a list of all available brands for your organization",
@@ -3377,6 +3493,148 @@
   },
   "components": {
     "schemas": {
+      "CampaignAffiliate": {
+        "type": "object",
+        "description": "One creator's enrollment in a campaign. The full payload contains ~90 fields mixing creator identity, campaign configuration, and commission data; the creator-identification subset is documented here.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 3490313,
+            "description": "Campaign-affiliate (enrollment) ID"
+          },
+          "user_id": {
+            "type": "integer",
+            "example": 2628998,
+            "description": "The creator's user ID"
+          },
+          "campaign_id": {
+            "type": "integer",
+            "example": 123,
+            "description": "Campaign the creator is enrolled in"
+          },
+          "campaign_name": {
+            "type": "string",
+            "example": "Summer Collection 2024",
+            "description": "Human-readable campaign name (or \"Contract <uuid>\" for contracts)"
+          },
+          "status": {
+            "type": "string",
+            "example": "active",
+            "enum": [
+              "active",
+              "paused",
+              "left",
+              "removed",
+              "completed",
+              "archived",
+              "pending"
+            ],
+            "description": "Enrollment status"
+          },
+          "affiliate_name": {
+            "type": "string",
+            "example": "Natalie Garay",
+            "description": "Creator's display name"
+          },
+          "affiliate_email": {
+            "type": "string",
+            "format": "email",
+            "example": "creator@example.com",
+            "description": "Creator's email"
+          },
+          "affiliate_phone_number": {
+            "type": "string",
+            "nullable": true,
+            "example": "+15551234567",
+            "description": "Creator's phone number (this endpoint includes phone numbers)"
+          },
+          "affiliate_avatar_url": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://imagedelivery.net/abc/avatar.png",
+            "description": "Avatar URL"
+          },
+          "affiliate_location": {
+            "type": "string",
+            "nullable": true,
+            "example": "Temecula, CA 92591, US",
+            "description": "Pretty location"
+          },
+          "affiliate_age": {
+            "type": "integer",
+            "example": 24,
+            "description": "Creator's age"
+          },
+          "affiliate_gender": {
+            "type": "string",
+            "nullable": true,
+            "example": "female",
+            "description": "Creator's gender"
+          },
+          "connected_accounts": {
+            "type": "array",
+            "description": "Creator's linked social accounts",
+            "items": {
+              "type": "object",
+              "properties": {
+                "platform": {
+                  "type": "string",
+                  "example": "Instagram"
+                },
+                "username": {
+                  "type": "string",
+                  "example": "nataliemgaray"
+                },
+                "profile_share_url": {
+                  "type": "string",
+                  "example": "https://www.instagram.com/nataliemgaray/"
+                }
+              }
+            }
+          },
+          "discord_id": {
+            "type": "string",
+            "nullable": true,
+            "example": "123456789012345678",
+            "description": "Discord UID if linked"
+          },
+          "tag": {
+            "type": "string",
+            "example": "natalie-g",
+            "description": "Affiliate tracking tag"
+          },
+          "unique_tag": {
+            "type": "string",
+            "example": "natalie-g-3490313",
+            "description": "Globally unique affiliate tracking tag"
+          },
+          "affiliate_link": {
+            "type": "string",
+            "example": "https://growi.io/r/natalie-g",
+            "description": "Creator's tracking/affiliate link"
+          },
+          "revenue_generated": {
+            "type": "number",
+            "example": 14245.57,
+            "description": "Revenue attributed to this creator"
+          },
+          "affiliate_amount_earned": {
+            "type": "number",
+            "example": 1403.31,
+            "description": "Commission earned by this creator"
+          },
+          "order_count": {
+            "type": "integer",
+            "example": 150,
+            "description": "Attributed orders"
+          },
+          "created_at": {
+            "type": "string",
+            "example": "January 16, 2026",
+            "description": "Enrollment date, formatted \"Month DD, YYYY\""
+          }
+        }
+      },
       "AffiliateSale": {
         "type": "object",
         "properties": {

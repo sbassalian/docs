@@ -76,7 +76,8 @@
       "group": "Organization API",
       "pages": [
         "api-reference/endpoint/get-brands",
-        "api-reference/endpoint/get-campaigns"
+        "api-reference/endpoint/get-campaigns",
+        "api-reference/endpoint/list-campaign-affiliates"
       ]
     },
     {

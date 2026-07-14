@@ -1,6 +1,6 @@
 ---
 title: "Campaign Creator Webhooks"
-description: "Receive notifications when creators are added or removed from campaigns"
+description: "Receive notifications when creators are added, removed, or have their affiliate code updated on campaigns"
 ---
 
 <Info>
@@ -9,7 +9,7 @@ description: "Receive notifications when creators are added or removed from camp
 
 ## Overview
 
-When a brand has a **Webhook URL** configured, Growi will send an **HTTP POST** request with a JSON body whenever a campaign's creator affiliation changes state.
+When a brand has a **Webhook URL** configured, Growi will send an **HTTP POST** request with a JSON body whenever a campaign's creator affiliation changes state, or when a creator's affiliate code is updated.
 
 ## Configuration
 
@@ -26,6 +26,7 @@ The webhook payload includes an `event` field to differentiate between actions:
 | `campaign_affiliate.activated` | Creator was **added/activated** on the campaign |
 | `campaign_affiliate.removed` | Creator was **removed** from the campaign |
 | `campaign_affiliate.left` | Creator **left** the campaign |
+| `campaign_affiliate.code_updated` | Creator's **affiliate code** (tag) was changed |
 
 <Note>
   If the system encounters an unknown status, it will fall back to `campaign_affiliate.<status>`.
@@ -93,11 +94,15 @@ The request body is a single JSON object with the following fields:
 </ResponseField>
 
 <ResponseField name="tag" type="string">
-  Default affiliate tag for the creator on this campaign, when available.
+  Default affiliate tag for the creator on this campaign, when available. For `code_updated`, this is the **new** code.
+</ResponseField>
+
+<ResponseField name="previous_tag" type="string">
+  Present on `campaign_affiliate.code_updated` only. The affiliate code **before** the change.
 </ResponseField>
 
 <Note>
-  Optional fields are omitted when values are not present. The `occurred_at` field uses the campaign affiliation record's `updated_at` timestamp.
+  Optional fields are omitted when values are not present. For status events, `occurred_at` uses the campaign affiliation record's `updated_at` timestamp. For `code_updated`, it is the time the code change was committed.
 </Note>
 
 ## Example Payloads
@@ -135,6 +140,26 @@ The request body is a single JSON object with the following fields:
 }
 ```
 
+### Creator Affiliate Code Updated
+
+```json
+{
+  "event": "campaign_affiliate.code_updated",
+  "occurred_at": "2026-07-14T16:10:00-04:00",
+  "campaign_affiliate_id": 123,
+  "campaign_id": 456,
+  "organization_id": 789,
+  "user_id": 42,
+  "status": "active",
+  "campaign_name": "Spring Promo",
+  "organization_slug": "acme",
+  "user_email": "creator@example.com",
+  "user_name": "Creator Name",
+  "previous_tag": "old-code",
+  "tag": "new-code"
+}
+```
+
 ## Troubleshooting
 
 <AccordionGroup>
@@ -142,9 +167,12 @@ The request body is a single JSON object with the following fields:
     Ensure your webhook URL is correctly configured in Organization settings and is publicly accessible over HTTPS.
   </Accordion>
   <Accordion title="Receiving Duplicate Events">
-    Implement idempotency in your webhook handler using the `campaign_affiliate_id` and `occurred_at` fields to deduplicate events.
+    Implement idempotency in your webhook handler using the `campaign_affiliate_id`, `event`, and `occurred_at` fields to deduplicate events.
   </Accordion>
   <Accordion title="Webhook Failing with Timeout">
     Your endpoint must respond within 10 seconds. Consider processing webhooks asynchronously and returning a 200 response immediately.
+  </Accordion>
+  <Accordion title="Got removed when changing a code">
+    Changing a creator's affiliate code does **not** remove them from the campaign. Status webhooks (`activated` / `removed` / `left`) only fire on status changes. Code changes emit `campaign_affiliate.code_updated` instead. If you received a `removed` event around a code change, check whether the creator was also removed (or a delayed status webhook from an earlier action was delivered).
   </Accordion>
 </AccordionGroup>

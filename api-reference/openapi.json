@@ -3224,6 +3224,16 @@
             "description": "Filter by affiliate tag"
           },
           {
+            "name": "sub_id",
+            "in": "query",
+            "required": false,
+            "example": "instagram",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by custom source/sub-ID tag (e.g., instagram, youtube)"
+          },
+          {
             "name": "store_id",
             "in": "query",
             "required": false,
@@ -3679,6 +3689,11 @@
             "type": "string",
             "example": "usd",
             "description": "Currency code"
+          },
+          "sub_id": {
+            "type": "string",
+            "example": "instagram",
+            "description": "Custom source/sub-ID tag captured on the sale (null when not set)"
           }
         }
       },
@@ -3747,6 +3762,11 @@
           "commission": {
             "type": "integer",
             "description": "Override commission amount in cents"
+          },
+          "sub_id": {
+            "type": "string",
+            "example": "instagram",
+            "description": "Custom source/sub-ID tag (e.g., instagram, youtube) for platform-level tracking within a single campaign"
           }
         }
       },
@@ -3793,6 +3813,11 @@
             "type": "string",
             "enum": ["unpaid", "paid", "paid_externally", "cancelled"],
             "description": "Sale status"
+          },
+          "sub_id": {
+            "type": "string",
+            "example": "instagram",
+            "description": "Custom source/sub-ID tag (e.g., instagram, youtube) for platform-level tracking"
           }
         }
       },

@@ -32,6 +32,7 @@ You can attribute the sale using one of two methods:
 | `visitor_uid`          | String  | Visitor unique identifier (for tracking purposes)                                     | No       |
 | `sale_type`            | String  | Type of sale: `one_time` or `subscription`. Default is `one_time`.                    | No       |
 | `commission`           | Integer | Override commission amount in **cents**. If omitted, calculated from campaign rules.  | No       |
+| `sub_id`               | String  | Custom source/sub-ID tag (e.g., `instagram`, `youtube`) for platform-level tracking within a single campaign. Returned in sale responses and filterable on the list endpoint. | No       |
 
 ## Request Example
 

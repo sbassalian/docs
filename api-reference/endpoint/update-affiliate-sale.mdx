@@ -34,6 +34,7 @@ All fields are optional. Only include the fields you want to update.
 | `customer_name`  | String  | Customer's name. Pass `null` to clear.                                                          |
 | `commission`     | Integer | Commission amount in **cents**. Omit to auto-recalculate when `total` is updated.               |
 | `status`         | String  | Sale status: `unpaid`, `paid`, `paid_externally`, or `cancelled`.                               |
+| `sub_id`         | String  | Custom source/sub-ID tag (e.g., `instagram`, `youtube`) for platform-level tracking.            |
 
 ## Request Example
 
@@ -104,6 +105,7 @@ curl -X PATCH "https://api.growi.io/api/public/v1/affiliate_sales/1947458" \
 | `data.total`       | Integer | Total order amount in cents                          |
 | `data.commission`  | Integer | Commission amount in cents                           |
 | `data.currency`    | String  | Currency code                                        |
+| `data.sub_id`      | String  | Custom source/sub-ID tag captured on the sale        |
 
 ## Error Responses
 

@@ -24,6 +24,7 @@ The response includes `data` (array of sales), `meta` (pagination info), and `ad
 | `order_id`          | String  | Filter by external order ID                                                                           | No       |
 | `status`            | String  | Filter by status: `paid`, `due`, `unpaid`, `canceled`, or `refunded`                                  | No       |
 | `affiliate_tag`     | String  | Filter by affiliate tag (campaign_affiliate_id tag)                                                   | No       |
+| `sub_id`            | String  | Filter by custom source/sub-ID tag (e.g., `instagram`, `youtube`)                                     | No       |
 | `store_id`          | String  | Store identifier (required for Shopify, not needed for website)                                       | No       |
 | `store_platform`    | String  | Platform type: `website` or `shopify_store`. Use `website` for website-sourced conversions.           | No       |
 | `ambassador_program`| Boolean | Filter to only ambassador program sales. Default is false.                                            | No       |
@@ -88,6 +89,7 @@ curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=w
 | `data[].total`                      | Integer | Total order amount in cents                                       |
 | `data[].commission`                 | Integer | Commission amount in cents                                        |
 | `data[].currency`                   | String  | Currency code (e.g., `usd`, `eur`)                                |
+| `data[].sub_id`                     | String  | Custom source/sub-ID tag captured on the sale (e.g., `instagram`) |
 | `meta`                              | Object  | Pagination metadata                                               |
 | `meta.row_count`                    | Integer | Total number of sales matching the query                          |
 | `meta.page_count`                   | Integer | Total number of pages available                                   |

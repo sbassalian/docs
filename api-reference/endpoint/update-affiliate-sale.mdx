@@ -5,7 +5,7 @@ openapi: "PATCH /affiliate_sales/{id}"
 
 Updates an existing affiliate sale that was created via the Public API. Use this endpoint to modify sale details such as the total amount, commission, status, or customer information.
 
-Only sales created through the public API (`POST /affiliate_sales`) can be updated with this endpoint. Sales from other platforms (e.g., Shopify) cannot be modified via this API.
+Only sales created through the public API (`POST /affiliate_sales`, including `website`, `ios`, and `android` with manual attribution) can be updated with this endpoint. Sales from other sources (e.g., Shopify, SDK cart attribution) cannot be modified via this API.
 
 ## Important Behavior
 

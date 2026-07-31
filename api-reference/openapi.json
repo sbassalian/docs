@@ -3356,7 +3356,7 @@
         }
       },
       "post": {
-        "description": "Creates a website conversion and attributes it to a campaign affiliate. Idempotent: sending the same order_id returns the existing sale.",
+        "description": "Creates a conversion and attributes it to a campaign affiliate. Defaults to platform=website; pass platform=ios or android for mobile app sales. Idempotent: sending the same order_id for the same platform returns the existing sale.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3415,7 +3415,7 @@
     },
     "/affiliate_sales/{id}": {
       "patch": {
-        "description": "Updates an existing affiliate sale that was created via the Public API (website platform). Only sales created through POST /affiliate_sales can be updated. Commission is automatically recalculated if total is updated without specifying commission.",
+        "description": "Updates an existing affiliate sale that was created via the Public API (website, ios, or android with manual attribution). Only sales created through POST /affiliate_sales can be updated. Commission is automatically recalculated if total is updated without specifying commission.",
         "parameters": [
           {
             "name": "id",
@@ -3661,6 +3661,7 @@
           "platform": {
             "type": "string",
             "example": "website",
+            "enum": ["website", "ios", "android", "shopify"],
             "description": "Source platform"
           },
           "status": {
@@ -3717,6 +3718,12 @@
             "type": "string",
             "enum": ["usd", "eur", "gbp"],
             "description": "Currency code"
+          },
+          "platform": {
+            "type": "string",
+            "enum": ["website", "ios", "android"],
+            "default": "website",
+            "description": "Conversion platform. Defaults to website. Use ios or android for mobile app sales (organization must have that app connected)."
           },
           "campaign_affiliate_id": {
             "type": "string",

@@ -1,0 +1,121 @@
+---
+title: 'TikTok Shop Videos'
+openapi: 'GET /tik_tok_shop/videos'
+---
+
+Lists shoppable videos for your TikTok Shop — one row per video with GMV, units sold, orders, views, and refund totals for the requested date range. This is the same data as the **Videos** tab of the TikTok Shop store page, with every filter the dashboard offers.
+
+## Response Fields
+
+Each video row contains:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | Integer \| null | Internal snapshot id |
+| `external_id` | String | TikTok video id |
+| `external_creator_id` | String \| null | TikTok creator id (oecuid) of the poster |
+| `title` / `truncated_title` | String | Video title (full / truncated to 30 chars) |
+| `share_url` | String | Video share URL (`"#"` when unavailable) |
+| `product_name` | String \| null | Featured product name |
+| `create_time` | String | Video post time (ISO 8601) |
+| `pretty_create_time` | String | Display string, e.g. `"July 10, 2026"` |
+| `affiliate_id` / `affiliate_name` / `affiliate_email` / `affiliate_avatar_url` | Mixed | Growi creator info (`"N/A"` / null when the creator is not on Growi) |
+| `connected_account_data` | Object | Linked TikTok account info |
+| `total_gmv` | Number | GMV in display currency units |
+| `total_units_sold` | Integer | Items sold |
+| `total_sku_orders` | Integer | SKU orders |
+| `total_commission` | Number | Estimated commission |
+| `total_refunded_amount` | Number | Refunded amount |
+| `total_items_refunded` | Integer | Items refunded |
+| `total_views` | Integer | Video views |
+| `*_formatted` | String | Display-string variant of every metric above |
+
+The response envelope is `{ data, meta, additional_data }` (see the Creators endpoint for the envelope shape).
+
+## Request Parameters
+
+| Parameter | Type | Description | Required | Default |
+| --- | --- | --- | --- | --- |
+| `start_date` | String | Start of the GMV date range (ISO 8601, `YYYY-MM-DD`) | Yes | — |
+| `end_date` | String | End of the GMV date range (ISO 8601, `YYYY-MM-DD`) | Yes | — |
+| `page` | Integer | Page number | No | 1 |
+| `per_page` | Integer | Results per page (max 100) | No | 20 |
+| `search` | String | Search by video URL, id, or title | No | — |
+| `campaign_id` | Integer | Filter to a campaign or contract in your organization | No | — |
+| `creator_id` | Integer | Filter to a single Growi creator (user id) | No | — |
+| `external_creator_id` | String | Filter to a single TikTok creator (oecuid) | No | — |
+| `connected_account_id` | Integer | Filter by connected social account id | No | — |
+| `platform` | String | `growi`, `all`, or `non_growi` | No | `growi` |
+| `gmv_min` / `gmv_max` | Number | GMV range bounds in display currency units | No | — |
+| `post_start_date` / `post_end_date` | String | Filter by video post date (ISO 8601); must be provided together | No | — |
+| `product_id` | String | Filter by TikTok Shop product id | No | — |
+| `user_content_id` | String | Filter to a single tracked content item | No | — |
+| `linked` | String | `all`, `linked`, or `unlinked` | No | `all` |
+| `include_zero_gmv` | String | Include videos with zero GMV | No | `true` |
+| `organization_id` | Integer | Narrow to a child organization | No | — |
+
+## Request Example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/videos?start_date=2026-07-01&end_date=2026-07-31&platform=all&include_zero_gmv=false" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response Example
+
+```json
+{
+  "data": [
+    {
+      "id": 998877,
+      "external_id": "7523456789012345678",
+      "external_creator_id": "7495033444...",
+      "title": "My favorite peach vitamins!",
+      "truncated_title": "My favorite peach vitamins!...",
+      "share_url": "https://www.tiktok.com/@janecreates/video/7523456789012345678",
+      "product_name": "Peach Perfect Multivitamin",
+      "create_time": "2026-07-10T12:00:00Z",
+      "pretty_create_time": "July 10, 2026",
+      "affiliate_name": "Jane Creator",
+      "total_gmv": 5432.1,
+      "total_gmv_formatted": "$5,432.10",
+      "total_units_sold": 180,
+      "total_units_sold_formatted": "180",
+      "total_views": 120000,
+      "total_views_formatted": "120,000"
+    }
+  ],
+  "meta": {
+    "row_count": 1892,
+    "total_pages": 95,
+    "current_page": 1,
+    "next_page": 2,
+    "prev_page": null
+  },
+  "additional_data": {
+    "total_gmv": 250000.5,
+    "total_units_sold": 10400,
+    "total_sku_orders": 9020,
+    "total_commission": 37500.25,
+    "total_items_refunded": 310,
+    "total_refunded_amount": 6100.0,
+    "currency_symbol": "$",
+    "currency": "usd"
+  }
+}
+```
+
+## Use Cases
+
+- Identifying top-converting videos by GMV and views
+- Attributing video performance to specific products (`product_id`) or campaigns (`campaign_id`)
+- Separating GMV attribution by post date vs. sale date with the post date range filters
+- Auditing linked vs. unlinked content with the `linked` filter
+
+## Notes
+
+- Results are always ordered by total GMV descending; there is no sort parameter.
+- `include_zero_gmv=true` (the default, matching the dashboard) includes videos that drove no sales in the range.
+- `post_start_date` / `post_end_date` filter on when the video was posted; `start_date` / `end_date` filter on when the GMV occurred.
+- Requests are rate limited (minimum 2 seconds between requests plus an hourly quota); see the `X-RateLimit-*` response headers.

@@ -73,6 +73,16 @@
       ]
     },
     {
+      "group": "TikTok Shop API",
+      "pages": [
+        "api-reference/endpoint/get-tik-tok-shop-store-creators",
+        "api-reference/endpoint/get-tik-tok-shop-store-videos",
+        "api-reference/endpoint/get-tik-tok-shop-store-lives",
+        "api-reference/endpoint/get-tik-tok-shop-store-products",
+        "api-reference/endpoint/get-tik-tok-shop-store-product-creators"
+      ]
+    },
+    {
       "group": "Organization API",
       "pages": [
         "api-reference/endpoint/get-brands",

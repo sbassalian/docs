@@ -3500,6 +3500,1054 @@
         }
       }
     }
+,
+    "/tik_tok_shop/creators": {
+      "get": {
+        "summary": "TikTok Shop Creators",
+        "description": "One row per creator with GMV, orders, commission, and refund totals for the date range. Ordered by total GMV descending (no sort parameter). Money fields are raw numbers in display currency units with *_formatted display-string variants.",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Start of the GMV date range (ISO 8601, YYYY-MM-DD)",
+            "example": "2026-07-01"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "End of the GMV date range (ISO 8601, YYYY-MM-DD)",
+            "example": "2026-07-31"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number (default 1)"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            },
+            "description": "Results per page: 1-100, default 20"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Free-text search"
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter to a campaign or contract belonging to your organization"
+          },
+          {
+            "name": "creator_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter to a single Growi creator (user id)"
+          },
+          {
+            "name": "platform",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "growi",
+                "all",
+                "non_growi"
+              ],
+              "default": "growi"
+            },
+            "description": "Data scope: growi (only creators on Growi, default), all (all TikTok Shop data), non_growi (creators not on Growi)"
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Narrow results to a child organization (id) of the API key organization"
+          },
+          {
+            "name": "external_creator_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter to a single TikTok creator by TikTok creator id (oecuid)"
+          },
+          {
+            "name": "connected_account_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter by connected social account id (matches dashboard behavior; prefer external_creator_id)"
+          },
+          {
+            "name": "gmv_min",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Minimum GMV in display currency units (e.g. dollars)"
+          },
+          {
+            "name": "gmv_max",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Maximum GMV in display currency units (e.g. dollars)"
+          },
+          {
+            "name": "all_contracts",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true"
+              ]
+            },
+            "description": "Set to 'true' to include creators from all contracts"
+          },
+          {
+            "name": "exclude_contests",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true"
+              ]
+            },
+            "description": "Set to 'true' to exclude TikTok Shop contest campaigns"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Creators listed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TikTokShopStoreCreatorRow"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/TikTokShopStoreMeta"
+                    },
+                    "additional_data": {
+                      "$ref": "#/components/schemas/TikTokShopStoreTotals"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta",
+                    "additional_data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid parameters (missing/invalid dates, unknown platform or linked value, foreign campaign_id, no TikTok Shop connected)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tik_tok_shop/videos": {
+      "get": {
+        "summary": "TikTok Shop Videos",
+        "description": "One row per shoppable video with GMV, orders, views, and refund totals for the date range. Ordered by total GMV descending (no sort parameter).",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Start of the GMV date range (ISO 8601, YYYY-MM-DD)",
+            "example": "2026-07-01"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "End of the GMV date range (ISO 8601, YYYY-MM-DD)",
+            "example": "2026-07-31"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number (default 1)"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            },
+            "description": "Results per page: 1-100, default 20"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Free-text search"
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter to a campaign or contract belonging to your organization"
+          },
+          {
+            "name": "creator_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter to a single Growi creator (user id)"
+          },
+          {
+            "name": "platform",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "growi",
+                "all",
+                "non_growi"
+              ],
+              "default": "growi"
+            },
+            "description": "Data scope: growi (only creators on Growi, default), all (all TikTok Shop data), non_growi (creators not on Growi)"
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Narrow results to a child organization (id) of the API key organization"
+          },
+          {
+            "name": "external_creator_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter to a single TikTok creator by TikTok creator id (oecuid)"
+          },
+          {
+            "name": "connected_account_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter by connected social account id (matches dashboard behavior; prefer external_creator_id)"
+          },
+          {
+            "name": "gmv_min",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Minimum GMV in display currency units (e.g. dollars)"
+          },
+          {
+            "name": "gmv_max",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Maximum GMV in display currency units (e.g. dollars)"
+          },
+          {
+            "name": "post_start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filter by video post date, range start (ISO 8601). Must be paired with post_end_date."
+          },
+          {
+            "name": "post_end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filter by video post date, range end (ISO 8601). Must be paired with post_start_date."
+          },
+          {
+            "name": "product_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by TikTok Shop product id"
+          },
+          {
+            "name": "user_content_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter to a single tracked content item"
+          },
+          {
+            "name": "linked",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "linked",
+                "unlinked"
+              ],
+              "default": "all"
+            },
+            "description": "Filter by linked status"
+          },
+          {
+            "name": "include_zero_gmv",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "default": "true"
+            },
+            "description": "Include videos with zero GMV (default true)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Videos listed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TikTokShopStoreVideoRow"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/TikTokShopStoreMeta"
+                    },
+                    "additional_data": {
+                      "$ref": "#/components/schemas/TikTokShopStoreTotals"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta",
+                    "additional_data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid parameters (missing/invalid dates, unknown platform or linked value, foreign campaign_id, no TikTok Shop connected)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tik_tok_shop/lives": {
+      "get": {
+        "summary": "TikTok Shop LIVE Streams",
+        "description": "One row per LIVE stream with GMV totals and engagement metrics for the date range. Ordered by GMV descending (no sort parameter). The *_amount metric fields (gpm_amount, aov_amount, average_gmv_per_customer_amount) are integer cents.",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Start of the GMV date range (ISO 8601, YYYY-MM-DD)",
+            "example": "2026-07-01"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "End of the GMV date range (ISO 8601, YYYY-MM-DD)",
+            "example": "2026-07-31"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number (default 1)"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            },
+            "description": "Results per page: 1-100, default 20"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Free-text search"
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter to a campaign or contract belonging to your organization"
+          },
+          {
+            "name": "creator_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter to a single Growi creator (user id)"
+          },
+          {
+            "name": "platform",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "growi",
+                "all",
+                "non_growi"
+              ],
+              "default": "growi"
+            },
+            "description": "Data scope: growi (only creators on Growi, default), all (all TikTok Shop data), non_growi (creators not on Growi)"
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Narrow results to a child organization (id) of the API key organization"
+          },
+          {
+            "name": "external_creator_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter to a single TikTok creator by TikTok creator id (oecuid)"
+          },
+          {
+            "name": "connected_account_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter by connected social account id (matches dashboard behavior; prefer external_creator_id)"
+          },
+          {
+            "name": "gmv_min",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Minimum GMV in display currency units (e.g. dollars)"
+          },
+          {
+            "name": "gmv_max",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Maximum GMV in display currency units (e.g. dollars)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "LIVE streams listed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TikTokShopStoreLiveRow"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/TikTokShopStoreMeta"
+                    },
+                    "additional_data": {
+                      "$ref": "#/components/schemas/TikTokShopStoreTotals"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta",
+                    "additional_data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid parameters (missing/invalid dates, unknown platform or linked value, foreign campaign_id, no TikTok Shop connected)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tik_tok_shop/products": {
+      "get": {
+        "summary": "TikTok Shop Products",
+        "description": "One row per product, summed across your tracked creators for the date range. Ordered by total GMV descending (no sort parameter).",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Start of the GMV date range (ISO 8601, YYYY-MM-DD)",
+            "example": "2026-07-01"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "End of the GMV date range (ISO 8601, YYYY-MM-DD)",
+            "example": "2026-07-31"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number (default 1)"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            },
+            "description": "Results per page: 1-100, default 20"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Free-text search"
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter to a campaign or contract belonging to your organization"
+          },
+          {
+            "name": "creator_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter to a single Growi creator (user id)"
+          },
+          {
+            "name": "platform",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "growi",
+                "all",
+                "non_growi"
+              ],
+              "default": "growi"
+            },
+            "description": "Data scope: growi (only creators on Growi, default), all (all TikTok Shop data), non_growi (creators not on Growi)"
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Narrow results to a child organization (id) of the API key organization"
+          },
+          {
+            "name": "all_contracts",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true"
+              ]
+            },
+            "description": "Set to 'true' to include creators from all contracts"
+          },
+          {
+            "name": "exclude_contests",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true"
+              ]
+            },
+            "description": "Set to 'true' to exclude TikTok Shop contest campaigns"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Products listed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TikTokShopStoreProductRow"
+                      }
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/TikTokShopStoreMeta"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "page_size": {
+                              "type": "integer",
+                              "description": "Rows on this page"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "additional_data": {
+                      "$ref": "#/components/schemas/TikTokShopStoreTotals"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta",
+                    "additional_data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid parameters (missing/invalid dates, unknown platform or linked value, foreign campaign_id, no TikTok Shop connected)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tik_tok_shop/product_creators": {
+      "get": {
+        "summary": "TikTok Shop Creators by Product",
+        "description": "One row per creator with an embedded products[] array breaking their GMV down by product for the date range. Ordered by total GMV descending (no sort parameter).",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Start of the GMV date range (ISO 8601, YYYY-MM-DD)",
+            "example": "2026-07-01"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "End of the GMV date range (ISO 8601, YYYY-MM-DD)",
+            "example": "2026-07-31"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number (default 1)"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            },
+            "description": "Results per page: 1-100, default 20"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Free-text search"
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter to a campaign or contract belonging to your organization"
+          },
+          {
+            "name": "creator_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter to a single Growi creator (user id)"
+          },
+          {
+            "name": "platform",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "growi",
+                "all",
+                "non_growi"
+              ],
+              "default": "growi"
+            },
+            "description": "Data scope: growi (only creators on Growi, default), all (all TikTok Shop data), non_growi (creators not on Growi)"
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Narrow results to a child organization (id) of the API key organization"
+          },
+          {
+            "name": "all_contracts",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true"
+              ]
+            },
+            "description": "Set to 'true' to include creators from all contracts"
+          },
+          {
+            "name": "exclude_contests",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true"
+              ]
+            },
+            "description": "Set to 'true' to exclude TikTok Shop contest campaigns"
+          },
+          {
+            "name": "product_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Only include creators who sold this TikTok Shop product id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product creators listed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TikTokShopStoreProductCreatorRow"
+                      }
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/TikTokShopStoreMeta"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "page_size": {
+                              "type": "integer",
+                              "description": "Rows on this page"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "additional_data": {
+                      "$ref": "#/components/schemas/TikTokShopStoreTotals"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta",
+                    "additional_data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid parameters (missing/invalid dates, unknown platform or linked value, foreign campaign_id, no TikTok Shop connected)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   },
   "components": {
     "schemas": {
@@ -3924,6 +4972,745 @@
           "product_id": {
             "type": "string",
             "description": "The product or plan ID associated with the purchase. Required only for payment events."
+          }
+        }
+      },
+      "TikTokShopStoreMeta": {
+        "type": "object",
+        "description": "Pagination metadata",
+        "properties": {
+          "row_count": {
+            "type": "integer",
+            "description": "Total rows across all pages"
+          },
+          "total_pages": {
+            "type": "integer"
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "next_page": {
+            "type": "integer",
+            "nullable": true
+          },
+          "prev_page": {
+            "type": "integer",
+            "nullable": true
+          }
+        }
+      },
+      "TikTokShopStoreTotals": {
+        "type": "object",
+        "description": "Raw totals across the full (unpaginated) result set",
+        "properties": {
+          "total_gmv": {
+            "type": "number"
+          },
+          "total_units_sold": {
+            "type": "integer"
+          },
+          "total_sku_orders": {
+            "type": "integer"
+          },
+          "total_commission": {
+            "type": "number"
+          },
+          "total_items_refunded": {
+            "type": "integer"
+          },
+          "total_refunded_amount": {
+            "type": "number"
+          },
+          "currency_symbol": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "TikTokShopStoreCreatorRow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": true
+          },
+          "external_id": {
+            "type": "string",
+            "description": "TikTok creator id (oecuid)"
+          },
+          "connected_account": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "nullable": true
+              },
+              "username": {
+                "type": "string"
+              },
+              "profile_share_url": {
+                "type": "string"
+              }
+            }
+          },
+          "affiliate_id": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Growi user id (null if the creator is not on Growi)"
+          },
+          "affiliate_name": {
+            "type": "string"
+          },
+          "affiliate_email": {
+            "type": "string"
+          },
+          "affiliate_avatar_url": {
+            "type": "string"
+          },
+          "total_gmv": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_gmv_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_commission": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_commission_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_refunded_amount": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_refunded_amount_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_live_gmv": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_live_gmv_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_product_card_gmv": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_product_card_gmv_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_units_sold": {
+            "type": "integer"
+          },
+          "total_units_sold_formatted": {
+            "type": "string"
+          },
+          "total_sku_orders": {
+            "type": "integer"
+          },
+          "total_sku_orders_formatted": {
+            "type": "string"
+          },
+          "total_items_refunded": {
+            "type": "integer"
+          },
+          "total_items_refunded_formatted": {
+            "type": "string"
+          },
+          "total_posts_with_gmv": {
+            "type": "integer"
+          },
+          "total_posts_with_gmv_formatted": {
+            "type": "string"
+          }
+        }
+      },
+      "TikTokShopStoreVideoRow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "nullable": true
+          },
+          "external_id": {
+            "type": "string",
+            "description": "TikTok video id"
+          },
+          "external_creator_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "truncated_title": {
+            "type": "string"
+          },
+          "share_url": {
+            "type": "string"
+          },
+          "product_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "create_time": {
+            "type": "string",
+            "description": "Video post time (ISO 8601)"
+          },
+          "pretty_create_time": {
+            "type": "string"
+          },
+          "connected_account_data": {
+            "type": "object"
+          },
+          "affiliate_id": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Growi user id (null if the creator is not on Growi)"
+          },
+          "affiliate_name": {
+            "type": "string"
+          },
+          "affiliate_email": {
+            "type": "string"
+          },
+          "affiliate_avatar_url": {
+            "type": "string"
+          },
+          "total_gmv": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_gmv_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_commission": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_commission_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_refunded_amount": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_refunded_amount_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_units_sold": {
+            "type": "integer"
+          },
+          "total_units_sold_formatted": {
+            "type": "string"
+          },
+          "total_sku_orders": {
+            "type": "integer"
+          },
+          "total_sku_orders_formatted": {
+            "type": "string"
+          },
+          "total_items_refunded": {
+            "type": "integer"
+          },
+          "total_items_refunded_formatted": {
+            "type": "string"
+          },
+          "total_views": {
+            "type": "integer"
+          },
+          "total_views_formatted": {
+            "type": "string"
+          }
+        }
+      },
+      "TikTokShopStoreLiveRow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "external_id": {
+            "type": "string",
+            "description": "TikTok LIVE id"
+          },
+          "external_creator_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "external_product_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "truncated_title": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "string",
+            "description": "Display string of the LIVE start/end time"
+          },
+          "start_time": {
+            "type": "string",
+            "nullable": true,
+            "description": "ISO 8601"
+          },
+          "end_time": {
+            "type": "string",
+            "nullable": true,
+            "description": "ISO 8601"
+          },
+          "product": {
+            "type": "object",
+            "nullable": true,
+            "description": "Featured product (id, title, image_url)"
+          },
+          "connected_account": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "nullable": true
+              },
+              "username": {
+                "type": "string"
+              },
+              "profile_share_url": {
+                "type": "string"
+              }
+            }
+          },
+          "affiliate_id": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Growi user id (null if the creator is not on Growi)"
+          },
+          "affiliate_name": {
+            "type": "string"
+          },
+          "affiliate_email": {
+            "type": "string"
+          },
+          "affiliate_avatar_url": {
+            "type": "string"
+          },
+          "total_gmv": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_gmv_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_commission": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_commission_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_refunded_amount": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_refunded_amount_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_live_gmv": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_live_gmv_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_product_card_gmv": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_product_card_gmv_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_units_sold": {
+            "type": "integer"
+          },
+          "total_units_sold_formatted": {
+            "type": "string"
+          },
+          "total_sku_orders": {
+            "type": "integer"
+          },
+          "total_sku_orders_formatted": {
+            "type": "string"
+          },
+          "total_items_refunded": {
+            "type": "integer"
+          },
+          "total_items_refunded_formatted": {
+            "type": "string"
+          },
+          "item_refunded_count": {
+            "type": "integer"
+          },
+          "gpm_amount": {
+            "type": "integer",
+            "description": "GMV per mille, integer cents"
+          },
+          "average_viewing_duration": {
+            "type": "string",
+            "nullable": true
+          },
+          "product_sold_count": {
+            "type": "integer"
+          },
+          "average_gmv_per_customer_amount": {
+            "type": "integer",
+            "description": "Integer cents"
+          },
+          "aov_amount": {
+            "type": "integer",
+            "description": "Average order value, integer cents"
+          },
+          "like_count": {
+            "type": "integer"
+          },
+          "live_product_impressions_count": {
+            "type": "integer"
+          },
+          "comment_count": {
+            "type": "integer"
+          },
+          "engagement_rate": {
+            "type": "string",
+            "nullable": true
+          },
+          "share_count": {
+            "type": "integer"
+          },
+          "tap_through_rate": {
+            "type": "string",
+            "nullable": true
+          },
+          "unique_viewer_count": {
+            "type": "integer"
+          },
+          "live_product_click_through_rate": {
+            "type": "string",
+            "nullable": true
+          },
+          "product_clicks_count": {
+            "type": "integer"
+          },
+          "impression_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "TikTokShopStoreProductRow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Same as external_product_id"
+          },
+          "external_product_id": {
+            "type": "string"
+          },
+          "product_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "product_image_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "latest_date": {
+            "type": "string",
+            "nullable": true,
+            "description": "Most recent date with sales (YYYY-MM-DD)"
+          },
+          "total_gmv": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_gmv_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_commission": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_commission_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_refunded_amount": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_refunded_amount_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_estimated_flat_fee": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_estimated_flat_fee_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_units_sold": {
+            "type": "integer"
+          },
+          "total_units_sold_formatted": {
+            "type": "string"
+          },
+          "total_sku_orders": {
+            "type": "integer"
+          },
+          "total_sku_orders_formatted": {
+            "type": "string"
+          },
+          "total_items_refunded": {
+            "type": "integer"
+          },
+          "total_items_refunded_formatted": {
+            "type": "string"
+          },
+          "total_videos": {
+            "type": "integer"
+          },
+          "total_videos_formatted": {
+            "type": "string"
+          },
+          "total_lives": {
+            "type": "integer"
+          },
+          "total_lives_formatted": {
+            "type": "string"
+          },
+          "total_samples_shipped": {
+            "type": "integer"
+          },
+          "total_samples_shipped_formatted": {
+            "type": "string"
+          },
+          "sales_creator_count": {
+            "type": "integer"
+          },
+          "sales_creator_count_formatted": {
+            "type": "string"
+          }
+        }
+      },
+      "TikTokShopStoreProductCreatorRow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "external_id": {
+            "type": "string",
+            "description": "TikTok creator id (oecuid)"
+          },
+          "connected_account": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "nullable": true
+              },
+              "username": {
+                "type": "string"
+              },
+              "profile_share_url": {
+                "type": "string"
+              }
+            }
+          },
+          "product_count": {
+            "type": "integer"
+          },
+          "latest_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "products": {
+            "type": "array",
+            "description": "Per-product breakdown for this creator, GMV descending",
+            "items": {
+              "type": "object",
+              "properties": {
+                "external_product_id": {
+                  "type": "string"
+                },
+                "product_name": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "product_image_url": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "latest_date": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "total_gmv": {
+                  "type": "number",
+                  "description": "Raw amount in display currency units (e.g. dollars)"
+                },
+                "total_gmv_formatted": {
+                  "type": "string",
+                  "description": "Display string (e.g. \"$1,234.56\")"
+                },
+                "total_commission": {
+                  "type": "number",
+                  "description": "Raw amount in display currency units (e.g. dollars)"
+                },
+                "total_commission_formatted": {
+                  "type": "string",
+                  "description": "Display string (e.g. \"$1,234.56\")"
+                },
+                "total_refunded_amount": {
+                  "type": "number",
+                  "description": "Raw amount in display currency units (e.g. dollars)"
+                },
+                "total_refunded_amount_formatted": {
+                  "type": "string",
+                  "description": "Display string (e.g. \"$1,234.56\")"
+                },
+                "total_estimated_flat_fee": {
+                  "type": "number",
+                  "description": "Raw amount in display currency units (e.g. dollars)"
+                },
+                "total_estimated_flat_fee_formatted": {
+                  "type": "string",
+                  "description": "Display string (e.g. \"$1,234.56\")"
+                },
+                "total_units_sold": {
+                  "type": "integer"
+                },
+                "total_units_sold_formatted": {
+                  "type": "string"
+                },
+                "total_sku_orders": {
+                  "type": "integer"
+                },
+                "total_sku_orders_formatted": {
+                  "type": "string"
+                },
+                "total_items_refunded": {
+                  "type": "integer"
+                },
+                "total_items_refunded_formatted": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "affiliate_id": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Growi user id (null if the creator is not on Growi)"
+          },
+          "affiliate_name": {
+            "type": "string"
+          },
+          "affiliate_email": {
+            "type": "string"
+          },
+          "affiliate_avatar_url": {
+            "type": "string"
+          },
+          "total_gmv": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_gmv_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_commission": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_commission_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_refunded_amount": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_refunded_amount_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_estimated_flat_fee": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_estimated_flat_fee_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_live_gmv": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_live_gmv_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_product_card_gmv": {
+            "type": "number",
+            "description": "Raw amount in display currency units (e.g. dollars)"
+          },
+          "total_product_card_gmv_formatted": {
+            "type": "string",
+            "description": "Display string (e.g. \"$1,234.56\")"
+          },
+          "total_units_sold": {
+            "type": "integer"
+          },
+          "total_units_sold_formatted": {
+            "type": "string"
+          },
+          "total_sku_orders": {
+            "type": "integer"
+          },
+          "total_sku_orders_formatted": {
+            "type": "string"
+          },
+          "total_items_refunded": {
+            "type": "integer"
+          },
+          "total_items_refunded_formatted": {
+            "type": "string"
           }
         }
       },

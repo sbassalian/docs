@@ -1597,7 +1597,10 @@
             "example": "desc",
             "schema": {
               "type": "string",
-              "enum": ["asc", "desc"]
+              "enum": [
+                "asc",
+                "desc"
+              ]
             },
             "description": "Sort results by posted date. Use 'asc' for oldest first or 'desc' for newest first. Case-insensitive. If not provided or invalid, no sorting is applied."
           }
@@ -1735,7 +1738,13 @@
             "example": "payout",
             "schema": {
               "type": "string",
-              "enum": ["payment", "payout", "deposit", "withdrawal", "dispute"]
+              "enum": [
+                "payment",
+                "payout",
+                "deposit",
+                "withdrawal",
+                "dispute"
+              ]
             },
             "description": "Filter by transaction type"
           },
@@ -2232,7 +2241,14 @@
             "example": "all",
             "schema": {
               "type": "string",
-              "enum": ["all", "paid", "due", "pending", "canceled", "refunded"],
+              "enum": [
+                "all",
+                "paid",
+                "due",
+                "pending",
+                "canceled",
+                "refunded"
+              ],
               "default": "all"
             },
             "description": "Filter by sale status"
@@ -2663,7 +2679,13 @@
             "example": "all",
             "schema": {
               "type": "string",
-              "enum": ["all", "paid", "pending", "canceled", "due"],
+              "enum": [
+                "all",
+                "paid",
+                "pending",
+                "canceled",
+                "due"
+              ],
               "default": "all"
             },
             "description": "Filter by tracking event status"
@@ -3210,7 +3232,13 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["paid", "due", "unpaid", "canceled", "refunded"]
+              "enum": [
+                "paid",
+                "due",
+                "unpaid",
+                "canceled",
+                "refunded"
+              ]
             },
             "description": "Filter by sale status"
           },
@@ -3249,7 +3277,10 @@
             "example": "website",
             "schema": {
               "type": "string",
-              "enum": ["website", "shopify_store"]
+              "enum": [
+                "website",
+                "shopify_store"
+              ]
             },
             "description": "Platform type: website or shopify_store"
           },
@@ -3313,7 +3344,7 @@
                         },
                         "paid_commission": {
                           "type": "number",
-                          "example": 500.00,
+                          "example": 500.0,
                           "description": "Paid commission in dollars"
                         },
                         "unpaid_commission": {
@@ -3499,8 +3530,7 @@
           }
         }
       }
-    }
-,
+    },
     "/tik_tok_shop/creators": {
       "get": {
         "summary": "TikTok Shop Creators",
@@ -4547,6 +4577,115 @@
           }
         }
       }
+    },
+    "/campaign_applications": {
+      "post": {
+        "summary": "Create Campaign Application",
+        "description": "Submits an applicant from your own signup form directly into a Growi campaign. Creates the creator account if needed and stores marketing attribution (Meta click ids, UTMs, TikTok enrichment) that is echoed back on outbound webhook events. Idempotent: repeat submissions for the same email + campaign return the existing application. Available on Scale and Enterprise plans.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewCampaignApplication"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Application created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "invitation_id": {
+                          "type": "integer",
+                          "description": "The application's id"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "pending, or accepted when the campaign auto-accepts"
+                        },
+                        "user_id": {
+                          "type": "integer",
+                          "description": "The creator's Growi user id"
+                        },
+                        "campaign_id": {
+                          "type": "integer"
+                        },
+                        "created": {
+                          "type": "boolean",
+                          "description": "true when a new application was created"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Repeat submission — the existing application is returned and new attribution keys are merged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not enabled for your plan, or read-only API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found for your organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4709,13 +4848,24 @@
           "platform": {
             "type": "string",
             "example": "website",
-            "enum": ["website", "ios", "android", "shopify"],
+            "enum": [
+              "website",
+              "ios",
+              "android",
+              "shopify"
+            ],
             "description": "Source platform"
           },
           "status": {
             "type": "string",
             "example": "unpaid",
-            "enum": ["paid", "due", "unpaid", "canceled", "refunded"],
+            "enum": [
+              "paid",
+              "due",
+              "unpaid",
+              "canceled",
+              "refunded"
+            ],
             "description": "Sale status"
           },
           "occurred_at": {
@@ -4748,7 +4898,10 @@
       },
       "NewAffiliateSale": {
         "type": "object",
-        "required": ["order_id", "currency"],
+        "required": [
+          "order_id",
+          "currency"
+        ],
         "properties": {
           "order_id": {
             "type": "string",
@@ -4764,12 +4917,20 @@
           },
           "currency": {
             "type": "string",
-            "enum": ["usd", "eur", "gbp"],
+            "enum": [
+              "usd",
+              "eur",
+              "gbp"
+            ],
             "description": "Currency code"
           },
           "platform": {
             "type": "string",
-            "enum": ["website", "ios", "android"],
+            "enum": [
+              "website",
+              "ios",
+              "android"
+            ],
             "default": "website",
             "description": "Conversion platform. Defaults to website. Use ios or android for mobile app sales (organization must have that app connected)."
           },
@@ -4810,7 +4971,10 @@
           },
           "sale_type": {
             "type": "string",
-            "enum": ["one_time", "subscription"],
+            "enum": [
+              "one_time",
+              "subscription"
+            ],
             "default": "one_time",
             "description": "Type of sale"
           },
@@ -4838,7 +5002,11 @@
           },
           "currency": {
             "type": "string",
-            "enum": ["usd", "eur", "gbp"],
+            "enum": [
+              "usd",
+              "eur",
+              "gbp"
+            ],
             "description": "Currency code"
           },
           "occurred_at": {
@@ -4866,7 +5034,12 @@
           },
           "status": {
             "type": "string",
-            "enum": ["unpaid", "paid", "paid_externally", "cancelled"],
+            "enum": [
+              "unpaid",
+              "paid",
+              "paid_externally",
+              "cancelled"
+            ],
             "description": "Sale status"
           },
           "sub_id": {
@@ -4878,7 +5051,9 @@
       },
       "NewTrackingEvent": {
         "type": "object",
-        "required": ["event_name"],
+        "required": [
+          "event_name"
+        ],
         "properties": {
           "event_name": {
             "type": "string",
@@ -4922,13 +5097,23 @@
           },
           "currency": {
             "type": "string",
-            "enum": ["usd", "eur", "gbp"],
+            "enum": [
+              "usd",
+              "eur",
+              "gbp"
+            ],
             "description": "Currency of the transaction",
             "nullable": true
           },
           "conversion_platform": {
             "type": "string",
-            "enum": ["shopify", "tik_tok_shop", "ios", "stripe", "whop"],
+            "enum": [
+              "shopify",
+              "tik_tok_shop",
+              "ios",
+              "stripe",
+              "whop"
+            ],
             "description": "Which platform the conversion happened on",
             "nullable": false
           },
@@ -4939,7 +5124,10 @@
           },
           "order_type": {
             "type": "string",
-            "enum": ["one_time", "subscription"],
+            "enum": [
+              "one_time",
+              "subscription"
+            ],
             "description": "Type of the order",
             "nullable": true
           },
@@ -5715,7 +5903,10 @@
         }
       },
       "Error": {
-        "required": ["error", "message"],
+        "required": [
+          "error",
+          "message"
+        ],
         "type": "object",
         "properties": {
           "error": {
@@ -5736,6 +5927,114 @@
           "data": {
             "type": "object",
             "description": "Endpoint-specific data"
+          }
+        }
+      },
+      "NewCampaignApplication": {
+        "type": "object",
+        "required": [
+          "campaign_id",
+          "email"
+        ],
+        "properties": {
+          "campaign_id": {
+            "type": "integer",
+            "description": "Growi campaign the applicant is applying to"
+          },
+          "email": {
+            "type": "string",
+            "description": "Applicant's email address"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "Applicant's first name"
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Applicant's last name"
+          },
+          "tiktok_handle": {
+            "type": "string",
+            "description": "TikTok handle or profile URL — the account is attached to the creator's profile"
+          },
+          "id": {
+            "type": "integer",
+            "description": "Your internal applicant id, stored as attribution external_id"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "When the applicant submitted your form, stored as attribution submitted_at"
+          },
+          "fbp": {
+            "type": "string",
+            "description": "Meta browser id cookie (_fbp)"
+          },
+          "fbc": {
+            "type": "string",
+            "description": "Meta click id cookie (_fbc)"
+          },
+          "fbclid": {
+            "type": "string",
+            "description": "Meta click id from the landing page URL"
+          },
+          "event_id": {
+            "type": "string",
+            "description": "Your event id — echoed back on webhook events so you can deduplicate against Meta Conversions API"
+          },
+          "event_name": {
+            "type": "string",
+            "description": "Your event name (e.g. AffiliateLead)"
+          },
+          "event_source_url": {
+            "type": "string",
+            "description": "URL the applicant submitted the form from"
+          },
+          "client_ip_address": {
+            "type": "string",
+            "description": "Applicant's IP address"
+          },
+          "client_user_agent": {
+            "type": "string",
+            "description": "Applicant's browser user agent"
+          },
+          "referrer": {
+            "type": "string",
+            "description": "HTTP referrer of the signup page"
+          },
+          "utm_source": {
+            "type": "string"
+          },
+          "utm_medium": {
+            "type": "string"
+          },
+          "utm_campaign": {
+            "type": "string"
+          },
+          "utm_content": {
+            "type": "string"
+          },
+          "utm_term": {
+            "type": "string"
+          },
+          "follower_count": {
+            "type": "integer",
+            "description": "Applicant's TikTok follower count"
+          },
+          "likes_count": {
+            "type": "integer",
+            "description": "Applicant's TikTok likes count"
+          },
+          "video_count": {
+            "type": "integer",
+            "description": "Applicant's TikTok video count"
+          },
+          "tiktok_verified": {
+            "type": "integer",
+            "description": "1 when the TikTok account is verified"
+          },
+          "enriched_at": {
+            "type": "string",
+            "description": "When you enriched the TikTok profile data"
           }
         }
       }

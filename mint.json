@@ -91,6 +91,12 @@
       ]
     },
     {
+      "group": "Applications API",
+      "pages": [
+        "api-reference/endpoint/create-campaign-application"
+      ]
+    },
+    {
       "group": "Conversions API",
       "pages": [
         "api-reference/endpoint/list-affiliate-sales",

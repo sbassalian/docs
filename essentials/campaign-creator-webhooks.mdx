@@ -1,6 +1,6 @@
 ---
 title: "Campaign Creator Webhooks"
-description: "Receive notifications when creators are added, removed, or have their affiliate code updated on campaigns"
+description: "Receive notifications when creators are added, removed, have their affiliate code updated, or generate sales on campaigns"
 ---
 
 <Info>
@@ -9,13 +9,13 @@ description: "Receive notifications when creators are added, removed, or have th
 
 ## Overview
 
-When a brand has a **Webhook URL** configured, Growi will send an **HTTP POST** request with a JSON body whenever a campaign's creator affiliation changes state, or when a creator's affiliate code is updated.
+When a brand has one or more **Webhook URLs** configured, Growi will send an **HTTP POST** request with a JSON body whenever a campaign's creator affiliation changes state, a creator's affiliate code is updated, or (when enabled) a creator generates an attributed sale.
 
 ## Configuration
 
 In the Organization settings, configure:
 
-- **Webhook URL**: A single HTTPS URL that will receive webhook POST requests.
+- **Webhook URLs**: One or more HTTPS destinations. Every active destination receives every event.
 
 ## Event Types
 
@@ -27,6 +27,7 @@ The webhook payload includes an `event` field to differentiate between actions:
 | `campaign_affiliate.removed` | Creator was **removed** from the campaign |
 | `campaign_affiliate.left` | Creator **left** the campaign |
 | `campaign_affiliate.code_updated` | Creator's **affiliate code** (tag) was changed |
+| `affiliate_sale.created` | A **sale was attributed** to one of your creators (opt-in — ask us to enable it) |
 
 <Note>
   If the system encounters an unknown status, it will fall back to `campaign_affiliate.<status>`.
@@ -39,11 +40,11 @@ The webhook payload includes an `event` field to differentiate between actions:
 | **Method** | `POST` |
 | **Content-Type** | `application/json` |
 | **Connect Timeout** | 10 seconds |
-| **Read Timeout** | 10 seconds |
+| **Read Timeout** | 30 seconds |
 | **Success Criteria** | Any `2xx` response |
 | **Retries** | Up to 3 retries on failure |
 
-Non-2xx responses are treated as failures and will be retried.
+Non-2xx responses are treated as failures and will be retried. Delivery is **at-least-once**: use the payload's `idempotency_key` to deduplicate.
 
 ## Payload Format
 
@@ -101,9 +102,61 @@ The request body is a single JSON object with the following fields:
   Present on `campaign_affiliate.code_updated` only. The affiliate code **before** the change.
 </ResponseField>
 
+<ResponseField name="idempotency_key" type="string">
+  Stable key for deduplicating redelivered events (delivery is at-least-once).
+</ResponseField>
+
+<ResponseField name="attribution" type="object">
+  Present when the creator was submitted through the [campaign applications API](/api-reference/endpoint/create-campaign-application). Echoes the marketing attribution you sent with the applicant — `fbp`, `fbc`, `fbclid`, `event_id`, `event_source_url`, UTM parameters, your `external_id`, and TikTok enrichment — so you can match the creator in your ad platform (for example, forwarding to Meta Conversions API).
+</ResponseField>
+
 <Note>
   Optional fields are omitted when values are not present. For status events, `occurred_at` uses the campaign affiliation record's `updated_at` timestamp. For `code_updated`, it is the time the code change was committed.
 </Note>
+
+## Sale Events
+
+`affiliate_sale.created` fires when a sale is attributed to one of your creators (Shopify, website/API conversions, and app sales). It is **opt-in** — contact us to enable it for your organization. On top of the shared fields above (`campaign_name`, `organization_slug`, `user_email`, `user_name`, `tag`, `attribution`), the payload carries:
+
+<ResponseField name="affiliate_sale_id" type="integer" required>
+  Growi's id for the sale.
+</ResponseField>
+
+<ResponseField name="order_id" type="string" required>
+  The external order id (e.g. the Shopify order).
+</ResponseField>
+
+<ResponseField name="total_cents" type="integer" required>
+  Order total in cents.
+</ResponseField>
+
+<ResponseField name="subtotal_cents" type="integer">
+  Order subtotal in cents.
+</ResponseField>
+
+<ResponseField name="commission_cents" type="integer">
+  The creator's commission in cents.
+</ResponseField>
+
+<ResponseField name="currency" type="string" required>
+  ISO currency code (lowercase, e.g. `usd`).
+</ResponseField>
+
+<ResponseField name="platform" type="string" required>
+  `shopify`, `website`, `ios`, or `android`.
+</ResponseField>
+
+<ResponseField name="sale_type" type="string">
+  `one_time` or `subscription`.
+</ResponseField>
+
+<ResponseField name="sale_occurrence" type="string">
+  `initial` for the customer's first attributed sale, `recurring` for later purchases.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Payout status of the sale (e.g. `unpaid`).
+</ResponseField>
 
 ## Example Payloads
 
@@ -122,7 +175,55 @@ The request body is a single JSON object with the following fields:
   "organization_slug": "acme",
   "user_email": "creator@example.com",
   "user_name": "Creator Name",
-  "tag": "creator-default-tag"
+  "tag": "creator-default-tag",
+  "idempotency_key": "campaign_affiliate.activated:123:2026-02-27T18:33:12-05:00",
+  "attribution": {
+    "fbp": "fb.1.1785503550741.5188770206",
+    "fbc": "fb.1.1785503550741.PAcGRvZgJmZGlk",
+    "event_id": "012e8a42-6b26-43cf-9a66-0242c6bc0fd1",
+    "event_source_url": "https://shop.example.com/tiktok-partner",
+    "utm_source": "facebook",
+    "external_id": 11177
+  }
+}
+```
+
+<Note>
+  `attribution` appears only for creators submitted through the campaign applications API. Approval events are delivered a couple of minutes after the approval, once the creator's affiliate code has been generated.
+</Note>
+
+### Sale Attributed to a Creator
+
+```json
+{
+  "event": "affiliate_sale.created",
+  "idempotency_key": "affiliate_sale.created:31337",
+  "occurred_at": "2026-08-20T12:00:00Z",
+  "affiliate_sale_id": 31337,
+  "order_id": "5723098317101",
+  "campaign_affiliate_id": 123,
+  "campaign_id": 456,
+  "organization_id": 789,
+  "user_id": 42,
+  "total_cents": 5900,
+  "subtotal_cents": 5400,
+  "commission_cents": 590,
+  "currency": "usd",
+  "platform": "shopify",
+  "sale_type": "one_time",
+  "sale_occurrence": "initial",
+  "status": "unpaid",
+  "campaign_name": "Spring Promo",
+  "organization_slug": "acme",
+  "user_email": "creator@example.com",
+  "user_name": "Creator Name",
+  "tag": "creator-default-tag",
+  "attribution": {
+    "fbp": "fb.1.1785503550741.5188770206",
+    "event_id": "012e8a42-6b26-43cf-9a66-0242c6bc0fd1",
+    "utm_source": "facebook",
+    "external_id": 11177
+  }
 }
 ```
 
@@ -167,7 +268,7 @@ The request body is a single JSON object with the following fields:
     Ensure your webhook URL is correctly configured in Organization settings and is publicly accessible over HTTPS.
   </Accordion>
   <Accordion title="Receiving Duplicate Events">
-    Implement idempotency in your webhook handler using the `campaign_affiliate_id`, `event`, and `occurred_at` fields to deduplicate events.
+    Implement idempotency in your webhook handler using the `idempotency_key` field to deduplicate events (for older payloads without it, combine `campaign_affiliate_id`, `event`, and `occurred_at`).
   </Accordion>
   <Accordion title="Webhook Failing with Timeout">
     Your endpoint must respond within 10 seconds. Consider processing webhooks asynchronously and returning a 200 response immediately.

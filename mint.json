@@ -30,7 +30,9 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction"]
+      "pages": [
+        "introduction"
+      ]
     },
     {
       "group": "Essentials",
@@ -42,11 +44,15 @@
     },
     {
       "group": "API Documentation",
-      "pages": ["api-reference/introduction"]
+      "pages": [
+        "api-reference/introduction"
+      ]
     },
     {
       "group": "Tracking Events",
-      "pages": ["api-reference/endpoint/create"]
+      "pages": [
+        "api-reference/endpoint/create"
+      ]
     },
     {
       "group": "Stats API",
@@ -101,7 +107,12 @@
       "pages": [
         "api-reference/endpoint/list-affiliate-sales",
         "api-reference/endpoint/create-affiliate-sale",
-        "api-reference/endpoint/update-affiliate-sale",
+        "api-reference/endpoint/update-affiliate-sale"
+      ]
+    },
+    {
+      "group": "Webhooks",
+      "pages": [
         "essentials/campaign-creator-webhooks"
       ]
     }

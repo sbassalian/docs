@@ -9,7 +9,7 @@ description: "Receive notifications when creators are added, removed, have their
 
 ## Overview
 
-When a brand has one or more **Webhook URLs** configured, Growi will send an **HTTP POST** request with a JSON body whenever a campaign's creator affiliation changes state, a creator's affiliate code is updated, or (when enabled) a creator generates an attributed sale.
+When a brand has one or more **Webhook URLs** configured, Growi will send an **HTTP POST** request with a JSON body whenever a campaign's creator affiliation changes state, a creator's affiliate code is updated, or a creator generates an attributed sale.
 
 ## Configuration
 
@@ -27,7 +27,7 @@ The webhook payload includes an `event` field to differentiate between actions:
 | `campaign_affiliate.removed` | Creator was **removed** from the campaign |
 | `campaign_affiliate.left` | Creator **left** the campaign |
 | `campaign_affiliate.code_updated` | Creator's **affiliate code** (tag) was changed |
-| `affiliate_sale.created` | A **sale was attributed** to one of your creators (opt-in — ask us to enable it) |
+| `affiliate_sale.created` | A **sale was attributed** to one of your creators |
 
 <Note>
   If the system encounters an unknown status, it will fall back to `campaign_affiliate.<status>`.
@@ -116,7 +116,7 @@ The request body is a single JSON object with the following fields:
 
 ## Sale Events
 
-`affiliate_sale.created` fires when a sale is attributed to one of your creators (Shopify, website/API conversions, and app sales). It is **opt-in** — contact us to enable it for your organization. On top of the shared fields above (`campaign_name`, `organization_slug`, `user_email`, `user_name`, `tag`, `attribution`), the payload carries:
+`affiliate_sale.created` fires when a sale is attributed to one of your creators (Shopify, website/API conversions, and app sales). On top of the shared fields above (`campaign_name`, `organization_slug`, `user_email`, `user_name`, `tag`, `attribution`), the payload carries:
 
 <ResponseField name="affiliate_sale_id" type="integer" required>
   Growi's id for the sale.

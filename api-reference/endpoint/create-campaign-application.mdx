@@ -8,7 +8,7 @@ Submits an applicant from your own signup form directly into a Growi campaign â€
 The endpoint creates the creator account if it doesn't exist yet, files a **pending** application to the campaign (or **accepted**, when the campaign auto-accepts applicants), and stores any marketing attribution you send. When the creator is later approved, or generates a sale, the attribution is **echoed back** on the corresponding [webhook events](/essentials/campaign-creator-webhooks) so you can match the creator in your ad platform (for example, forwarding to the Meta Conversions API).
 
 <Info>
-  Available on **Scale** and **Enterprise** plans, and requires a full-access API key (read-only keys are rejected).
+  Requires a full-access API key (read-only keys are rejected).
 </Info>
 
 **Idempotent**: repeat submissions for the same `email` + `campaign_id` return the existing application with `created: false` instead of creating a duplicate. Attribution keys not seen before are merged in; existing values are never overwritten. This endpoint is also exempt from the 2-second request-interval limit, so bursts of near-simultaneous form submissions are safe.

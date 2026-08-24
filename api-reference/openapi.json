@@ -4581,7 +4581,7 @@
     "/campaign_applications": {
       "post": {
         "summary": "Create Campaign Application",
-        "description": "Submits an applicant from your own signup form directly into a Growi campaign. Creates the creator account if needed and stores marketing attribution (Meta click ids, UTMs, TikTok enrichment) that is echoed back on outbound webhook events. Idempotent: repeat submissions for the same email + campaign return the existing application. Available on Scale and Enterprise plans.",
+        "description": "Submits an applicant from your own signup form directly into a Growi campaign. Creates the creator account if needed and stores marketing attribution (Meta click ids, UTMs, TikTok enrichment) that is echoed back on outbound webhook events. Idempotent: repeat submissions for the same email + campaign return the existing application.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4655,7 +4655,7 @@
             }
           },
           "403": {
-            "description": "Not enabled for your plan, or read-only API key",
+            "description": "Read-only API key",
             "content": {
               "application/json": {
                 "schema": {

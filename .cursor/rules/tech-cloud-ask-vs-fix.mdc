@@ -1,0 +1,14 @@
+---
+description: Cursor Cloud on tech@ — Ask vs Fix for Linear assign-to-tech
+alwaysApply: true
+---
+
+# Ask vs Fix (tech@ Cloud)
+
+When this clone is used by Cursor Cloud / assign-to-Juno:
+
+- **Ask** (how-to, where-is, timezone, can Growi tell, policy): comment a customer-ready answer + file proof on Linear. No PR.
+- **Fix** (bug, missing feature, change settings): PR + Linear QA proof + ping Solomon. Merge only after he approves on Slack or GitHub. He deploys.
+- Ben send gate is separate: how-to / where-is / timezone, ≥80%, not money/legal/churn/angry. Never send as Solomon.
+- Never mutate production. Never query another org than the ticket.
+- Follow `.cursor/skills/linear-issue-workflow/SKILL.md`.

@@ -1,0 +1,12 @@
+---
+description: Growi production is AWS; Heroku is fully deprecated
+alwaysApply: true
+---
+
+# Growi hosting: AWS, not Heroku
+
+Heroku is **fully deprecated**. Production (including `api.growi.io`) runs on **AWS / EKS**.
+
+- Never suggest `heroku` CLI, `git push heroku`, `heroku run`, `heroku logs`, or Heroku app names (`growi`, `affilia`).
+- Treat leftover `heroku` remotes, README snippets, and GitHub "Heroku" deployment records as stale.
+- For deploys, logs, consoles, and "is this live?", use the AWS/EKS/GHCR path — not Heroku.

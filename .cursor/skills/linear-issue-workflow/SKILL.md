@@ -7,25 +7,32 @@ description: Workflow for ALL engineering work in the Growi repos — every code
 
 This skill is the source of truth for Cursor (desktop and Cloud on `tech@growi.io`). Do not invent a second lifecycle.
 
-## Ask vs Fix (mandatory on Cloud / assign-to-tech)
+## Ask vs Fix (mandatory on Cloud / assign-to-Cursor)
 
-Decide from the Linear title, description, and attached Slack thread.
+Every CS Slack question is ticketed and assigned to **Cursor**. Grok Bot never answers from its own confidence. There is no “80% sure, send now” path.
 
-**Ask (account manager):** how-to, where-is-the-setting, timezone, “what does this mean,” “can Growi tell if…,” policy. Do **not** open a PR.
+Decide Ask vs Fix from the Linear title, description, and attached Slack thread.
+
+**Ask (account manager):** how-to, where-is-the-setting, timezone, “what does this mean,” “can Growi tell if…,” policy.
 
 1. Search the repos (and only the ticket’s org/creator if you have read-only data).
 2. Comment a customer-ready reply on the Linear issue plus file/line proof.
-3. Move the issue to **In Review** (or Done if it is FAQ-only and no code will ship).
-4. Never send Slack as Solomon. Ben’s send gate is separate: how-to / where-is / timezone, ≥80% sure, not money / legal / churn / angry.
+3. **Dashboard Juno check (required on every Ask).** Can the in-dashboard assistant already answer this for the brand?
+   - Look at `app/services/assistant/system_prompt.rb` playbooks, `Mcp::Toolbox` tools, and the dash UI the brand would use.
+   - **Yes:** say so on Linear (tool name / playbook / drawer path). No extra PR unless that playbook is stale.
+   - **No:** this Ask is also a Fix. Add the missing playbook, MCP tool, and/or self-serve dash path so the next brand can ask Juno instead of Slack. Never mutate production data.
+4. Move the issue to **In Review** (or Done if FAQ-only and Juno already covers it with no code to ship).
+5. Never send Slack as Solomon. Ben sends only after this Linear comment exists. Ben still does not send money / legal / churn / angry — those stay human.
 
 **Fix (engineer):** bug, missing feature, “update my campaign / settings,” dash cannot do it today.
 
 1. Follow the full lifecycle below.
 2. If the customer asked to change settings the dash/Juno cannot do, the PR adds that self-serve path. Never mutate production data.
-3. Open a PR, post QA proof on Linear, move to **In Review**, ping Solomon to approve.
-4. Merge **only** after Solomon approves on Slack or the GitHub PR. Then stop. Solomon deploys. Ben follow-up is after deploy.
+3. If the change would change what Juno tells a brand, update `system_prompt.rb` / tools in the same PR (see `.cursor/rules/juno-answers-stay-current.mdc`).
+4. Open a PR, post QA proof on Linear, move to **In Review**, ping Solomon to approve.
+5. Merge **only** after Solomon approves on Slack or the GitHub PR. Then stop. Solomon deploys. Ben follow-up is after deploy.
 
-If unsure, treat it as **Ask** and say what a Fix PR would be.
+If unsure, treat it as **Ask** first, still run the Juno check, and say what a Fix PR would be.
 
 ## Issue-first rule (mandatory)
 
@@ -68,7 +75,7 @@ If the comment **is** Solomon’s approve (“lgtm”, “merge”, “approved�
 ## When handed an existing issue
 
 1. Fetch the issue (`get_issue`). Read title, description, Slack attachments, `gitBranchName`.
-2. Classify Ask vs Fix. If Ask, stop after the customer-ready comment.
+2. Classify Ask vs Fix. Always run the dashboard Juno check. If Ask and Juno already covers it, stop after the customer-ready comment. If Ask and Juno cannot, continue as a Fix for the Juno/self-serve gap.
 3. Move to **In Progress** as soon as Fix work starts.
 4. Implement in the relevant repo. Verify (typecheck/lint/tests the repo provides).
 5. Create a pull request:
@@ -76,7 +83,7 @@ If the comment **is** Solomon’s approve (“lgtm”, “merge”, “approved�
    - Commit **only** files for this issue. Pathspec commit. Never sweep unrelated index files.
    - Match `git log --oneline -5` style.
    - `gh pr create` with the issue title, identifier, and Linear URL.
-6. **QA proof on the issue** for UI changes: screenshot or recording inline in a Linear comment (`![description](assetUrl)`). One sentence of what you verified.
+6. **QA proof on the issue** for UI Fixes: screenshot or recording inline in a Linear comment (`![description](assetUrl)`). One sentence of what you verified.
 7. Move to **In Review**. Ping Solomon to approve. Do not merge yet.
 
 ## Visual verification (screenshots / recordings)
@@ -90,12 +97,14 @@ Required for UI Fixes, not optional:
 ## Creating Linear issues
 
 - **Team:** Engineering
+- **Project:** Benji (`https://linear.app/growi/project/benji-f9ab3611ebb0`) — CS folder. Not the Cloud start trigger. Do not put normal feature work here.
 - **Cycle:** current
-- **Assignee:** Juno (`tech@growi.io`)
+- **Assignee:** **Cursor** (this starts Cloud). Assigning Juno alone does not start Cloud.
 - **Priority:** Urgent
 - **Estimate:** 1 trivial, 2 typical
 - **Labels:** existing only — never create labels
 - **State:** Done if logging already-shipped work, with commit hashes
+- Attach the Slack thread URL.
 
 ## Notes
 

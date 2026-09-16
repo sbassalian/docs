@@ -1,14 +1,15 @@
 ---
-description: Cursor Cloud on tech@ — Ask vs Fix for Linear assign-to-tech
+description: Cursor Cloud on tech@ — every CS question to Cursor; Juno must be able to answer it in dash
 alwaysApply: true
 ---
 
 # Ask vs Fix (tech@ Cloud)
 
-When this clone is used by Cursor Cloud / assign-to-Juno:
+When this clone is used by Cursor Cloud / assign-to-Cursor:
 
-- **Ask** (how-to, where-is, timezone, can Growi tell, policy): comment a customer-ready answer + file proof on Linear. No PR.
+- Every CS question goes to Cursor. No Grok “80% sure, send now.” Ben waits for the Linear comment.
+- **Ask** (how-to, where-is, timezone, can Growi tell, policy): comment a customer-ready answer + file proof on Linear. Then check dashboard Juno (`system_prompt.rb`, `Mcp::Toolbox`, dash UI). If Juno cannot answer it, ship the prompt / tool / self-serve path so it can.
 - **Fix** (bug, missing feature, change settings): PR + Linear QA proof + ping Solomon. Merge only after he approves on Slack or GitHub. He deploys.
-- Ben send gate is separate: how-to / where-is / timezone, ≥80%, not money/legal/churn/angry. Never send as Solomon.
+- Ben send: only after Cloud commented. Never money / legal / churn / angry. Never as Solomon.
 - Never mutate production. Never query another org than the ticket.
 - Follow `.cursor/skills/linear-issue-workflow/SKILL.md`.

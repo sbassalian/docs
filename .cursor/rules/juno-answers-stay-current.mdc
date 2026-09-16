@@ -1,0 +1,28 @@
+---
+description: Every PR / push to main must keep dashboard Juno answers current
+alwaysApply: true
+---
+
+# Juno answers stay current
+
+Dashboard Juno is `Assistant::SystemPrompt` + `Mcp::Toolbox` tools + the dash UI a brand can use. If a customer can ask Slack, they should be able to ask Juno.
+
+## On every CS Ask
+
+Can Juno already answer this in the drawer? If no, the ticket is also a Fix: add a playbook, tool, or self-serve path in the same work. Never leave “Slack only.”
+
+## On every PR or push to main
+
+Before you finish, ask: **would this change what Juno should tell a brand?**
+
+If yes, update in the **same PR** (backend even if the UI change is in the monorepo):
+
+- `app/services/assistant/system_prompt.rb` — playbooks, paths, timezone, email types, formulas
+- `app/services/mcp/toolbox.rb` + `app/services/mcp/tools/` — new lookup or write
+- Dash copy / setting location if you moved it
+
+Examples that **do** require a Juno update: moved a setting, changed payout/cycle timezone, new email type, commission or attribution formula, new self-serve write, renamed a page.
+
+Examples that **do not**: refactors with the same behavior, tests, dead-code deletion that Juno never mentioned.
+
+Do not merge a behavior change that leaves Juno teaching the old path.

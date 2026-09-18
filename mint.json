@@ -93,7 +93,9 @@
       "pages": [
         "api-reference/endpoint/get-brands",
         "api-reference/endpoint/get-campaigns",
-        "api-reference/endpoint/list-campaign-affiliates"
+        "api-reference/endpoint/list-campaign-affiliates",
+        "api-reference/endpoint/update-campaign-affiliate",
+        "api-reference/endpoint/bulk-update-campaign-affiliates"
       ]
     },
     {

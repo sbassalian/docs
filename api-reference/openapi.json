@@ -2966,6 +2966,204 @@
         }
       }
     },
+    "/campaign_affiliates/{id}": {
+      "patch": {
+        "description": "Sets the creator's default affiliate tag (spoken discount / coupon code) to an exact string. Codes must be unique inside the organization. Fires campaign_affiliate.code_updated.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Campaign-affiliate (enrollment) ID from GET /campaign_affiliates"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["tag"],
+                "properties": {
+                  "tag": {
+                    "type": "string",
+                    "example": "THEIREXISTINGCODE",
+                    "description": "New default affiliate tag. Stored lowercase."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tag updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "id": { "type": "integer", "example": 3490313 },
+                    "tag": { "type": "string", "example": "theirexistingcode" }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "Not Authenticated" }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Read-only API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "This API key is read-only and cannot modify data."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Not found, missing tag, or tag already taken",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Sorry, that code is already taken. Please try a different one."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaign_affiliates/bulk": {
+      "patch": {
+        "description": "Sets default affiliate tags for up to 300 creators in one request. Valid rows still update when another row fails. Each success fires campaign_affiliate.code_updated.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["affiliates"],
+                "properties": {
+                  "affiliates": {
+                    "type": "array",
+                    "maxItems": 300,
+                    "items": {
+                      "type": "object",
+                      "required": ["id", "tag"],
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 3490313,
+                          "description": "Campaign-affiliate (enrollment) ID"
+                        },
+                        "tag": {
+                          "type": "string",
+                          "example": "OLLYCODE",
+                          "description": "New default affiliate tag. Stored lowercase."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Every row updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "updated": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "tag": { "type": "string" }
+                        }
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "error": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "Not Authenticated" }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Empty payload, over the 300-row cap, or at least one row failed (successful rows are still saved)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": false },
+                    "error": { "type": "string" },
+                    "updated": { "type": "array", "items": { "type": "object" } },
+                    "errors": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/organizations/brands": {
       "get": {
         "description": "Retrieves a list of all available brands for your organization",

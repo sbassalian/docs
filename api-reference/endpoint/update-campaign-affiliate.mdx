@@ -1,0 +1,57 @@
+---
+title: "Update Campaign Affiliate"
+openapi: "PATCH /campaign_affiliates/{id}"
+---
+
+Sets the creator's default affiliate tag (the spoken discount / coupon code) to an exact string. Use this after a creator joins if you want to keep the code they already say on camera, or to migrate an existing roster onto a revenue campaign.
+
+Codes are unique inside your organization. A rename fires `campaign_affiliate.code_updated` so any coupons you mint from the webhook tag stay in sync.
+
+For 300+ creators, prefer [Bulk Update Campaign Affiliates](/api-reference/endpoint/bulk-update-campaign-affiliates) instead of looping this endpoint (the public API also enforces a 2-second gap between requests).
+
+## Path Parameters
+
+| Parameter | Type    | Description                                              | Required |
+| --------- | ------- | -------------------------------------------------------- | -------- |
+| `id`      | Integer | Campaign-affiliate (enrollment) ID from the list endpoint | Yes      |
+
+## Request Body
+
+| Field | Type   | Description                                              | Required |
+| ----- | ------ | -------------------------------------------------------- | -------- |
+| `tag` | String | New default affiliate tag. Stored lowercase. Must be unique in the org. | Yes      |
+
+## Request Example
+
+```bash
+curl -X PATCH "https://api.growi.io/api/public/v1/campaign_affiliates/3490313" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "tag": "THEIREXISTINGCODE"
+     }'
+```
+
+## Response Example
+
+```json
+{
+  "success": true,
+  "id": 3490313,
+  "tag": "theirexistingcode"
+}
+```
+
+## Authentication
+
+Send your organization's public API key as a Bearer token. **Viewer (read-only) keys cannot call this.** See [Rate Limits & Authentication](/api-reference/introduction).
+
+## Error Responses
+
+| Status | Body | When |
+| ------ | ---- | ---- |
+| `401` | `{ "error": "Not Authenticated" }` | Missing or invalid API key. |
+| `403` | `{ "error": "This API key is read-only and cannot modify data." }` | Viewer key. |
+| `422` | `{ "error": "Campaign affiliate not found." }` | Unknown or foreign enrollment id. |
+| `422` | `{ "error": "tag is required" }` | Missing / blank `tag`. |
+| `422` | `{ "error": "Sorry, that code is already taken. Please try a different one." }` | Another creator in the org already holds this tag. |

@@ -42,6 +42,28 @@ code, pre, kbd, .font-mono {
   font-family: var(--g-mono) !important;
 }
 
+/* ---------- Page frame ----------
+   Aspen caps everything at 1472px, which leaves a ~520px text column on a 1767px monitor.
+   The frame grows on large screens; --g-frame keeps navbar, pages and homepage aligned. */
+:root { --g-frame: 1472px; --g-container: 1152px; }
+@media (min-width: 1600px) { :root { --g-frame: 1600px; --g-container: 1320px; } }
+@media (min-width: 1920px) { :root { --g-frame: 1760px; --g-container: 1440px; } }
+.max-w-8xl { max-width: var(--g-frame) !important; }
+html:not([data-page-mode="custom"]) #body-content { max-width: var(--g-frame) !important; }
+#content-container { max-width: var(--g-container) !important; }
+/* Guide pages have no example panel, so keep prose at a readable measure */
+html:not([data-page-mode="custom"]):not([data-current-path^="/api-reference/endpoint"]) #content-area { max-width: 48rem; }
+/* Laptops (1280-1599px): a narrower example panel and gutter give endpoint text ~100px more room */
+@media (min-width: 1280px) and (max-width: 1599px) {
+  #content-container { padding-left: 3rem !important; }
+  html[data-current-path^="/api-reference/endpoint"] #content-side-layout,
+  html[data-current-path^="/api-reference/endpoint"] #content-side-layout > * {
+    width: 24rem !important;
+    max-width: 24rem !important;
+  }
+  html[data-current-path^="/api-reference/endpoint"] #content-area { width: calc(100% - 24rem) !important; }
+}
+
 /* ---------- Page chrome ---------- */
 
 /* Brand hierarchy: H1 bold and tight, H2 light but larger than H3 so it still leads */
@@ -228,8 +250,10 @@ html:has(#error-badge) .nav-tabs-item[data-active="true"] > div {
 html.dark .mdx-content [data-name="frame"] img { filter: brightness(0.85); }
 
 /* ---------- Homepage (index.mdx, mode: custom) ---------- */
+/* Same frame and 36px gutter as the navbar, so content lines up with the logo at every width */
 .g-home {
-  max-width: 1232px;
+  max-width: var(--g-frame);
+  margin-inline: auto;
   padding: 0 36px;
   color: var(--g-text);
 }
@@ -311,6 +335,7 @@ html.dark .mdx-content [data-name="frame"] img { filter: brightness(0.85); }
   border-radius: 20px;
   overflow: hidden;
   aspect-ratio: 1.22;
+  max-height: 540px;
   background: #0646cc url("/images/wave.jpg") center / cover no-repeat;
 }
 .g-art-card {

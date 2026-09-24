@@ -20,6 +20,10 @@ For 300+ creators, prefer [Bulk update campaign affiliates](/api-reference/endpo
 | `422` | `{ "error": "tag is required" }` | Missing / blank `tag`. |
 | `422` | `{ "error": "Sorry, that code is already taken. Please try a different one." }` | Another creator in the org already holds this tag. |
 
+## Permissions
+
+**Viewer (read-only) keys can't call this.** Rate limits are on the [Authentication](/authentication) page.
+
 <RequestExample>
 
 ```bash cURL

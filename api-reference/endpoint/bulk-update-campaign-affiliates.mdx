@@ -25,6 +25,10 @@ If some rows fail, the API returns `422` with an `errors` list. Rows that succee
 | `422` | `{ "error": "Maximum 300 affiliates per request." }` | More than 300 rows. |
 | `422` | `{ "success": false, "updated": [...], "errors": [...] }` | At least one row failed. Successful rows are still saved. |
 
+## Permissions
+
+**Viewer (read-only) keys can't call this.** Rate limits are on the [Authentication](/authentication) page.
+
 <RequestExample>
 
 ```bash cURL

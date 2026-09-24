@@ -77,6 +77,10 @@ This endpoint is useful for:
 - **Performance review**: Use `revenue_generated`, `affiliate_amount_earned`, and `order_count` to rank creators in a campaign.
 - **Drill-down**: Use `affiliates[].id` with the single campaign-affiliate endpoint, or `user_id` to join against other API data.
 
+## Permissions
+
+This is a read-only `GET`, so **viewer (read-only) API keys** can call it. Keys are scoped to a single organization, and results always come from the key's organization. Rate limits are on the [Authentication](/authentication) page.
+
 <RequestExample>
 
 ```bash Active creators

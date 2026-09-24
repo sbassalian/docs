@@ -33,14 +33,16 @@ description: "Create an API key in the dashboard and send it as a Bearer token."
 </Steps>
 
 <Note>
-  The public API expects at least 2 seconds between requests. For bulk work, use the bulk endpoints, like [bulk update campaign affiliates](/api-reference/endpoint/bulk-update-campaign-affiliates), instead of looping.
+  Rate limits apply per API key: at least 2 seconds between requests, plus an hourly cap. Every response carries `X-RateLimit-*` headers so you can see where you are. For bulk work, use the bulk endpoints, like [bulk update campaign affiliates](/api-reference/endpoint/bulk-update-campaign-affiliates), instead of looping.
 </Note>
+
+Keys are scoped to one organization. Some endpoints need more than a viewer (read-only) key; their pages say so under **Permissions**.
 
 ## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="My API key doesn't work">
-    Check that you copied the whole key and that it hasn't been deleted. If in doubt, create a new one.
+    Check that you copied the whole key and that it hasn't expired. If in doubt, create a new one.
   </Accordion>
   <Accordion title="I get authorization errors">
     The header must be `Authorization: Bearer YOUR_API_KEY`, with one space after `Bearer` and nothing else around the key.

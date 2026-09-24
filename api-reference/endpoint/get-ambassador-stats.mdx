@@ -1,49 +1,10 @@
 ---
 title: "Get ambassador stats"
 openapi: "GET /stats/query_ambassadors"
-description: "Retrieves aggregated statistics for campaign ambassadors, grouped by individual affiliate. This endpoint provides performance metrics including revenue, commission, order counts, refund amounts, and clicks for ambassadors within a specified date range."
+description: "Performance totals for each ambassador over a date range."
 ---
 
-## Request parameters
-
-| Parameter        | Type    | Description                                                       | Required |
-| ---------------- | ------- | ----------------------------------------------------------------- | -------- |
-| `start_date`     | String  | Start date in MM/DD/YYYY format                                   | Yes      |
-| `end_date`       | String  | End date in MM/DD/YYYY format                                     | Yes      |
-| `campaign_id`    | Integer | ID of the campaign to query                                       | Yes      |
-| `page`           | Integer | Page number for pagination. Default is 1.                         | No       |
-| `per_page`       | Integer | Number of results per page. Default is 20. Maximum is 100.        | No       |
-| `include_clicks` | String  | Set to `true` to include click data. Default is `false`.          | No       |
-| `search`         | String  | Search across email, first name, last name, or full name          | No       |
-| `email`          | String  | Filter by ambassador email(s). Supports comma-separated values    | No       |
-| `first_name`     | String  | Filter by ambassador first name (case-insensitive, partial match) | No       |
-| `last_name`      | String  | Filter by ambassador last name (case-insensitive, partial match)  | No       |
-
-## Response fields
-
-| Field                          | Type    | Description                                                                   |
-| ------------------------------ | ------- | ----------------------------------------------------------------------------- |
-| `data`                         | Array   | Array of ambassador statistics objects                                        |
-| `data[].campaign_affiliate_id` | Integer | Unique identifier for the campaign affiliate relationship                     |
-| `data[].user_id`               | Integer | Unique identifier for the user/ambassador                                     |
-| `data[].email`                 | String  | Ambassador's email address                                                    |
-| `data[].first_name`            | String  | Ambassador's first name                                                       |
-| `data[].last_name`             | String  | Ambassador's last name                                                        |
-| `data[].creator_name`          | String  | Full name of the ambassador (first + last)                                    |
-| `data[].revenue`               | Number  | Total revenue generated in dollars (for the specified date range)             |
-| `data[].commission`            | Number  | Total commission earned in dollars                                            |
-| `data[].orders_count`          | Integer | Total number of completed orders                                              |
-| `data[].clicks`                | Integer | Total number of unique link clicks. Default is 0 unless `include_clicks=true` |
-| `data[].refund_amount`         | Number  | Total refunded/canceled order amount in dollars                               |
-| `data[].joined_campaign_date`  | String  | Date the ambassador joined the campaign (MM/DD/YYYY format)                   |
-| `meta`                         | Object  | Pagination and query metadata                                                 |
-| `meta.total_ambassadors`       | Integer | Total number of ambassadors matching the query (across all pages)             |
-| `meta.current_page`            | Integer | Current page number                                                           |
-| `meta.per_page`                | Integer | Number of results per page                                                    |
-| `meta.total_pages`             | Integer | Total number of pages available                                               |
-| `meta.start_date`              | String  | Query start date                                                              |
-| `meta.end_date`                | String  | Query end date                                                                |
-| `meta.campaign_id`             | String  | Campaign ID queried                                                           |
+Includes revenue, commission, order counts, refund amounts and clicks, grouped by affiliate.
 
 ## Filter examples
 
@@ -51,7 +12,7 @@ description: "Retrieves aggregated statistics for campaign ambassadors, grouped 
 
 The `search` parameter searches across email, first name, last name, and full name:
 
-```bash
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&search=john" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
@@ -60,7 +21,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
 
 Filter by a specific ambassador email:
 
-```bash
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&email=john@example.com" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
@@ -69,7 +30,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
 
 Filter by multiple ambassador emails using comma-separated values:
 
-```bash
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&email=john@example.com,jane@example.com,bob@example.com" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
@@ -78,7 +39,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
 
 Filter by ambassador first name (case-insensitive, partial match):
 
-```bash
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&first_name=John" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
@@ -87,7 +48,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
 
 Filter by ambassador last name (case-insensitive, partial match):
 
-```bash
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&last_name=Smith" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
@@ -96,14 +57,14 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
 
 You can combine multiple filters:
 
-```bash
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&first_name=John&last_name=Doe&include_clicks=true" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 
 ### Pagination
 
-```bash
+```bash Shell
 # Get first page (20 results by default)
 curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&page=1" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
@@ -125,10 +86,10 @@ All metrics (revenue, commission, orders, clicks, refunds) are filtered by the s
 
 To analyze different time periods, make separate API calls with different date ranges:
 
-- **This Month**: `start_date=12/01/2024&end_date=12/31/2024`
-- **Last Month**: `start_date=11/01/2024&end_date=11/30/2024`
-- **Year to Date**: `start_date=01/01/2024&end_date=12/31/2024`
-- **Custom Range**: Any range you specify
+- **This month**: `start_date=12/01/2024&end_date=12/31/2024`
+- **Last month**: `start_date=11/01/2024&end_date=11/30/2024`
+- **Year to date**: `start_date=01/01/2024&end_date=12/31/2024`
+- **Custom range**: Any range you specify
 
 ### Pagination
 
@@ -142,7 +103,7 @@ To analyze different time periods, make separate API calls with different date r
 
 ### 400 Bad Request: missing required parameters
 
-```json
+```json JSON
 {
   "error": "Missing required parameter(s): start_date, end_date, campaign_id"
 }
@@ -150,7 +111,7 @@ To analyze different time periods, make separate API calls with different date r
 
 ### 401 Unauthorized: invalid API key
 
-```json
+```json JSON
 {
   "error": "Not Authenticated"
 }
@@ -158,7 +119,7 @@ To analyze different time periods, make separate API calls with different date r
 
 ### 429 Too Many Requests: rate limit exceeded
 
-```json
+```json JSON
 {
   "error": "Rate limit exceeded. Please wait 2 seconds between requests.",
   "retry_after": 2
@@ -169,22 +130,22 @@ To analyze different time periods, make separate API calls with different date r
 
 This endpoint is subject to the standard Public API rate limits:
 
-- **Frequency Limit**: 2-second minimum interval between requests
-- **Hourly Limit**: 40 requests per hour (default, configurable per organization)
+- **Frequency limit**: 2-second minimum interval between requests
+- **Hourly limit**: 40 requests per hour (default, configurable per organization)
 
 ## Performance tips
 
 To ensure fast response times:
 
-1. **Use Pagination**: Always paginate for campaigns with many ambassadors
-2. **Apply Filters**: Use email/name filters to narrow results
+1. **Use pagination**: Always paginate for campaigns with many ambassadors
+2. **Apply filters**: Use email/name filters to narrow results
 3. **Clicks**: Only add `include_clicks=true` when you specifically need click data
 
 ## Integration examples
 
 ### JavaScript/Node.js
 
-```javascript
+```javascript JavaScript
 const axios = require("axios");
 
 async function getAmbassadorStats(
@@ -264,7 +225,7 @@ stats.data.forEach((ambassador) => {
 
 ### Python
 
-```python
+```python Python
 import requests
 
 def get_ambassador_stats(api_key, campaign_id, start_date, end_date, **filters):
@@ -320,7 +281,7 @@ for ambassador in stats['data']:
 
 ### Ruby
 
-```ruby
+```ruby RUBY
 require 'net/http'
 require 'json'
 require 'cgi'
@@ -388,7 +349,7 @@ end
 
 When filtering by multiple emails, use comma-separated values without spaces (or with spaces - both work):
 
-```
+```text Text
 ?email=user1@example.com,user2@example.com,user3@example.com
 ```
 
@@ -407,7 +368,7 @@ The system will:
 
 By default, clicks are not included to ensure fast response times. To include click data:
 
-```
+```text Text
 ?include_clicks=true
 ```
 

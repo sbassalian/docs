@@ -1,28 +1,21 @@
 ---
 title: "List brands"
 openapi: "GET /organizations/brands"
-description: "Retrieves a list of all available brands for your organization. This endpoint returns basic brand information including brand IDs and names that can be used for filtering and organization purposes."
+description: "Every brand in your organization, with IDs and names."
 ---
 
-## Response fields
-
-| Field           | Type    | Description                                  |
-| --------------- | ------- | -------------------------------------------- |
-| `success`       | Boolean | Indicates whether the request was successful |
-| `brands`        | Array   | Array of brand objects                       |
-| `brands[].id`   | Integer | Unique identifier for the brand              |
-| `brands[].name` | String  | Display name of the brand                    |
+Use the IDs to filter other endpoints.
 
 ## Use cases
 
-- **Brand Filtering**: Use brand IDs to filter data in other API endpoints
-- **Brand Management**: Retrieve available brands for management interfaces
-- **Organization Setup**: Get brand information for initial application setup
+- **Brand filtering**: Use brand IDs to filter data in other API endpoints
+- **Brand management**: Retrieve available brands for management interfaces
+- **Organization setup**: Get brand information for initial application setup
 - **Reporting**: Include brand names in reports and analytics dashboards
 
 ## Error responses
 
-```json
+```json JSON
 {
   "error": "Not Authenticated"
 }
@@ -30,9 +23,9 @@ description: "Retrieves a list of all available brands for your organization. Th
 
 Common error scenarios:
 
-- **401 Unauthorized**: Invalid or missing Bearer token
-- **403 Forbidden**: API key doesn't have permission to access brands
-- **500 Internal Server Error**: Server-side error occurred
+- **401 unauthorized**: Invalid or missing Bearer token
+- **403 forbidden**: API key doesn't have permission to access brands
+- **500 internal server error**: Server-side error occurred
 
 <RequestExample>
 

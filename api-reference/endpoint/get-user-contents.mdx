@@ -16,28 +16,6 @@ Sorting is applied **before pagination**, ensuring consistent ordering across al
 - Page 2 shows the next 10 newest posts
 - And so on...
 
-## Response fields
-
-| Field                                       | Type    | Description                                                      |
-| ------------------------------------------- | ------- | ---------------------------------------------------------------- |
-| `success`                                   | Boolean | Indicates if the request was successful                          |
-| `data.user_contents`                        | Array   | Array of user content objects                                    |
-| `data.user_contents[].create_time`          | Integer | Unix timestamp of when the content was created                   |
-| `data.user_contents[].platform`             | String  | Platform where the content was posted (`tik_tok` or `instagram`) |
-| `data.user_contents[].connected_account_id` | Integer | ID of the connected account that posted the content              |
-| `data.user_contents[].username`             | String  | Username of the creator                                          |
-| `data.user_contents[].profile_share_url`    | String  | Direct URL to the creator's profile                              |
-| `data.user_contents[].date`                 | String  | Date when the content was posted (format: "MMM DD")              |
-| `data.user_contents[].sorted_dates`         | Array   | Array of all available dates in "MMM DD" format for filtering    |
-| `data.user_contents[].total_views`          | Integer | Total views within the specified date range (start_date to end_date) |
-| `data.user_contents[].all_time_views`       | Integer | The post's current all-time views (only included when `include_all_time_views=true`) |
-| `data.user_contents[].share_url`            | String  | Direct URL to the content on the platform                        |
-| `meta.current_page`                         | Integer | Current page number for pagination                               |
-| `meta.per_page`                             | Integer | Number of results per page                                       |
-| `meta.row_count`                            | Integer | Total number of results across all pages                         |
-| `meta.page_count`                           | Integer | Total number of pages available                                  |
-| `meta.has_more`                             | Boolean | Indicates if there are more pages available                      |
-
 <RequestExample>
 
 ```bash Basic

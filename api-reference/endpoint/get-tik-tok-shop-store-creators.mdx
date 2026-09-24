@@ -2,32 +2,12 @@
 title: "List TikTok Shop creators"
 sidebarTitle: "List creators"
 openapi: "GET /tik_tok_shop/creators"
+description: "Creator performance for your TikTok Shop: GMV, units sold, orders, commission and refunds per creator."
 ---
 
-Lists creator performance for your TikTok Shop — one row per creator with GMV, units sold, orders, commission, and refund totals for the requested date range. This is the same data as the **Creators** tab of the TikTok Shop store page, with every filter the dashboard offers.
+Same data as the **Creators** tab of the TikTok Shop store page, with every filter the dashboard offers. Rows are ordered by total GMV, highest first (there's no sort parameter). Money fields are raw numbers in display currency units, with `*_formatted` display-string variants.
 
-## Response fields
-
-Each creator row contains:
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `id` | Integer \| null | Internal snapshot id |
-| `external_id` | String | TikTok creator id (oecuid) |
-| `affiliate_id` | Integer \| null | Growi user id (null if the creator is not on Growi) |
-| `affiliate_name` | String | Creator name (`"N/A"` when unknown) |
-| `affiliate_email` | String | Creator email (`"N/A"` when unknown) |
-| `affiliate_avatar_url` | String | Avatar image URL |
-| `connected_account` | Object | `{ id, username, profile_share_url }` of the linked TikTok account |
-| `total_gmv` | Number | Gross merchandise value in display currency units (e.g. dollars) |
-| `total_units_sold` | Integer | Items sold |
-| `total_sku_orders` | Integer | SKU orders |
-| `total_commission` | Number | Estimated commission |
-| `total_refunded_amount` | Number | Refunded amount |
-| `total_items_refunded` | Integer | Items refunded |
-| `total_posts_with_gmv` | Integer | Distinct videos with GMV in the range |
-| `total_live_gmv` / `total_product_card_gmv` | Number | Always `0` (reserved) |
-| `*_formatted` | String | Display-string variant of every metric above (e.g. `"$1,234.56"`) |
+## About the response
 
 The response envelope is `{ data, meta, additional_data }`: `meta` carries pagination (`row_count`, `total_pages`, `current_page`, `next_page`, `prev_page`) and `additional_data` carries raw totals across the full result set plus `currency` / `currency_symbol`.
 

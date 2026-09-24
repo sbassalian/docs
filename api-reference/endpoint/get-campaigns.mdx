@@ -1,31 +1,22 @@
 ---
 title: "List campaigns"
 openapi: "GET /organizations/campaigns"
-description: "Retrieves a list of all available campaigns for your organization. This endpoint returns basic campaign information including campaign IDs, names, types, and statuses that can be used for filtering and organization purposes."
+description: "Every campaign in your organization, with IDs, names, types and statuses."
 ---
 
-## Response fields
-
-| Field                      | Type    | Description                                    |
-| -------------------------- | ------- | ---------------------------------------------- |
-| `success`                  | Boolean | Indicates whether the request was successful   |
-| `campaigns`                | Array   | Array of campaign objects                      |
-| `campaigns[].id`           | Integer | Unique identifier for the campaign             |
-| `campaigns[].name`         | String  | Display name of the campaign                   |
-| `campaigns[].campaign_type`| String  | Type of campaign (Campaign, Contract, Ambassador Program) |
-| `campaigns[].status`       | String  | Current status of the campaign (Active, Paused, Canceled, Completed, Archived, Void) |
+Use the IDs to filter other endpoints.
 
 ## Use cases
 
-- **Campaign Filtering**: Use campaign IDs to filter data in other API endpoints
-- **Campaign Management**: Retrieve available campaigns for management interfaces
-- **Organization Setup**: Get campaign information for initial application setup
+- **Campaign filtering**: Use campaign IDs to filter data in other API endpoints
+- **Campaign management**: Retrieve available campaigns for management interfaces
+- **Organization setup**: Get campaign information for initial application setup
 - **Reporting**: Include campaign names and statuses in reports and analytics dashboards
-- **Status Monitoring**: Track campaign statuses across your organization
+- **Status monitoring**: Track campaign statuses across your organization
 
 ## Error responses
 
-```json
+```json JSON
 {
   "error": "Not Authenticated"
 }
@@ -33,10 +24,10 @@ description: "Retrieves a list of all available campaigns for your organization.
 
 Common error scenarios:
 
-- **401 Unauthorized**: Invalid or missing Bearer token
-- **403 Forbidden**: API key doesn't have permission to access campaigns
-- **422 Unprocessable Entity**: Organization not found
-- **500 Internal Server Error**: Server-side error occurred
+- **401 unauthorized**: Invalid or missing Bearer token
+- **403 forbidden**: API key doesn't have permission to access campaigns
+- **422 unprocessable entity**: Organization not found
+- **500 internal server error**: Server-side error occurred
 
 <RequestExample>
 

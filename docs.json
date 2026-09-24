@@ -37,7 +37,7 @@
     "library": "lucide"
   },
   "styling": {
-    "eyebrows": "section",
+    "eyebrows": "breadcrumbs",
     "codeblocks": "dark"
   },
   "search": {
@@ -152,7 +152,7 @@
             "icon": "chart-line",
             "pages": [
               {
-                "group": "Overview",
+                "group": "Summary",
                 "pages": [
                   "api-reference/endpoint/get-snapshots",
                   "api-reference/endpoint/get-creators-24h",

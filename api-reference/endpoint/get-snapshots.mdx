@@ -4,22 +4,6 @@ openapi: "GET /stats/snapshots"
 description: "Retrieves time-series data for content engagement metrics within a specified date range."
 ---
 
-## Response fields
-
-Each snapshot object contains the following fields:
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `date` | String | The date for this snapshot in YYYY-MM-DD format |
-| `total_views` | Integer | Total number of views for all content on this date |
-| `total_likes` | Integer | Total number of likes for all content on this date |
-| `total_comments` | Integer | Total number of comments for all content on this date |
-| `total_shares` | Integer | Total number of shares for all content on this date |
-| `total_saves` | Integer | Total number of saves for all content on this date |
-| `total_posts_count` | Integer | Total number of posts created on this date |
-| `user_content_ids` | Array | List of user content IDs associated with this date |
-| `organization_id` | Integer/null | Organization ID if applicable |
-
 <RequestExample>
 
 ```bash cURL

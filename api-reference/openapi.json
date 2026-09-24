@@ -137,6 +137,45 @@
                     "data": {
                       "type": "object",
                       "description": "Snapshots data"
+                    },
+                    "date": {
+                      "type": "string",
+                      "description": "The date for this snapshot in YYYY-MM-DD format"
+                    },
+                    "total_views": {
+                      "type": "integer",
+                      "description": "Total number of views for all content on this date"
+                    },
+                    "total_likes": {
+                      "type": "integer",
+                      "description": "Total number of likes for all content on this date"
+                    },
+                    "total_comments": {
+                      "type": "integer",
+                      "description": "Total number of comments for all content on this date"
+                    },
+                    "total_shares": {
+                      "type": "integer",
+                      "description": "Total number of shares for all content on this date"
+                    },
+                    "total_saves": {
+                      "type": "integer",
+                      "description": "Total number of saves for all content on this date"
+                    },
+                    "total_posts_count": {
+                      "type": "integer",
+                      "description": "Total number of posts created on this date"
+                    },
+                    "user_content_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      },
+                      "description": "List of user content IDs associated with this date"
+                    },
+                    "organization_id": {
+                      "type": "integer",
+                      "description": "Organization ID if applicable"
                     }
                   }
                 }
@@ -285,6 +324,30 @@
                     "data": {
                       "type": "object",
                       "description": "Content 24h data"
+                    },
+                    "date": {
+                      "type": "object",
+                      "description": "Unix timestamp for the current day"
+                    },
+                    "last_date": {
+                      "type": "object",
+                      "description": "Unix timestamp for the comparison day (1 week before)"
+                    },
+                    "current": {
+                      "type": "object",
+                      "description": "Number of views/likes for the current day"
+                    },
+                    "last": {
+                      "type": "object",
+                      "description": "Number of views/likes for the comparison day"
+                    },
+                    "total": {
+                      "type": "object",
+                      "description": "Running total as of the latest date"
+                    },
+                    "last_total": {
+                      "type": "object",
+                      "description": "Running total as of the comparison period's latest date"
                     }
                   }
                 }
@@ -464,6 +527,24 @@
               "default": 4
             },
             "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Page number for pagination. Default is 1."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of results per page. Default is 40. Maximum is 100."
           }
         ],
         "responses": {
@@ -581,7 +662,8 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "example": true
+                      "example": true,
+                      "description": "Indicates whether the request was successful"
                     },
                     "data": {
                       "type": "object",
@@ -642,7 +724,8 @@
                                       "description": "Total GMV generated through this specific social account"
                                     }
                                   }
-                                }
+                                },
+                                "description": "Array of connected social media accounts"
                               },
                               "discord_id": {
                                 "type": "string",
@@ -653,9 +736,38 @@
                                 "type": "string",
                                 "example": "johndoe",
                                 "description": "Discord username (included when include_discord=true)"
+                              },
+                              "campaigns": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "campaign_id": {
+                                      "type": "integer",
+                                      "description": "Unique identifier for the campaign"
+                                    },
+                                    "campaign_name": {
+                                      "type": "string",
+                                      "description": "Name of the campaign"
+                                    },
+                                    "total_gmv": {
+                                      "type": "number",
+                                      "description": "Total GMV generated by the creator for this campaign"
+                                    }
+                                  }
+                                },
+                                "description": "Array of campaigns the creator is associated with"
+                              },
+                              "brands": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object"
+                                },
+                                "description": "Array of brand names the creator is associated with"
                               }
                             }
-                          }
+                          },
+                          "description": "Array of creator objects ranked by GMV"
                         },
                         "meta": {
                           "type": "object",
@@ -686,6 +798,33 @@
                               "description": "Whether there are more pages available"
                             }
                           }
+                        }
+                      },
+                      "description": "Container for the response data"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "description": "Pagination metadata",
+                      "properties": {
+                        "current_page": {
+                          "type": "integer",
+                          "description": "Current page number"
+                        },
+                        "per_page": {
+                          "type": "integer",
+                          "description": "Number of results per page"
+                        },
+                        "row_count": {
+                          "type": "integer",
+                          "description": "Total number of rows/records"
+                        },
+                        "page_count": {
+                          "type": "integer",
+                          "description": "Total number of pages"
+                        },
+                        "has_more": {
+                          "type": "boolean",
+                          "description": "Whether there are more pages available"
                         }
                       }
                     }
@@ -1128,6 +1267,26 @@
                           }
                         }
                       }
+                    },
+                    "product_id": {
+                      "type": "string",
+                      "description": "Unique identifier for the TikTok Shop product"
+                    },
+                    "product_name": {
+                      "type": "string",
+                      "description": "Full name/title of the product"
+                    },
+                    "total_gmv": {
+                      "type": "number",
+                      "description": "Total Gross Merchandise Value (revenue) generated by this product"
+                    },
+                    "total_orders": {
+                      "type": "integer",
+                      "description": "Total number of orders for this product"
+                    },
+                    "unique_videos": {
+                      "type": "integer",
+                      "description": "Number of unique videos that promoted this product"
                     }
                   }
                 }
@@ -1185,6 +1344,24 @@
               "default": 4
             },
             "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Page number for pagination. Default is 1."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of results per page. Default is 40. Maximum is 100."
           }
         ],
         "responses": {
@@ -1259,6 +1436,24 @@
               "default": 4
             },
             "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Page number for pagination. Default is 1."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of results per page. Default is 40. Maximum is 100."
           }
         ],
         "responses": {
@@ -1333,6 +1528,24 @@
               "default": 4
             },
             "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Page number for pagination. Default is 1."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of results per page. Default is 40. Maximum is 100."
           }
         ],
         "responses": {
@@ -1407,6 +1620,24 @@
               "default": 4
             },
             "description": "Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Page number for pagination. Default is 1."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of results per page. Default is 40. Maximum is 100."
           }
         ],
         "responses": {
@@ -1615,11 +1846,91 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "example": true
+                      "example": true,
+                      "description": "Indicates if the request was successful"
                     },
                     "data": {
                       "type": "object",
-                      "description": "User contents data"
+                      "description": "User contents data",
+                      "properties": {
+                        "user_contents": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "create_time": {
+                                "type": "integer",
+                                "description": "Unix timestamp of when the content was created"
+                              },
+                              "platform": {
+                                "type": "string",
+                                "description": "Platform where the content was posted (`tik_tok` or `instagram`)"
+                              },
+                              "connected_account_id": {
+                                "type": "integer",
+                                "description": "ID of the connected account that posted the content"
+                              },
+                              "username": {
+                                "type": "string",
+                                "description": "Username of the creator"
+                              },
+                              "profile_share_url": {
+                                "type": "string",
+                                "description": "Direct URL to the creator's profile"
+                              },
+                              "date": {
+                                "type": "string",
+                                "description": "Date when the content was posted (format: \"MMM DD\")"
+                              },
+                              "sorted_dates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object"
+                                },
+                                "description": "Array of all available dates in \"MMM DD\" format for filtering"
+                              },
+                              "total_views": {
+                                "type": "integer",
+                                "description": "Total views within the specified date range (start_date to end_date)"
+                              },
+                              "all_time_views": {
+                                "type": "integer",
+                                "description": "The post's current all-time views (only included when `include_all_time_views=true`)"
+                              },
+                              "share_url": {
+                                "type": "string",
+                                "description": "Direct URL to the content on the platform"
+                              }
+                            }
+                          },
+                          "description": "Array of user content objects"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "current_page": {
+                          "type": "integer",
+                          "description": "Current page number for pagination"
+                        },
+                        "per_page": {
+                          "type": "integer",
+                          "description": "Number of results per page"
+                        },
+                        "row_count": {
+                          "type": "integer",
+                          "description": "Total number of results across all pages"
+                        },
+                        "page_count": {
+                          "type": "integer",
+                          "description": "Total number of pages available"
+                        },
+                        "has_more": {
+                          "type": "boolean",
+                          "description": "Indicates if there are more pages available"
+                        }
+                      }
                     }
                   }
                 }
@@ -2128,7 +2439,8 @@
                             "description": "Name of the ambassador program campaign"
                           }
                         }
-                      }
+                      },
+                      "description": "Array of ambassador objects"
                     },
                     "meta": {
                       "type": "object",
@@ -2153,7 +2465,8 @@
                           "example": 8,
                           "description": "Total number of pages available"
                         }
-                      }
+                      },
+                      "description": "Pagination metadata"
                     }
                   }
                 }
@@ -2321,7 +2634,8 @@
                                 "nullable": true,
                                 "description": "URL to the ambassador's avatar image"
                               }
-                            }
+                            },
+                            "description": "Ambassador information"
                           },
                           "program": {
                             "type": "object",
@@ -2341,7 +2655,8 @@
                                 "example": "active",
                                 "description": "Status of the affiliate"
                               }
-                            }
+                            },
+                            "description": "Program information"
                           },
                           "order": {
                             "type": "object",
@@ -2367,8 +2682,16 @@
                                   "type": "object"
                                 },
                                 "description": "Order activity log"
+                              },
+                              "logs": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object"
+                                },
+                                "description": "Order activity logs"
                               }
-                            }
+                            },
+                            "description": "Order details"
                           },
                           "sale_amount": {
                             "type": "object",
@@ -2383,7 +2706,8 @@
                                 "example": 29170,
                                 "description": "Sale amount in cents"
                               }
-                            }
+                            },
+                            "description": "Sale amount details"
                           },
                           "commission": {
                             "type": "object",
@@ -2418,7 +2742,8 @@
                                 "example": false,
                                 "description": "Whether commission has been overridden"
                               }
-                            }
+                            },
+                            "description": "Commission details"
                           },
                           "occurred_at": {
                             "type": "string",
@@ -2463,7 +2788,8 @@
                             "description": "Whether this is a self-referral"
                           }
                         }
-                      }
+                      },
+                      "description": "Array of ambassador sale objects"
                     },
                     "meta": {
                       "type": "object",
@@ -2483,7 +2809,8 @@
                           "example": 1,
                           "description": "Current page number"
                         }
-                      }
+                      },
+                      "description": "Pagination metadata"
                     },
                     "additional_data": {
                       "type": "object",
@@ -2533,7 +2860,8 @@
                           "example": 0,
                           "description": "Total number of posts"
                         }
-                      }
+                      },
+                      "description": "Summary statistics for the query results"
                     },
                     "user_contents": {
                       "type": "array",
@@ -2689,6 +3017,15 @@
               "default": "all"
             },
             "description": "Filter by tracking event status"
+          },
+          {
+            "name": "include_clicks",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Set to `true` to include click data. Default is `false`."
           }
         ],
         "responses": {
@@ -2758,9 +3095,14 @@
                             "type": "string",
                             "example": "01/15/2024",
                             "description": "Date the ambassador joined the campaign (MM/DD/YYYY format)"
+                          },
+                          "refund_amount": {
+                            "type": "number",
+                            "description": "Total refunded/canceled order amount in dollars"
                           }
                         }
-                      }
+                      },
+                      "description": "Array of ambassador statistics objects"
                     },
                     "meta": {
                       "type": "object",
@@ -2800,7 +3142,8 @@
                           "example": "123",
                           "description": "Campaign ID queried"
                         }
-                      }
+                      },
+                      "description": "Pagination and query metadata"
                     }
                   }
                 }
@@ -2919,7 +3262,8 @@
                       "type": "array",
                       "items": {
                         "$ref": "#/components/schemas/CampaignAffiliate"
-                      }
+                      },
+                      "description": "Array of campaign-affiliate (enrollment) objects"
                     },
                     "meta": {
                       "type": "object",
@@ -2986,7 +3330,9 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["tag"],
+                "required": [
+                  "tag"
+                ],
                 "properties": {
                   "tag": {
                     "type": "string",
@@ -3006,9 +3352,18 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": { "type": "boolean", "example": true },
-                    "id": { "type": "integer", "example": 3490313 },
-                    "tag": { "type": "string", "example": "theirexistingcode" }
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3490313
+                    },
+                    "tag": {
+                      "type": "string",
+                      "example": "theirexistingcode"
+                    }
                   }
                 }
               }
@@ -3021,7 +3376,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": { "type": "string", "example": "Not Authenticated" }
+                    "error": {
+                      "type": "string",
+                      "example": "Not Authenticated"
+                    }
                   }
                 }
               }
@@ -3071,14 +3429,19 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["affiliates"],
+                "required": [
+                  "affiliates"
+                ],
                 "properties": {
                   "affiliates": {
                     "type": "array",
                     "maxItems": 300,
                     "items": {
                       "type": "object",
-                      "required": ["id", "tag"],
+                      "required": [
+                        "id",
+                        "tag"
+                      ],
                       "properties": {
                         "id": {
                           "type": "integer",
@@ -3091,7 +3454,8 @@
                           "description": "New default affiliate tag. Stored lowercase."
                         }
                       }
-                    }
+                    },
+                    "description": "Rows to update. Each row needs `id` (campaign-affiliate enrollment ID) and `tag` (new code)."
                   }
                 }
               }
@@ -3106,14 +3470,21 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": { "type": "boolean", "example": true },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
                     "updated": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
-                          "id": { "type": "integer" },
-                          "tag": { "type": "string" }
+                          "id": {
+                            "type": "integer"
+                          },
+                          "tag": {
+                            "type": "string"
+                          }
                         }
                       }
                     },
@@ -3122,8 +3493,12 @@
                       "items": {
                         "type": "object",
                         "properties": {
-                          "id": { "type": "integer" },
-                          "error": { "type": "string" }
+                          "id": {
+                            "type": "integer"
+                          },
+                          "error": {
+                            "type": "string"
+                          }
                         }
                       }
                     }
@@ -3139,7 +3514,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": { "type": "string", "example": "Not Authenticated" }
+                    "error": {
+                      "type": "string",
+                      "example": "Not Authenticated"
+                    }
                   }
                 }
               }
@@ -3152,16 +3530,32 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": { "type": "boolean", "example": false },
-                    "error": { "type": "string" },
-                    "updated": { "type": "array", "items": { "type": "object" } },
-                    "errors": { "type": "array", "items": { "type": "object" } }
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "updated": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
                   }
                 }
               }
             }
           }
-        }
+        },
+        "parameters": []
       }
     },
     "/organizations/brands": {
@@ -3177,7 +3571,8 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "example": true
+                      "example": true,
+                      "description": "Indicates whether the request was successful"
                     },
                     "brands": {
                       "type": "array",
@@ -3195,7 +3590,8 @@
                             "description": "Display name of the brand"
                           }
                         }
-                      }
+                      },
+                      "description": "Array of brand objects"
                     }
                   }
                 }
@@ -3248,7 +3644,8 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "example": true
+                      "example": true,
+                      "description": "Indicates whether the request was successful"
                     },
                     "campaigns": {
                       "type": "array",
@@ -3289,7 +3686,8 @@
                             "description": "Current status of the campaign"
                           }
                         }
-                      }
+                      },
+                      "description": "Array of campaign objects"
                     }
                   }
                 }
@@ -3505,7 +3903,8 @@
                       "type": "array",
                       "items": {
                         "$ref": "#/components/schemas/AffiliateSale"
-                      }
+                      },
+                      "description": "Array of affiliate sale objects"
                     },
                     "meta": {
                       "type": "object",
@@ -3525,7 +3924,8 @@
                           "example": 1,
                           "description": "Current page number"
                         }
-                      }
+                      },
+                      "description": "Pagination metadata"
                     },
                     "additional_data": {
                       "type": "object",
@@ -3565,7 +3965,8 @@
                           "example": 0.0,
                           "description": "Total refunded amount in dollars"
                         }
-                      }
+                      },
+                      "description": "Aggregate totals for the query"
                     }
                   }
                 }
@@ -3605,7 +4006,8 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/AffiliateSale"
+                      "$ref": "#/components/schemas/AffiliateSale",
+                      "description": "The created affiliate sale object"
                     }
                   }
                 }
@@ -3675,7 +4077,8 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/AffiliateSale"
+                      "$ref": "#/components/schemas/AffiliateSale",
+                      "description": "The updated affiliate sale object"
                     }
                   }
                 }
@@ -3908,6 +4311,70 @@
                     },
                     "additional_data": {
                       "$ref": "#/components/schemas/TikTokShopStoreTotals"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "null"
+                    },
+                    "external_id": {
+                      "type": "string",
+                      "description": "TikTok creator id (oecuid)"
+                    },
+                    "affiliate_id": {
+                      "type": "integer",
+                      "description": "null"
+                    },
+                    "affiliate_name": {
+                      "type": "string",
+                      "description": "Creator name (`\"N/A\"` when unknown)"
+                    },
+                    "affiliate_email": {
+                      "type": "string",
+                      "description": "Creator email (`\"N/A\"` when unknown)"
+                    },
+                    "affiliate_avatar_url": {
+                      "type": "string",
+                      "description": "Avatar image URL"
+                    },
+                    "connected_account": {
+                      "type": "object",
+                      "description": "`{ id, username, profile_share_url }` of the linked TikTok account"
+                    },
+                    "total_gmv": {
+                      "type": "number",
+                      "description": "Gross merchandise value in display currency units (e.g. dollars)"
+                    },
+                    "total_units_sold": {
+                      "type": "integer",
+                      "description": "Items sold"
+                    },
+                    "total_sku_orders": {
+                      "type": "integer",
+                      "description": "SKU orders"
+                    },
+                    "total_commission": {
+                      "type": "number",
+                      "description": "Estimated commission"
+                    },
+                    "total_refunded_amount": {
+                      "type": "number",
+                      "description": "Refunded amount"
+                    },
+                    "total_items_refunded": {
+                      "type": "integer",
+                      "description": "Items refunded"
+                    },
+                    "total_posts_with_gmv": {
+                      "type": "integer",
+                      "description": "Distinct videos with GMV in the range"
+                    },
+                    "total_live_gmv": {
+                      "type": "number",
+                      "description": "Always `0` (reserved)"
+                    },
+                    "_formatted": {
+                      "type": "string",
+                      "description": "Display-string variant of every metric above (e.g. `\"$1,234.56\"`)"
                     }
                   },
                   "required": [
@@ -4164,6 +4631,78 @@
                     },
                     "additional_data": {
                       "$ref": "#/components/schemas/TikTokShopStoreTotals"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "null"
+                    },
+                    "external_id": {
+                      "type": "string",
+                      "description": "TikTok video id"
+                    },
+                    "external_creator_id": {
+                      "type": "string",
+                      "description": "null"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "Video title (full / truncated to 30 chars)"
+                    },
+                    "share_url": {
+                      "type": "string",
+                      "description": "Video share URL (`\"#\"` when unavailable)"
+                    },
+                    "product_name": {
+                      "type": "string",
+                      "description": "null"
+                    },
+                    "create_time": {
+                      "type": "string",
+                      "description": "Video post time (ISO 8601)"
+                    },
+                    "pretty_create_time": {
+                      "type": "string",
+                      "description": "Display string, e.g. `\"July 10, 2026\"`"
+                    },
+                    "affiliate_id": {
+                      "type": "object",
+                      "description": "Growi creator info (`\"N/A\"` / null when the creator is not on Growi)"
+                    },
+                    "connected_account_data": {
+                      "type": "object",
+                      "description": "Linked TikTok account info"
+                    },
+                    "total_gmv": {
+                      "type": "number",
+                      "description": "GMV in display currency units"
+                    },
+                    "total_units_sold": {
+                      "type": "integer",
+                      "description": "Items sold"
+                    },
+                    "total_sku_orders": {
+                      "type": "integer",
+                      "description": "SKU orders"
+                    },
+                    "total_commission": {
+                      "type": "number",
+                      "description": "Estimated commission"
+                    },
+                    "total_refunded_amount": {
+                      "type": "number",
+                      "description": "Refunded amount"
+                    },
+                    "total_items_refunded": {
+                      "type": "integer",
+                      "description": "Items refunded"
+                    },
+                    "total_views": {
+                      "type": "integer",
+                      "description": "Video views"
+                    },
+                    "_formatted": {
+                      "type": "string",
+                      "description": "Display-string variant of every metric above"
                     }
                   },
                   "required": [
@@ -4353,6 +4892,98 @@
                     },
                     "additional_data": {
                       "$ref": "#/components/schemas/TikTokShopStoreTotals"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "Internal snapshot id"
+                    },
+                    "external_id": {
+                      "type": "string",
+                      "description": "TikTok LIVE id"
+                    },
+                    "external_creator_id": {
+                      "type": "string",
+                      "description": "null"
+                    },
+                    "external_product_id": {
+                      "type": "string",
+                      "description": "null"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "LIVE title (full / truncated)"
+                    },
+                    "duration": {
+                      "type": "string",
+                      "description": "Display string of the LIVE start/end time"
+                    },
+                    "start_time": {
+                      "type": "string",
+                      "description": "null"
+                    },
+                    "product": {
+                      "type": "object",
+                      "description": "null"
+                    },
+                    "affiliate_": {
+                      "type": "object",
+                      "description": "Growi creator info (see Creators endpoint)"
+                    },
+                    "total_gmv": {
+                      "type": "number",
+                      "description": "GMV in display currency units"
+                    },
+                    "total_units_sold": {
+                      "type": "integer",
+                      "description": "Items sold"
+                    },
+                    "total_sku_orders": {
+                      "type": "integer",
+                      "description": "SKU orders"
+                    },
+                    "total_commission": {
+                      "type": "number",
+                      "description": "Estimated commission"
+                    },
+                    "total_refunded_amount": {
+                      "type": "number",
+                      "description": "Refunded amount"
+                    },
+                    "total_items_refunded": {
+                      "type": "integer",
+                      "description": "Items refunded"
+                    },
+                    "_formatted": {
+                      "type": "string",
+                      "description": "Display-string variant of every metric above"
+                    },
+                    "gpm_amount": {
+                      "type": "integer",
+                      "description": "GMV per mille, **integer cents**"
+                    },
+                    "aov_amount": {
+                      "type": "integer",
+                      "description": "Average order value, **integer cents**"
+                    },
+                    "average_gmv_per_customer_amount": {
+                      "type": "integer",
+                      "description": "**Integer cents**"
+                    },
+                    "average_viewing_duration": {
+                      "type": "string",
+                      "description": "null"
+                    },
+                    "unique_viewer_count": {
+                      "type": "integer",
+                      "description": "Engagement counts"
+                    },
+                    "engagement_rate": {
+                      "type": "string",
+                      "description": "null"
+                    },
+                    "live_product_impressions_count": {
+                      "type": "integer",
+                      "description": "Product funnel counts"
                     }
                   },
                   "required": [
@@ -4543,6 +5174,70 @@
                     },
                     "additional_data": {
                       "$ref": "#/components/schemas/TikTokShopStoreTotals"
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "Same as `external_product_id`"
+                    },
+                    "external_product_id": {
+                      "type": "string",
+                      "description": "TikTok Shop product id"
+                    },
+                    "product_name": {
+                      "type": "string",
+                      "description": "Product name"
+                    },
+                    "product_image_url": {
+                      "type": "string",
+                      "description": "null"
+                    },
+                    "latest_date": {
+                      "type": "string",
+                      "description": "null"
+                    },
+                    "total_gmv": {
+                      "type": "number",
+                      "description": "GMV in display currency units"
+                    },
+                    "total_units_sold": {
+                      "type": "integer",
+                      "description": "Items sold"
+                    },
+                    "total_sku_orders": {
+                      "type": "integer",
+                      "description": "SKU orders"
+                    },
+                    "total_commission": {
+                      "type": "number",
+                      "description": "Estimated commission"
+                    },
+                    "total_refunded_amount": {
+                      "type": "number",
+                      "description": "Refunded amount"
+                    },
+                    "total_items_refunded": {
+                      "type": "integer",
+                      "description": "Items refunded"
+                    },
+                    "total_estimated_flat_fee": {
+                      "type": "number",
+                      "description": "Estimated flat fees"
+                    },
+                    "total_videos": {
+                      "type": "integer",
+                      "description": "Content counts featuring this product"
+                    },
+                    "total_samples_shipped": {
+                      "type": "integer",
+                      "description": "Samples shipped"
+                    },
+                    "sales_creator_count": {
+                      "type": "integer",
+                      "description": "Distinct creators who sold this product"
+                    },
+                    "_formatted": {
+                      "type": "string",
+                      "description": "Display-string variant of every metric above"
                     }
                   },
                   "required": [
@@ -4742,6 +5437,53 @@
                     },
                     "additional_data": {
                       "$ref": "#/components/schemas/TikTokShopStoreTotals"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "Internal row id"
+                    },
+                    "external_id": {
+                      "type": "string",
+                      "description": "TikTok creator id (oecuid)"
+                    },
+                    "affiliate_id": {
+                      "type": "object",
+                      "description": "Growi creator info (`\"N/A\"` / null when not on Growi)"
+                    },
+                    "connected_account": {
+                      "type": "object",
+                      "description": "`{ id, username, profile_share_url }`"
+                    },
+                    "product_count": {
+                      "type": "integer",
+                      "description": "Distinct products this creator sold"
+                    },
+                    "latest_date": {
+                      "type": "string",
+                      "description": "null"
+                    },
+                    "total_gmv": {
+                      "type": "number",
+                      "description": "GMV in display currency units"
+                    },
+                    "total_units_sold": {
+                      "type": "integer",
+                      "description": "Sales counts"
+                    },
+                    "total_commission": {
+                      "type": "number",
+                      "description": "Money totals"
+                    },
+                    "products": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      },
+                      "description": "Per-product breakdown, GMV descending (fields below)"
+                    },
+                    "_formatted": {
+                      "type": "string",
+                      "description": "Display-string variant of every metric above"
                     }
                   },
                   "required": [
@@ -4835,7 +5577,29 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "type": "object"
+                      "type": "object",
+                      "properties": {
+                        "invitation_id": {
+                          "type": "integer",
+                          "description": "The application's id"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "`pending`, or `accepted` when the campaign auto-accepts applicants"
+                        },
+                        "user_id": {
+                          "type": "integer",
+                          "description": "The creator's Growi user id"
+                        },
+                        "campaign_id": {
+                          "type": "integer",
+                          "description": "The campaign applied to"
+                        },
+                        "created": {
+                          "type": "boolean",
+                          "description": "`true` for a new application, `false` for an idempotent repeat"
+                        }
+                      }
                     }
                   }
                 }
@@ -4879,6 +5643,313 @@
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/creator_payouts": {
+      "get": {
+        "summary": "List creator payouts",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates whether the request was successful"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "Internal identifier for the payout record"
+                          },
+                          "uuid": {
+                            "type": "string",
+                            "description": "Stable identifier; use this with `mark_credit_payout`"
+                          },
+                          "creator_name": {
+                            "type": "string",
+                            "description": "Creator's display name"
+                          },
+                          "creator_avatar_url": {
+                            "type": "string",
+                            "description": "URL to the creator's avatar image"
+                          },
+                          "creator_id": {
+                            "type": "integer",
+                            "description": "Unique identifier for the creator"
+                          },
+                          "amount": {
+                            "type": "string",
+                            "description": "Cash amount, formatted with currency"
+                          },
+                          "deal_date": {
+                            "type": "string",
+                            "description": "Billing cycle end / due date (MM/DD/YYYY)"
+                          },
+                          "since_date": {
+                            "type": "string",
+                            "description": "Start date of the payout period (MM/DD/YYYY)"
+                          },
+                          "campaign_category": {
+                            "type": "string",
+                            "description": "Category of the campaign"
+                          },
+                          "campaign_name": {
+                            "type": "string",
+                            "description": "Name of the associated campaign"
+                          },
+                          "views": {
+                            "type": "string",
+                            "description": "View status or completion status"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "One of `Due`, `Pending`, `Paid`, `Sent from account`, `Paid externally`, `Canceled`, `In progress`"
+                          },
+                          "contents_delivered": {
+                            "type": "integer",
+                            "description": "Number of content pieces delivered"
+                          },
+                          "contents_required": {
+                            "type": "integer",
+                            "description": "Number of content pieces required"
+                          },
+                          "credits_enabled": {
+                            "type": "boolean",
+                            "description": "Whether the campaign has credits enabled"
+                          },
+                          "credit_name": {
+                            "type": "string",
+                            "description": "null"
+                          },
+                          "total_credit_amount": {
+                            "type": "integer",
+                            "description": "Sum of all credit components (fixed + commission + residual + bonus + milestone bonus + meta ad fee + acceptance bonus). `0` when the feature is off"
+                          },
+                          "formatted_total_credit_amount": {
+                            "type": "string",
+                            "description": "null"
+                          }
+                        }
+                      },
+                      "description": "Array of creator payout objects"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "description": "Pagination metadata",
+                      "properties": {
+                        "current_page": {
+                          "type": "integer",
+                          "description": "Current page number"
+                        },
+                        "row_count": {
+                          "type": "integer",
+                          "description": "Total number of rows"
+                        },
+                        "page_count": {
+                          "type": "integer",
+                          "description": "Total number of pages"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filters by payout cycle start"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filters by payout cycle end"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "One of `paid`, `pending`, `open`, `failed`, `void`, `canceled`, `completed`"
+          },
+          {
+            "name": "credits_only",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "When `true`, only returns credit-based payouts"
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter by campaign (single ID, comma-separated list, or array)"
+          },
+          {
+            "name": "creator_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter by creator"
+          },
+          {
+            "name": "tag_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Organization payout tag"
+          },
+          {
+            "name": "creator_tag_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Creator tag"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Page number for pagination. Defaults to 1."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Results per page. Defaults to 4, maximum 40. (`limit` is accepted as an alias.)"
+          }
+        ]
+      }
+    },
+    "/stats/mark_credit_payout": {
+      "post": {
+        "summary": "Mark credit payout",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates whether the payout was marked as paid externally"
+                    },
+                    "creator_payout": {
+                      "type": "object",
+                      "description": "The updated payout",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "Internal identifier for the payout"
+                        },
+                        "uuid": {
+                          "type": "string",
+                          "description": "Stable identifier"
+                        },
+                        "creator_name": {
+                          "type": "string",
+                          "description": "Creator's display name"
+                        },
+                        "since_date": {
+                          "type": "string",
+                          "description": "Start date of the payout period (MM/DD/YYYY)"
+                        },
+                        "deal_date": {
+                          "type": "string",
+                          "description": "Billing cycle end / due date (MM/DD/YYYY)"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "Will be `Paid externally` after a successful call"
+                        },
+                        "amount": {
+                          "type": "string",
+                          "description": "Cash amount, formatted with currency"
+                        },
+                        "credits_enabled": {
+                          "type": "boolean",
+                          "description": "Whether credits are enabled for the campaign"
+                        },
+                        "credit_name": {
+                          "type": "string",
+                          "description": "null"
+                        },
+                        "total_credit_amount": {
+                          "type": "integer",
+                          "description": "Total credit amount for the payout"
+                        },
+                        "formatted_total_credit_amount": {
+                          "type": "string",
+                          "description": "null"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "creator_payout_uuid": {
+                    "type": "string",
+                    "description": "The `uuid` of the payout (from `GET /stats/creator_payouts`)"
+                  }
+                },
+                "required": [
+                  "creator_payout_uuid"
+                ]
               }
             }
           }

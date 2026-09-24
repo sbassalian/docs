@@ -18,7 +18,7 @@ All API requests require authentication using a Public API key. You can find you
 
 Include your API key in the request headers:
 
-```http
+```http HTTP
 Authorization: Bearer YOUR_PUBLIC_API_KEY
 ```
 
@@ -26,7 +26,7 @@ Authorization: Bearer YOUR_PUBLIC_API_KEY
 
 All API endpoints are prefixed with:
 
-```
+```text Text
 https://api.growi.io/api/public/v1
 ```
 
@@ -38,7 +38,7 @@ The Stats API provides the following endpoints:
 
 Get available filters for your organization.
 
-```http
+```http HTTP
 GET /stats/filters?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
@@ -46,7 +46,7 @@ GET /stats/filters?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 
 Get a breakdown of content by platform.
 
-```http
+```http HTTP
 GET /stats/content_platform_composition?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
@@ -54,7 +54,7 @@ GET /stats/content_platform_composition?start_date=MM/DD/YYYY&end_date=MM/DD/YYY
 
 Get time-series data for content engagement metrics.
 
-```http
+```http HTTP
 GET /stats/snapshots?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
@@ -62,7 +62,7 @@ GET /stats/snapshots?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 
 Get 24-hour views and engagement metrics with comparison to previous period.
 
-```http
+```http HTTP
 GET /stats/content_24h_data?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
@@ -70,7 +70,7 @@ GET /stats/content_24h_data?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 
 Get creator acquisition data with comparison to previous period.
 
-```http
+```http HTTP
 GET /stats/creators_24h?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
@@ -78,7 +78,7 @@ GET /stats/creators_24h?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 
 Get your top-performing creators ranked by total engagement.
 
-```http
+```http HTTP
 GET /stats/top_creators_by_engagement?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
 ```
 
@@ -86,7 +86,7 @@ GET /stats/top_creators_by_engagement?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&
 
 Get your most active creators ranked by post count.
 
-```http
+```http HTTP
 GET /stats/top_creators_by_posts?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
 ```
 
@@ -94,7 +94,7 @@ GET /stats/top_creators_by_posts?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit
 
 Get your top-performing social accounts ranked by engagement.
 
-```http
+```http HTTP
 GET /stats/top_connected_accounts_by_engagement?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
 ```
 
@@ -102,7 +102,7 @@ GET /stats/top_connected_accounts_by_engagement?start_date=MM/DD/YYYY&end_date=M
 
 Get your top creators ranked by earnings.
 
-```http
+```http HTTP
 GET /stats/top_earning_creators?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
 ```
 
@@ -110,7 +110,7 @@ GET /stats/top_earning_creators?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=
 
 Get payout data with comparison to previous period.
 
-```http
+```http HTTP
 GET /stats/payouts_24h?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
@@ -118,7 +118,7 @@ GET /stats/payouts_24h?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 
 Get all user content creation data within a date range.
 
-```http
+```http HTTP
 GET /stats/user_contents?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
@@ -126,7 +126,7 @@ GET /stats/user_contents?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 
 Get TikTok Shop GMV data with comparison to previous period.
 
-```http
+```http HTTP
 GET /stats/tik_tok_shop_gmv_24h?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
@@ -134,7 +134,7 @@ GET /stats/tik_tok_shop_gmv_24h?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 
 Get your top-performing posts ranked by views. Optionally restrict the candidate post set by post creation time using `posted_at_start_date` and `posted_at_end_date` (both required together).
 
-```http
+```http HTTP
 GET /stats/top_posts_by_views?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
 GET /stats/top_posts_by_views?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&posted_at_start_date=MM/DD/YYYY&posted_at_end_date=MM/DD/YYYY
 ```
@@ -143,7 +143,7 @@ GET /stats/top_posts_by_views?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&posted_a
 
 Get progress metrics for your manual campaigns.
 
-```http
+```http HTTP
 GET /stats/manual_campaign_progress?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
@@ -151,7 +151,7 @@ GET /stats/manual_campaign_progress?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 
 Get your top-performing creators ranked by Gross Merchandise Value (GMV).
 
-```http
+```http HTTP
 GET /stats/top_creators_by_gmv?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
 ```
 
@@ -161,15 +161,15 @@ All endpoints require the following parameters:
 
 | Parameter     | Type    | Description                              | Required |
 | ------------- | ------- | ---------------------------------------- | -------- |
-| `start_date`  | String  | Start date in MM/DD/YYYY format          | Yes      |
-| `end_date`    | String  | End date in MM/DD/YYYY format            | Yes      |
-| `limit`       | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No       |
+| `start_date`  | string  | Start date in MM/DD/YYYY format          | Yes      |
+| `end_date`    | string  | End date in MM/DD/YYYY format            | Yes      |
+| `limit`       | integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No       |
 
 ## Response format
 
 Responses are returned in JSON format. A successful response includes:
 
-```json
+```json JSON
 {
   "success": true,
   "data": {
@@ -182,7 +182,7 @@ Responses are returned in JSON format. A successful response includes:
 
 ### JavaScript/TypeScript
 
-```typescript
+```typescript TYPESCRIPT
 async function fetchTopCreatorsByEngagement() {
   const startDate = "01/01/2023";
   const endDate = "01/31/2023";
@@ -204,7 +204,7 @@ async function fetchTopCreatorsByEngagement() {
 
 ### Python
 
-```python
+```python Python
 import requests
 from datetime import datetime
 
@@ -253,7 +253,7 @@ def fetch_content_platform_composition():
 
 - [API Reference](/api-reference)
 - [Authentication Guide](/authentication)
-- [Tracking Events API](/tracking-events-api)
-- [Campaign Affiliates API](/campaign-affiliates-api)
+- [Tracking Events API](/api-reference/endpoint/create)
+- [Campaign Affiliates API](/api-reference/endpoint/list-campaign-affiliates)
 
 For any questions or issues with the API, please contact support@growi.io.

@@ -10,80 +10,80 @@ description: "Retrieves transaction history including payments, payouts, deposit
 
 | Field                    | Type    | Description                                              |
 | ------------------------ | ------- | -------------------------------------------------------- |
-| `id`                     | Integer | Unique identifier for the transaction                    |
-| `formatted_amount`       | String  | Transaction amount in formatted currency with sign (amounts are in cents) |
-| `transaction_type`       | String  | Type of transaction (Payment, Payout, Deposit, etc.)    |
-| `currency`               | String  | Currency code (e.g., "usd")                             |
-| `formatted_fee_amount`   | String  | Processing fee amount in formatted currency (amounts are in cents) |
-| `formatted_total`        | String  | Total amount including fees in formatted currency (amounts are in cents) |
-| `status`                 | String  | Transaction status (Paid, Available, Failed, etc.)      |
-| `balance`                | Number  | Account balance after transaction (in cents)            |
-| `pending_balance`        | Number  | Pending balance amount (in cents)                       |
-| `description`            | String  | Transaction description                                  |
-| `organization_id`        | Integer | ID of the organization                                   |
-| `creator_payout_id`      | Integer | Associated creator payout ID (null if not applicable)   |
-| `invoice_id`             | Integer | Associated invoice ID (null if not applicable)          |
-| `payment_method_id`      | Integer | Payment method ID (null if not applicable)              |
-| `external_id`            | String  | External system identifier                               |
-| `source`                 | String  | Transaction source (Balance, External, etc.)            |
-| `destination`            | String  | Transaction destination                                  |
-| `created`                | Integer | Unix timestamp of transaction creation                   |
-| `organization_name`      | String  | Name of the organization                                 |
-| `organization_logo_url`  | String  | URL to organization logo                                 |
-| `organization_slug`      | String  | Organization slug identifier                             |
-| `invoice_description`    | String  | Description from associated invoice                      |
+| `id`                     | integer | Unique identifier for the transaction                    |
+| `formatted_amount`       | string  | Transaction amount in formatted currency with sign (amounts are in cents) |
+| `transaction_type`       | string  | Type of transaction (Payment, Payout, Deposit, etc.)    |
+| `currency`               | string  | Currency code (e.g., "usd")                             |
+| `formatted_fee_amount`   | string  | Processing fee amount in formatted currency (amounts are in cents) |
+| `formatted_total`        | string  | Total amount including fees in formatted currency (amounts are in cents) |
+| `status`                 | string  | Transaction status (Paid, Available, Failed, etc.)      |
+| `balance`                | number  | Account balance after transaction (in cents)            |
+| `pending_balance`        | number  | Pending balance amount (in cents)                       |
+| `description`            | string  | Transaction description                                  |
+| `organization_id`        | integer | ID of the organization                                   |
+| `creator_payout_id`      | integer | Associated creator payout ID (null if not applicable)   |
+| `invoice_id`             | integer | Associated invoice ID (null if not applicable)          |
+| `payment_method_id`      | integer | Payment method ID (null if not applicable)              |
+| `external_id`            | string  | External system identifier                               |
+| `source`                 | string  | Transaction source (Balance, External, etc.)            |
+| `destination`            | string  | Transaction destination                                  |
+| `created`                | integer | Unix timestamp of transaction creation                   |
+| `organization_name`      | string  | Name of the organization                                 |
+| `organization_logo_url`  | string  | URL to organization logo                                 |
+| `organization_slug`      | string  | Organization slug identifier                             |
+| `invoice_description`    | string  | Description from associated invoice                      |
 
 ### Invoice object (when applicable)
 
 | Field                                    | Type    | Description                                    |
 | ---------------------------------------- | ------- | ---------------------------------------------- |
-| `invoice.id`                             | Integer | Invoice unique identifier                      |
-| `invoice.currency`                       | String  | Invoice currency                               |
-| `invoice.hosted_invoice_url`             | String  | URL to hosted invoice (null if not available) |
-| `invoice.status`                         | String  | Invoice status                                 |
-| `invoice.total_formatted`                | Number  | Invoice total amount (in cents)               |
-| `invoice.created_at_formatted`           | String  | Invoice creation date (MM/DD/YY format)        |
-| `invoice.description`                    | String  | Invoice description                            |
-| `invoice.pretty_status`                  | String  | Human-readable status                          |
-| `invoice.paid_at`                        | String  | ISO timestamp when invoice was paid            |
-| `invoice.payment_method`                 | String  | Payment method used                            |
-| `invoice.line_items`                     | Array   | Array of line item objects                     |
+| `invoice.id`                             | integer | Invoice unique identifier                      |
+| `invoice.currency`                       | string  | Invoice currency                               |
+| `invoice.hosted_invoice_url`             | string  | URL to hosted invoice (null if not available) |
+| `invoice.status`                         | string  | Invoice status                                 |
+| `invoice.total_formatted`                | number  | Invoice total amount (in cents)               |
+| `invoice.created_at_formatted`           | string  | Invoice creation date (MM/DD/YY format)        |
+| `invoice.description`                    | string  | Invoice description                            |
+| `invoice.pretty_status`                  | string  | Human-readable status                          |
+| `invoice.paid_at`                        | string  | ISO timestamp when invoice was paid            |
+| `invoice.payment_method`                 | string  | Payment method used                            |
+| `invoice.line_items`                     | array   | Array of line item objects                     |
 
 ### Line item object
 
 | Field                          | Type    | Description                           |
 | ------------------------------ | ------- | ------------------------------------- |
-| `line_items[].id`              | Integer | Line item unique identifier           |
-| `line_items[].amount`          | Number  | Line item amount (in cents)           |
-| `line_items[].user_name`       | String  | Creator/user name                     |
-| `line_items[].campaign_name`   | String  | Associated campaign name              |
-| `line_items[].user_id`         | Integer | Creator/user ID                       |
-| `line_items[].status`          | String  | Line item status                      |
-| `line_items[].creator_payout_id` | Integer | Associated creator payout ID        |
-| `line_items[].description`     | String  | Line item description                 |
-| `line_items[].refunded`        | Boolean | Whether the item was refunded         |
+| `line_items[].id`              | integer | Line item unique identifier           |
+| `line_items[].amount`          | number  | Line item amount (in cents)           |
+| `line_items[].user_name`       | string  | Creator/user name                     |
+| `line_items[].campaign_name`   | string  | Associated campaign name              |
+| `line_items[].user_id`         | integer | Creator/user ID                       |
+| `line_items[].status`          | string  | Line item status                      |
+| `line_items[].creator_payout_id` | integer | Associated creator payout ID        |
+| `line_items[].description`     | string  | Line item description                 |
+| `line_items[].refunded`        | boolean | Whether the item was refunded         |
 
 ### Metadata
 
 | Field                | Type    | Description                    |
 | -------------------- | ------- | ------------------------------ |
-| `meta.row_count`     | Integer | Total number of transactions   |
-| `meta.page_count`    | Integer | Total number of pages          |
-| `meta.current_page`  | Integer | Current page number            |
+| `meta.row_count`     | integer | Total number of transactions   |
+| `meta.page_count`    | integer | Total number of pages          |
+| `meta.current_page`  | integer | Current page number            |
 
 ### Additional data (financial summary)
 
 | Field                              | Type   | Description                                      |
 | ---------------------------------- | ------ | ------------------------------------------------ |
-| `additional_data.amount_sum`       | Number | Total available balance amount (in cents)       |
-| `additional_data.fee_sum`          | Number | Total fees collected (in cents)                 |
-| `additional_data.payout_sum`       | Number | Total payout amount (negative value, in cents)  |
-| `additional_data.payment_sum`      | Number | Total payment amount received (in cents)        |
-| `additional_data.deposit_sum`      | Number | Total deposit amount (in cents)                 |
-| `additional_data.withdrawal_sum`   | Number | Total withdrawal amount (in cents)              |
-| `additional_data.dispute_sum`      | Number | Total dispute amount (in cents)                 |
-| `additional_data.payout_other_sum` | Number | Total payouts from payment methods (in cents)  |
-| `additional_data.payout_balance_sum` | Number | Total payouts from balance (in cents)         |
+| `additional_data.amount_sum`       | number | Total available balance amount (in cents)       |
+| `additional_data.fee_sum`          | number | Total fees collected (in cents)                 |
+| `additional_data.payout_sum`       | number | Total payout amount (negative value, in cents)  |
+| `additional_data.payment_sum`      | number | Total payment amount received (in cents)        |
+| `additional_data.deposit_sum`      | number | Total deposit amount (in cents)                 |
+| `additional_data.withdrawal_sum`   | number | Total withdrawal amount (in cents)              |
+| `additional_data.dispute_sum`      | number | Total dispute amount (in cents)                 |
+| `additional_data.payout_other_sum` | number | Total payouts from payment methods (in cents)  |
+| `additional_data.payout_balance_sum` | number | Total payouts from balance (in cents)         |
 
 ## Transaction types
 

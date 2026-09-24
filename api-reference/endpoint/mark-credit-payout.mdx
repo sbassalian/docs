@@ -1,23 +1,19 @@
 ---
 title: "Mark credit payout"
 openapi: "POST /stats/mark_credit_payout"
-description: "Marks a single credit-only creator payout as **paid externally**. Use this after paying a creator their credits in your own system so that the payout's status is reflected in Growi."
+description: "Mark a credit-only creator payout as paid outside Growi."
 ---
 
+Use this after you pay a creator their credits in your own system, so the payout shows as paid in Growi.
+
 <Note>
-  This endpoint is **one-shot** — payouts cannot be partially paid. Each call
+  This endpoint is **one-shot**: payouts cannot be partially paid. Each call
   marks the entire credit payout as paid externally.
 </Note>
 
 <Note>
   Rate limit: a minimum of **2 seconds** between requests per API key.
 </Note>
-
-## Request body
-
-| Field                 | Type   | Description                                                  | Required |
-| --------------------- | ------ | ------------------------------------------------------------ | -------- |
-| `creator_payout_uuid` | String | The `uuid` of the payout (from `GET /stats/creator_payouts`) | Yes      |
 
 ## Validation rules
 
@@ -29,29 +25,11 @@ The endpoint rejects the request unless all of the following are true:
 4. The payout's `total_credit_amount` is greater than `0`.
 5. The payout's `total_cash_amount` is `0` (no mixed cash + credits).
 
-## Response fields
-
-| Field                                          | Type           | Description                                                |
-| ---------------------------------------------- | -------------- | ---------------------------------------------------------- |
-| `success`                                      | Boolean        | Indicates whether the payout was marked as paid externally |
-| `creator_payout`                               | Object         | The updated payout                                         |
-| `creator_payout.id`                            | Integer        | Internal identifier for the payout                         |
-| `creator_payout.uuid`                          | String         | Stable identifier                                          |
-| `creator_payout.creator_name`                  | String         | Creator's display name                                     |
-| `creator_payout.since_date`                    | String         | Start date of the payout period (MM/DD/YYYY)               |
-| `creator_payout.deal_date`                     | String         | Billing cycle end / due date (MM/DD/YYYY)                  |
-| `creator_payout.status`                        | String         | Will be `Paid externally` after a successful call          |
-| `creator_payout.amount`                        | String         | Cash amount, formatted with currency                       |
-| `creator_payout.credits_enabled`               | Boolean        | Whether credits are enabled for the campaign               |
-| `creator_payout.credit_name`                   | String \| null | Org-defined label (e.g. `"credits"`)                       |
-| `creator_payout.total_credit_amount`           | Integer        | Total credit amount for the payout                         |
-| `creator_payout.formatted_total_credit_amount` | String \| null | Display string (e.g. `"750 credits"`)                      |
-
 ## Error responses
 
 All errors return a non-2xx response with a JSON body of the form:
 
-```json
+```json JSON
 { "error": "<message>" }
 ```
 
@@ -72,7 +50,7 @@ All errors return a non-2xx response with a JSON body of the form:
 
 ## Typical workflow
 
-1. `GET /stats/creator_payouts?start_date=…&end_date=…&credits_only=true` — fetch the list of credit payouts due to your creators.
+1. `GET /stats/creator_payouts?start_date=…&end_date=…&credits_only=true`: fetch the list of credit payouts due to your creators.
 2. Pay each creator their credits in your own system.
 3. For each paid creator, `POST /stats/mark_credit_payout` with their `creator_payout_uuid` to record the payout in Growi.
 

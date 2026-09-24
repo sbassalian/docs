@@ -1,19 +1,10 @@
 ---
 title: "Get content (24h)"
 openapi: "GET /stats/content_24h_data"
-description: "Retrieves 24-hour views and engagement metrics with comparison to previous period. For each date, you get that day's metrics along with the corresponding data from a period before for comparison."
+description: "Daily views and engagement, each compared with the previous period."
 ---
 
-## Response fields
-
-| Field | Description |
-| --- | --- |
-| `date` | Unix timestamp for the current day |
-| `last_date` | Unix timestamp for the comparison day (1 week before) |
-| `current` | Number of views/likes for the current day |
-| `last` | Number of views/likes for the comparison day |
-| `total` | Running total as of the latest date |
-| `last_total` | Running total as of the comparison period's latest date |
+For each date you get that day's metrics plus the matching day from the period before.
 
 <RequestExample>
 

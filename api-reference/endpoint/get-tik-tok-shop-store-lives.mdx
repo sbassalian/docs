@@ -2,39 +2,12 @@
 title: "List TikTok Shop LIVE streams"
 sidebarTitle: "List LIVE streams"
 openapi: "GET /tik_tok_shop/lives"
+description: "LIVE streams for your TikTok Shop, with GMV and engagement metrics per stream."
 ---
 
-Lists LIVE streams for your TikTok Shop — one row per LIVE with GMV totals plus the full set of LIVE engagement metrics (viewers, impressions, click-through rates, GPM) for the requested date range. This is the same data as the **Lives** tab of the TikTok Shop store page, with every filter the dashboard offers.
+Same data as the **Lives** tab of the TikTok Shop store page, with every filter the dashboard offers. Metrics include viewers, impressions, click-through rates and GPM. Rows are ordered by GMV, highest first (there's no sort parameter). The `*_amount` fields (`gpm_amount`, `aov_amount`, `average_gmv_per_customer_amount`) are integer cents.
 
-## Response fields
-
-Each LIVE row contains:
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `id` | Integer | Internal snapshot id |
-| `external_id` | String | TikTok LIVE id |
-| `external_creator_id` | String \| null | TikTok creator id (oecuid) of the host |
-| `external_product_id` | String \| null | Featured product id |
-| `title` / `truncated_title` | String | LIVE title (full / truncated) |
-| `duration` | String | Display string of the LIVE start/end time |
-| `start_time` / `end_time` | String \| null | LIVE start/end (ISO 8601) |
-| `product` | Object \| null | Featured product `{ id, title, image_url }` |
-| `affiliate_*` / `connected_account` | Mixed | Growi creator info (see Creators endpoint) |
-| `total_gmv` | Number | GMV in display currency units |
-| `total_units_sold` | Integer | Items sold |
-| `total_sku_orders` | Integer | SKU orders |
-| `total_commission` | Number | Estimated commission |
-| `total_refunded_amount` | Number | Refunded amount |
-| `total_items_refunded` | Integer | Items refunded |
-| `*_formatted` | String | Display-string variant of every metric above |
-| `gpm_amount` | Integer | GMV per mille, **integer cents** |
-| `aov_amount` | Integer | Average order value, **integer cents** |
-| `average_gmv_per_customer_amount` | Integer | **Integer cents** |
-| `average_viewing_duration` | String \| null | e.g. `"1m 32s"` |
-| `unique_viewer_count` / `impression_count` / `like_count` / `comment_count` / `share_count` | Integer | Engagement counts |
-| `engagement_rate` / `tap_through_rate` / `live_product_click_through_rate` | String \| null | Rate display strings |
-| `live_product_impressions_count` / `product_clicks_count` / `product_sold_count` | Integer | Product funnel counts |
+## About the response
 
 The response envelope is `{ data, meta, additional_data }` (see the Creators endpoint for the envelope shape).
 

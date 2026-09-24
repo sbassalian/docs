@@ -47,8 +47,6 @@ The webhook payload includes an `event` field to differentiate between actions:
 
 Non-2xx responses are treated as failures and will be retried. Delivery is **at-least-once**: use the payload's `idempotency_key` to deduplicate.
 
-## Next
-
 <CardGroup cols={3}>
   <Card title="Payload reference" icon="braces" href="/webhooks/payloads">
     Every field in the request body.

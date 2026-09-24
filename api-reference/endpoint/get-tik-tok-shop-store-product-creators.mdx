@@ -2,29 +2,14 @@
 title: "List TikTok Shop product creators"
 sidebarTitle: "List product creators"
 openapi: "GET /tik_tok_shop/product_creators"
+description: "Creators with their TikTok Shop GMV broken down by product."
 ---
 
-Lists creators with a per-product breakdown of their TikTok Shop sales — one row per creator with an embedded `products[]` array showing how their GMV splits across products for the requested date range. This is the same data as the **Products** tab (Creators view) of the TikTok Shop store page.
+One row per creator with an embedded `products[]` array showing how their GMV splits across products. Same data as the **Products** tab (Creators view) of the TikTok Shop store page. Rows are ordered by total GMV, highest first (there's no sort parameter).
 
-For the product-level rollup, see [TikTok Shop Products](/api-reference/endpoint/get-tik-tok-shop-store-products).
+For the product-level rollup, see [List TikTok Shop products](/api-reference/endpoint/get-tik-tok-shop-store-products).
 
-## Response fields
-
-Each creator row contains:
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `id` | Integer | Internal row id |
-| `external_id` | String | TikTok creator id (oecuid) |
-| `affiliate_id` / `affiliate_name` / `affiliate_email` / `affiliate_avatar_url` | Mixed | Growi creator info (`"N/A"` / null when not on Growi) |
-| `connected_account` | Object | `{ id, username, profile_share_url }` |
-| `product_count` | Integer | Distinct products this creator sold |
-| `latest_date` | String \| null | Most recent date with sales |
-| `total_gmv` | Number | GMV in display currency units |
-| `total_units_sold` / `total_sku_orders` / `total_items_refunded` | Integer | Sales counts |
-| `total_commission` / `total_refunded_amount` / `total_estimated_flat_fee` | Number | Money totals |
-| `products` | Array | Per-product breakdown, GMV descending (fields below) |
-| `*_formatted` | String | Display-string variant of every metric above |
+## About the response
 
 Each entry in `products[]` contains `external_product_id`, `product_name`, `product_image_url`, `latest_date`, plus the same raw + `*_formatted` metric pairs (`total_gmv`, `total_units_sold`, `total_sku_orders`, `total_commission`, `total_refunded_amount`, `total_items_refunded`, `total_estimated_flat_fee`).
 

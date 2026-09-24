@@ -2,18 +2,14 @@
 title: "Bulk update campaign affiliates"
 sidebarTitle: "Bulk update affiliates"
 openapi: "PATCH /campaign_affiliates/bulk"
-description: "Sets default affiliate tags for many creators in one request. Built for spoken-code migrations (keep the codes creators already use when you move them onto a revenue campaign)."
+description: "Set affiliate codes for many creators in one request."
 ---
+
+Built for spoken-code migrations: keep the codes creators already use when you move them onto a revenue campaign.
 
 Each row is independent: valid rows still update when another row fails. Codes must be unique inside your organization. Each successful rename fires `campaign_affiliate.code_updated`.
 
 Maximum **300** affiliates per request.
-
-## Request body
-
-| Field | Type | Description | Required |
-| ----- | ---- | ----------- | -------- |
-| `affiliates` | Array | Rows to update. Each row needs `id` (campaign-affiliate enrollment ID) and `tag` (new code). | Yes |
 
 ## Partial failures
 

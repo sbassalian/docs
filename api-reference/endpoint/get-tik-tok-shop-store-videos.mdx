@@ -2,34 +2,12 @@
 title: "List TikTok Shop videos"
 sidebarTitle: "List videos"
 openapi: "GET /tik_tok_shop/videos"
+description: "Shoppable videos for your TikTok Shop, with GMV, units, orders, views and refunds per video."
 ---
 
-Lists shoppable videos for your TikTok Shop — one row per video with GMV, units sold, orders, views, and refund totals for the requested date range. This is the same data as the **Videos** tab of the TikTok Shop store page, with every filter the dashboard offers.
+Same data as the **Videos** tab of the TikTok Shop store page, with every filter the dashboard offers.
 
-## Response fields
-
-Each video row contains:
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `id` | Integer \| null | Internal snapshot id |
-| `external_id` | String | TikTok video id |
-| `external_creator_id` | String \| null | TikTok creator id (oecuid) of the poster |
-| `title` / `truncated_title` | String | Video title (full / truncated to 30 chars) |
-| `share_url` | String | Video share URL (`"#"` when unavailable) |
-| `product_name` | String \| null | Featured product name |
-| `create_time` | String | Video post time (ISO 8601) |
-| `pretty_create_time` | String | Display string, e.g. `"July 10, 2026"` |
-| `affiliate_id` / `affiliate_name` / `affiliate_email` / `affiliate_avatar_url` | Mixed | Growi creator info (`"N/A"` / null when the creator is not on Growi) |
-| `connected_account_data` | Object | Linked TikTok account info |
-| `total_gmv` | Number | GMV in display currency units |
-| `total_units_sold` | Integer | Items sold |
-| `total_sku_orders` | Integer | SKU orders |
-| `total_commission` | Number | Estimated commission |
-| `total_refunded_amount` | Number | Refunded amount |
-| `total_items_refunded` | Integer | Items refunded |
-| `total_views` | Integer | Video views |
-| `*_formatted` | String | Display-string variant of every metric above |
+## About the response
 
 The response envelope is `{ data, meta, additional_data }` (see the Creators endpoint for the envelope shape).
 

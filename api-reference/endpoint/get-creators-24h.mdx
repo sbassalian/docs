@@ -1,13 +1,15 @@
 ---
 title: "Get creators (24h)"
 openapi: "GET /stats/creators_24h"
-description: "Retrieves daily creator metrics with comparison to previous period. This endpoint tracks both new creators (who joined your database) and active creators (who made posts) for each date."
+description: "Daily new and active creators, compared with the previous period."
 ---
+
+New creators joined your database that day. Active creators made posts that day.
 
 ## Key definitions
 
-- **New Creators**: Creators who joined your database on that specific date
-- **Active Creators**: Creators who made at least one post on that specific date
+- **New creators**: Creators who joined your database on that specific date
+- **Active creators**: Creators who made at least one post on that specific date
 
 <RequestExample>
 

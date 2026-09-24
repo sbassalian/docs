@@ -1,9 +1,10 @@
 ---
 title: "List campaign affiliates"
 openapi: "GET /campaign_affiliates"
+description: "The creators enrolled in your campaigns, optionally for one campaign."
 ---
 
-Retrieves the organization's enrolled creators (campaign affiliates). By default it returns every active creator across all of your campaigns. Pass the optional **`campaign_id`** parameter to restrict the list to the creators enrolled in a single campaign — the recommended way to **identify and extract the list of creators added to a specific campaign**.
+By default it returns every active creator across all of your campaigns. Pass the optional **`campaign_id`** parameter to restrict the list to one campaign. That's the way to **identify and extract the creators added to a specific campaign**. Results are always scoped to your API key's organization.
 
 Each item represents one creator's enrollment (a campaign affiliate) and includes creator identity, contact details, connected social accounts, and attributed performance. The full payload is large (~90 fields); this page documents the creator-identification subset most useful for listing creators, and notes that additional campaign-configuration and commission fields are also returned.
 
@@ -11,14 +12,14 @@ Each item represents one creator's enrollment (a campaign affiliate) and include
 
 This is the headline use case. It's a two-step flow.
 
-**Step 1 — find the campaign's ID** with [Get Campaigns](/api-reference/endpoint/get-campaigns):
+**Step 1: find the campaign's ID** with [List campaigns](/api-reference/endpoint/get-campaigns):
 
-```bash
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/organizations/campaigns" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 
-```json
+```json JSON
 {
   "success": true,
   "campaigns": [
@@ -27,25 +28,18 @@ curl -X GET "https://api.growi.io/api/public/v1/organizations/campaigns" \
 }
 ```
 
-**Step 2 — list that campaign's creators** by passing the `campaign_id`:
+**Step 2: list that campaign's creators** by passing the `campaign_id`:
 
-```bash
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/campaign_affiliates?campaign_id=123" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 
 <Note>
-An unknown `campaign_id`, or one that belongs to a different organization, returns **HTTP 200 with an empty `affiliates` array** — not a `404`. There is no cross-organization data leakage. Check for an empty list rather than relying on an error status.
+An unknown `campaign_id`, or one that belongs to a different organization, returns **HTTP 200 with an empty `affiliates` array**, not a `404`. There is no cross-organization data leakage. Check for an empty list rather than relying on an error status.
 </Note>
 
-## Request parameters
-
-| Parameter     | Type    | Description                                                                                                                                                                  | Required |
-| ------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `campaign_id` | Integer | **Restrict results to creators enrolled in this campaign.** Get IDs from [Get Campaigns](/api-reference/endpoint/get-campaigns). Unknown/foreign IDs return an empty list. Omit to return creators across all campaigns. | No       |
-| `status`      | String  | Enrollment status filter. One of `active`, `paused`, `left`, `removed`, `completed`, `archived`, `pending`. Default is `active`.                                            | No       |
-| `pagination`  | Boolean | Set to `true` to paginate (25 results per page) and include a `meta` block. Default is `false`.                                                                             | No       |
-| `page`        | Integer | Page number. Only used when `pagination=true`. Default is 1.                                                                                                                | No       |
+## About the parameters
 
 <Note>
 Page size is fixed server-side at **25**. There is no `per`/`per_page` parameter on this endpoint.
@@ -55,41 +49,10 @@ Page size is fixed server-side at **25**. There is no `per`/`per_page` parameter
 
 Without pagination, the response is `{ "affiliates": [ ... ] }`. The example below is trimmed to the documented fields; the real payload contains additional campaign-configuration and commission fields per creator.
 
-## Response fields
-
-The documented subset most useful for listing the creators in a campaign:
-
-| Field                            | Type           | Description                                                              |
-| -------------------------------- | -------------- | ----------------------------------------------------------------------- |
-| `affiliates`                     | Array          | Array of campaign-affiliate (enrollment) objects                        |
-| `affiliates[].id`                | Integer        | Campaign-affiliate (enrollment) ID                                      |
-| `affiliates[].user_id`           | Integer        | The creator's user ID                                                   |
-| `affiliates[].campaign_id`       | Integer        | Campaign the creator is enrolled in                                     |
-| `affiliates[].campaign_name`     | String         | Human-readable campaign name (or `Contract <uuid>` for contracts)       |
-| `affiliates[].status`            | String         | Enrollment status (`active`, `paused`, `left`, `removed`, `completed`, `archived`, `pending`) |
-| `affiliates[].affiliate_name`    | String         | Creator's display name                                                  |
-| `affiliates[].affiliate_email`   | String         | Creator's email                                                         |
-| `affiliates[].affiliate_phone_number` | String\|null | Creator's phone number (this endpoint includes phone numbers)        |
-| `affiliates[].affiliate_avatar_url` | String\|null | Avatar URL                                                             |
-| `affiliates[].affiliate_location` | String\|null  | Pretty location                                                         |
-| `affiliates[].affiliate_age`     | Integer        | Creator's age                                                           |
-| `affiliates[].affiliate_gender`  | String\|null   | Creator's gender                                                        |
-| `affiliates[].connected_accounts` | Array         | Creator's linked social accounts (each: `platform`, `username`, `profile_share_url`) |
-| `affiliates[].discord_id`        | String\|null   | Discord UID if linked                                                   |
-| `affiliates[].tag`               | String         | Affiliate tracking tag                                                  |
-| `affiliates[].unique_tag`        | String         | Globally unique affiliate tracking tag                                  |
-| `affiliates[].affiliate_link`    | String         | Creator's tracking/affiliate link                                       |
-| `affiliates[].revenue_generated` | Number         | Revenue attributed to this creator                                      |
-| `affiliates[].affiliate_amount_earned` | Number   | Commission earned by this creator                                       |
-| `affiliates[].order_count`       | Integer        | Attributed orders                                                       |
-| `affiliates[].created_at`        | String         | Enrollment date, formatted `"Month DD, YYYY"`                           |
-| `meta`                           | Object         | Pagination metadata. Present only when `pagination=true`.               |
-| `meta.row_count`                 | Integer        | Total number of affiliates matching the query                           |
-| `meta.page_count`                | Integer        | Total number of pages                                                   |
-| `meta.current_page`              | Integer        | Current page number                                                     |
+## About the response
 
 <Note>
-The response also includes many campaign-configuration and commission fields per creator — for example `campaign_platforms`, `campaign_tiers`, `current_tier`, `shopify_commission_value`, `tik_tok_shop_commission_value`, and `organization_currency`. They are returned but not documented here; the fields above are what you need to identify and list the creators in a campaign.
+The response also includes many campaign-configuration and commission fields per creator, for example `campaign_platforms`, `campaign_tiers`, `current_tier`, `shopify_commission_value`, `tik_tok_shop_commission_value`, and `organization_currency`. They are returned but not documented here; the fields above are what you need to identify and list the creators in a campaign.
 </Note>
 
 ## Error responses
@@ -101,7 +64,7 @@ The response also includes many campaign-configuration and commission fields per
 | `429`  | `{ "error": "Hourly rate limit of N requests exceeded.", "retry_after": <secs>, "reset_time": "<iso8601>" }`  | Hourly limit exceeded.          |
 
 <Note>
-There is **no `404`** for an unknown `campaign_id` — the endpoint returns `200` with an empty `affiliates` array. This is a common integrator gotcha; check for an empty list rather than an error status.
+There is **no `404`** for an unknown `campaign_id`: the endpoint returns `200` with an empty `affiliates` array. This is a common integrator gotcha; check for an empty list rather than an error status.
 </Note>
 
 ## Use cases

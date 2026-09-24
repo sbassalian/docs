@@ -136,7 +136,8 @@ html:has(#error-badge) .nav-tabs-item[data-active="true"] > div {
 }
 .callout > :not([data-component-part="callout-icon"]) a { color: var(--g-link) !important; }
 .callout[data-callout-type="note"] [data-component-part="callout-icon"] svg,
-.callout[data-callout-type="info"] [data-component-part="callout-icon"] svg { color: var(--g-link) !important; }
+.callout[data-callout-type="info"] [data-component-part="callout-icon"] svg,
+.callout[data-callout-type="tip"] [data-component-part="callout-icon"] svg { color: var(--g-link) !important; }
 .callout[data-callout-type="warning"] [data-component-part="callout-icon"] svg,
 .callout[data-callout-type="danger"] [data-component-part="callout-icon"] svg { color: var(--g-orange) !important; }
 .callout[data-callout-type="warning"],
@@ -184,6 +185,32 @@ html:has(#error-badge) .nav-tabs-item[data-active="true"] > div {
   vertical-align: top;
 }
 .mdx-content tbody tr:first-child td { border-top: 0; }
+/* Wide tables scroll inside their box instead of crushing field names */
+.mdx-content div:has(> table) { display: block; overflow-x: auto; }
+.mdx-content td:first-child code { white-space: nowrap; }
+
+/* Mintlify's generated field headings (Authorizations, Query Parameters, Body, Response):
+   sentence case, and a step below H3 */
+.mdx-content h4 {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: var(--g-ink);
+  text-transform: lowercase;
+}
+.mdx-content h4::first-letter { text-transform: uppercase; }
+
+/* Nested sidebar groups (Stats > Summary, ...) read as labels, not pages */
+#navigation-items li > button {
+  font-weight: 600;
+  color: var(--g-ink);
+}
+
+/* Below 1280px the example panels stack above the explanation; move them after it */
+@media (max-width: 1279px) {
+  #api-playground-2-operation-page > :first-child { display: contents; }
+  #api-playground-2-operation-page > :first-child > :nth-child(2) { order: 2; margin-top: 0; }
+  #api-playground-2-operation-page > .mdx-content { order: 1; }
+}
 
 /* "required" is information, not an error */
 [data-component-part="field-required-pill"] {
@@ -481,6 +508,7 @@ html.dark .g-pill[aria-selected="true"] { color: #080808; }
 .g-card-art .g-icon { width: 34px; height: 34px; stroke-width: 1.4; }
 .g-tone-blue { background: linear-gradient(135deg, #0646cc, #3f74e8); color: #fff; }
 .g-tone-ink { background: #080808; color: #fff; }
+html.dark .g-tone-ink { background: #1a1c21; }
 .g-tone-soft { background: var(--g-soft); color: var(--g-orange); }
 .g-card-body { display: block; padding: 16px 18px 18px; }
 .g-card-title { display: block; color: var(--g-ink); font-weight: 600; font-size: 16px; margin-bottom: 4px; }

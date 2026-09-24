@@ -1,11 +1,11 @@
 ---
-title: "Get Top Earning Creators"
+title: "Get top earning creators"
+sidebarTitle: "Top earning creators"
 openapi: "GET /stats/top_earning_creators"
+description: "Retrieves your top creators ranked by earnings within a specified date range."
 ---
 
-Retrieves your top creators ranked by earnings within a specified date range.
-
-## Request Parameters
+## Request parameters
 
 | Parameter    | Type    | Description                                                                                  | Required |
 | ------------ | ------- | -------------------------------------------------------------------------------------------- | -------- |
@@ -15,17 +15,19 @@ Retrieves your top creators ranked by earnings within a specified date range.
 | `page`       | Integer | Page number for pagination. Default is 1.                                                    | No       |
 | `per_page`   | Integer | Number of results per page. Default is 40. Maximum is 100.                                   | No       |
 
-## Request Example
+<RequestExample>
 
-```bash
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/stats/top_earning_creators?start_date=01/01/2023&end_date=01/31/2023&limit=5&page=1&per_page=20" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+</RequestExample>
 
-```json
+<ResponseExample>
+
+```json 200
 {
   "success": true,
   "data": {
@@ -127,3 +129,5 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_earning_creators?start
   }
 }
 ```
+
+</ResponseExample>

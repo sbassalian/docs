@@ -1,23 +1,37 @@
 ---
-title: "Bulk Update Campaign Affiliates"
+title: "Bulk update campaign affiliates"
+sidebarTitle: "Bulk update affiliates"
 openapi: "PATCH /campaign_affiliates/bulk"
+description: "Sets default affiliate tags for many creators in one request. Built for spoken-code migrations (keep the codes creators already use when you move them onto a revenue campaign)."
 ---
-
-Sets default affiliate tags for many creators in one request. Built for spoken-code migrations (keep the codes creators already use when you move them onto a revenue campaign).
 
 Each row is independent: valid rows still update when another row fails. Codes must be unique inside your organization. Each successful rename fires `campaign_affiliate.code_updated`.
 
 Maximum **300** affiliates per request.
 
-## Request Body
+## Request body
 
 | Field | Type | Description | Required |
 | ----- | ---- | ----------- | -------- |
 | `affiliates` | Array | Rows to update. Each row needs `id` (campaign-affiliate enrollment ID) and `tag` (new code). | Yes |
 
-## Request Example
+## Partial failures
 
-```bash
+If some rows fail, the API returns `422` with an `errors` list. Rows that succeeded are still saved.
+
+## Error responses
+
+| Status | Body | When |
+| ------ | ---- | ---- |
+| `401` | `{ "error": "Not Authenticated" }` | Missing or invalid API key. |
+| `403` | `{ "error": "This API key is read-only and cannot modify data." }` | Viewer key. |
+| `422` | `{ "error": "affiliates is required" }` | Missing / empty `affiliates`. |
+| `422` | `{ "error": "Maximum 300 affiliates per request." }` | More than 300 rows. |
+| `422` | `{ "success": false, "updated": [...], "errors": [...] }` | At least one row failed. Successful rows are still saved. |
+
+<RequestExample>
+
+```bash cURL
 curl -X PATCH "https://api.growi.io/api/public/v1/campaign_affiliates/bulk" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json" \
@@ -29,11 +43,11 @@ curl -X PATCH "https://api.growi.io/api/public/v1/campaign_affiliates/bulk" \
      }'
 ```
 
-## Response Example
+</RequestExample>
 
-All rows succeeded:
+<ResponseExample>
 
-```json
+```json 200
 {
   "success": true,
   "updated": [
@@ -44,9 +58,7 @@ All rows succeeded:
 }
 ```
 
-Partial failure (HTTP 422 — successful rows are still saved):
-
-```json
+```json 422 partial
 {
   "success": false,
   "updated": [
@@ -58,16 +70,4 @@ Partial failure (HTTP 422 — successful rows are still saved):
 }
 ```
 
-## Authentication
-
-Send your organization's public API key as a Bearer token. **Viewer (read-only) keys cannot call this.** See [Rate Limits & Authentication](/api-reference/introduction).
-
-## Error Responses
-
-| Status | Body | When |
-| ------ | ---- | ---- |
-| `401` | `{ "error": "Not Authenticated" }` | Missing or invalid API key. |
-| `403` | `{ "error": "This API key is read-only and cannot modify data." }` | Viewer key. |
-| `422` | `{ "error": "affiliates is required" }` | Missing / empty `affiliates`. |
-| `422` | `{ "error": "Maximum 300 affiliates per request." }` | More than 300 rows. |
-| `422` | `{ "success": false, "updated": [...], "errors": [...] }` | At least one row failed. Successful rows are still saved. |
+</ResponseExample>

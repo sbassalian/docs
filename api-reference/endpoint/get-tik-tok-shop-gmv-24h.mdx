@@ -1,28 +1,32 @@
 ---
-title: 'Get TikTok Shop GMV 24h'
-openapi: 'GET /stats/tik_tok_shop_gmv_24h'
+title: "Get TikTok Shop GMV (24h)"
+sidebarTitle: "Get GMV (24h)"
+openapi: "GET /stats/tik_tok_shop_gmv_24h"
+description: "Retrieves TikTok Shop Gross Merchandise Value (GMV) data with daily breakdown and comparison to previous period. Returns time-series data showing GMV performance, order counts, and period-over-period comparisons for each day in the specified date range."
 ---
 
-Retrieves TikTok Shop Gross Merchandise Value (GMV) data with daily breakdown and comparison to previous period. Returns time-series data showing GMV performance, order counts, and period-over-period comparisons for each day in the specified date range.
+## Use cases
 
-## Request Parameters
+This endpoint is useful for:
+- Tracking daily TikTok Shop GMV performance over time
+- Comparing current period performance to previous period
+- Building custom GMV dashboards and analytics
+- Monitoring order volume trends
+- Calculating period-over-period growth rates
 
-| Parameter | Type | Description | Required |
-| --- | --- | --- | --- |
-| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
-| `end_date` | String | End date in MM/DD/YYYY format | Yes |
+<RequestExample>
 
-## Request Example
-
-```bash
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/stats/tik_tok_shop_gmv_24h?start_date=10/04/2025&end_date=11/03/2025" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+</RequestExample>
 
-```json
+<ResponseExample>
+
+```json 200
 {
   "success": true,
   "data": {
@@ -68,26 +72,4 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/tik_tok_shop_gmv_24h?start
 }
 ```
 
-## Response Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `date` | String | The date for this data point (YYYY-MM-DD format) |
-| `last_date` | Integer | Unix timestamp for the corresponding date in the previous period |
-| `current` | String | GMV for the current date (formatted as currency string) |
-| `last` | String | GMV for the corresponding date in the previous period (formatted as currency string) |
-| `total` | String | Cumulative GMV total for the current period (formatted as currency string) |
-| `last_total` | String | Cumulative GMV total for the previous period (formatted as currency string) |
-| `order_count` | Integer | Number of orders on the current date |
-| `last_order_count` | Integer | Number of orders on the corresponding date in the previous period |
-| `total_order_count` | Integer | Cumulative order count for the current period |
-| `last_total_order_count` | Integer | Cumulative order count for the previous period |
-
-## Use Cases
-
-This endpoint is useful for:
-- Tracking daily TikTok Shop GMV performance over time
-- Comparing current period performance to previous period
-- Building custom GMV dashboards and analytics
-- Monitoring order volume trends
-- Calculating period-over-period growth rates 
+</ResponseExample>

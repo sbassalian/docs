@@ -1,13 +1,14 @@
 ---
-title: 'TikTok Shop Products'
-openapi: 'GET /tik_tok_shop/products'
+title: "List TikTok Shop products"
+sidebarTitle: "List products"
+openapi: "GET /tik_tok_shop/products"
 ---
 
 Lists products for your TikTok Shop — one row per product, with GMV, units sold, orders, commission, and refund totals summed across your tracked creators for the requested date range. This is the same data as the **Products** tab (Overall view) of the TikTok Shop store page.
 
 For the per-creator breakdown of product sales, see [TikTok Shop Creators by Product](/api-reference/endpoint/get-tik-tok-shop-store-product-creators).
 
-## Response Fields
+## Response fields
 
 Each product row contains:
 
@@ -32,33 +33,32 @@ Each product row contains:
 
 The response envelope is `{ data, meta, additional_data }`; `meta` additionally includes `page_size` (rows on this page) and `additional_data` includes `product_count`.
 
-## Request Parameters
+## Use cases
 
-| Parameter | Type | Description | Required | Default |
-| --- | --- | --- | --- | --- |
-| `start_date` | String | Start of the GMV date range (ISO 8601, `YYYY-MM-DD`) | Yes | — |
-| `end_date` | String | End of the GMV date range (ISO 8601, `YYYY-MM-DD`) | Yes | — |
-| `page` | Integer | Page number | No | 1 |
-| `per_page` | Integer | Results per page (max 100) | No | 20 |
-| `search` | String | Free-text search | No | — |
-| `campaign_id` | Integer | Filter to a campaign or contract in your organization | No | — |
-| `creator_id` | Integer | Only count sales from a single Growi creator (user id) | No | — |
-| `platform` | String | `growi`, `all`, or `non_growi` | No | `growi` |
-| `all_contracts` | String | `'true'` to include creators from all contracts | No | — |
-| `exclude_contests` | String | `'true'` to exclude TikTok Shop contest campaigns | No | — |
-| `organization_id` | Integer | Narrow to a child organization | No | — |
+- Ranking products by creator-driven GMV
+- Tracking how many creators and how much content each product has
+- Monitoring refunds and sample shipments per product
+- Feeding product performance into inventory and campaign planning
 
-## Request Example
+## Notes
 
-```bash
+- Results are always ordered by total GMV descending; there is no sort parameter.
+- Totals are summed across your organization's tracked creators (creators with tracked content), matching the dashboard's Products tab.
+- Requests are rate limited (minimum 2 seconds between requests plus an hourly quota); see the `X-RateLimit-*` response headers.
+
+<RequestExample>
+
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/products?start_date=2026-07-01&end_date=2026-07-31" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+</RequestExample>
 
-```json
+<ResponseExample>
+
+```json 200
 {
   "data": [
     {
@@ -104,15 +104,4 @@ curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/products?start_date
 }
 ```
 
-## Use Cases
-
-- Ranking products by creator-driven GMV
-- Tracking how many creators and how much content each product has
-- Monitoring refunds and sample shipments per product
-- Feeding product performance into inventory and campaign planning
-
-## Notes
-
-- Results are always ordered by total GMV descending; there is no sort parameter.
-- Totals are summed across your organization's tracked creators (creators with tracked content), matching the dashboard's Products tab.
-- Requests are rate limited (minimum 2 seconds between requests plus an hourly quota); see the `X-RateLimit-*` response headers.
+</ResponseExample>

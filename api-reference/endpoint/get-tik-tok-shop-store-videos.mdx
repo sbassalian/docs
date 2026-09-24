@@ -1,11 +1,12 @@
 ---
-title: 'TikTok Shop Videos'
-openapi: 'GET /tik_tok_shop/videos'
+title: "List TikTok Shop videos"
+sidebarTitle: "List videos"
+openapi: "GET /tik_tok_shop/videos"
 ---
 
 Lists shoppable videos for your TikTok Shop — one row per video with GMV, units sold, orders, views, and refund totals for the requested date range. This is the same data as the **Videos** tab of the TikTok Shop store page, with every filter the dashboard offers.
 
-## Response Fields
+## Response fields
 
 Each video row contains:
 
@@ -32,39 +33,33 @@ Each video row contains:
 
 The response envelope is `{ data, meta, additional_data }` (see the Creators endpoint for the envelope shape).
 
-## Request Parameters
+## Use cases
 
-| Parameter | Type | Description | Required | Default |
-| --- | --- | --- | --- | --- |
-| `start_date` | String | Start of the GMV date range (ISO 8601, `YYYY-MM-DD`) | Yes | — |
-| `end_date` | String | End of the GMV date range (ISO 8601, `YYYY-MM-DD`) | Yes | — |
-| `page` | Integer | Page number | No | 1 |
-| `per_page` | Integer | Results per page (max 100) | No | 20 |
-| `search` | String | Search by video URL, id, or title | No | — |
-| `campaign_id` | Integer | Filter to a campaign or contract in your organization | No | — |
-| `creator_id` | Integer | Filter to a single Growi creator (user id) | No | — |
-| `external_creator_id` | String | Filter to a single TikTok creator (oecuid) | No | — |
-| `connected_account_id` | Integer | Filter by connected social account id | No | — |
-| `platform` | String | `growi`, `all`, or `non_growi` | No | `growi` |
-| `gmv_min` / `gmv_max` | Number | GMV range bounds in display currency units | No | — |
-| `post_start_date` / `post_end_date` | String | Filter by video post date (ISO 8601); must be provided together | No | — |
-| `product_id` | String | Filter by TikTok Shop product id | No | — |
-| `user_content_id` | String | Filter to a single tracked content item | No | — |
-| `linked` | String | `all`, `linked`, or `unlinked` | No | `all` |
-| `include_zero_gmv` | String | Include videos with zero GMV | No | `true` |
-| `organization_id` | Integer | Narrow to a child organization | No | — |
+- Identifying top-converting videos by GMV and views
+- Attributing video performance to specific products (`product_id`) or campaigns (`campaign_id`)
+- Separating GMV attribution by post date vs. sale date with the post date range filters
+- Auditing linked vs. unlinked content with the `linked` filter
 
-## Request Example
+## Notes
 
-```bash
+- Results are always ordered by total GMV descending; there is no sort parameter.
+- `include_zero_gmv=true` (the default, matching the dashboard) includes videos that drove no sales in the range.
+- `post_start_date` / `post_end_date` filter on when the video was posted; `start_date` / `end_date` filter on when the GMV occurred.
+- Requests are rate limited (minimum 2 seconds between requests plus an hourly quota); see the `X-RateLimit-*` response headers.
+
+<RequestExample>
+
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/videos?start_date=2026-07-01&end_date=2026-07-31&platform=all&include_zero_gmv=false" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+</RequestExample>
 
-```json
+<ResponseExample>
+
+```json 200
 {
   "data": [
     {
@@ -106,16 +101,4 @@ curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/videos?start_date=2
 }
 ```
 
-## Use Cases
-
-- Identifying top-converting videos by GMV and views
-- Attributing video performance to specific products (`product_id`) or campaigns (`campaign_id`)
-- Separating GMV attribution by post date vs. sale date with the post date range filters
-- Auditing linked vs. unlinked content with the `linked` filter
-
-## Notes
-
-- Results are always ordered by total GMV descending; there is no sort parameter.
-- `include_zero_gmv=true` (the default, matching the dashboard) includes videos that drove no sales in the range.
-- `post_start_date` / `post_end_date` filter on when the video was posted; `start_date` / `end_date` filter on when the GMV occurred.
-- Requests are rate limited (minimum 2 seconds between requests plus an hourly quota); see the `X-RateLimit-*` response headers.
+</ResponseExample>

@@ -1,11 +1,12 @@
 ---
-title: 'TikTok Shop Creators'
-openapi: 'GET /tik_tok_shop/creators'
+title: "List TikTok Shop creators"
+sidebarTitle: "List creators"
+openapi: "GET /tik_tok_shop/creators"
 ---
 
 Lists creator performance for your TikTok Shop — one row per creator with GMV, units sold, orders, commission, and refund totals for the requested date range. This is the same data as the **Creators** tab of the TikTok Shop store page, with every filter the dashboard offers.
 
-## Response Fields
+## Response fields
 
 Each creator row contains:
 
@@ -30,36 +31,33 @@ Each creator row contains:
 
 The response envelope is `{ data, meta, additional_data }`: `meta` carries pagination (`row_count`, `total_pages`, `current_page`, `next_page`, `prev_page`) and `additional_data` carries raw totals across the full result set plus `currency` / `currency_symbol`.
 
-## Request Parameters
+## Use cases
 
-| Parameter | Type | Description | Required | Default |
-| --- | --- | --- | --- | --- |
-| `start_date` | String | Start of the GMV date range (ISO 8601, `YYYY-MM-DD`) | Yes | — |
-| `end_date` | String | End of the GMV date range (ISO 8601, `YYYY-MM-DD`) | Yes | — |
-| `page` | Integer | Page number | No | 1 |
-| `per_page` | Integer | Results per page (max 100) | No | 20 |
-| `search` | String | Free-text search by creator name | No | — |
-| `campaign_id` | Integer | Filter to a campaign or contract in your organization | No | — |
-| `creator_id` | Integer | Filter to a single Growi creator (user id) | No | — |
-| `external_creator_id` | String | Filter to a single TikTok creator (oecuid) | No | — |
-| `connected_account_id` | Integer | Filter by connected social account id | No | — |
-| `platform` | String | `growi` (only creators on Growi), `all` (all TikTok Shop data), `non_growi` (creators not on Growi) | No | `growi` |
-| `gmv_min` / `gmv_max` | Number | GMV range bounds in display currency units | No | — |
-| `all_contracts` | String | `'true'` to include creators from all contracts | No | — |
-| `exclude_contests` | String | `'true'` to exclude TikTok Shop contest campaigns | No | — |
-| `organization_id` | Integer | Narrow to a child organization of the API key organization | No | — |
+- Building creator leaderboards and performance dashboards from your TikTok Shop data
+- Reconciling creator commissions against GMV for payout workflows
+- Comparing on-Growi vs. off-Growi creator performance via the `platform` filter
+- Tracking campaign- or contract-specific creator performance with `campaign_id`
 
-## Request Example
+## Notes
 
-```bash
+- Results are always ordered by total GMV descending; there is no sort parameter.
+- Money fields are raw numbers in display currency units (dollars for USD shops); use the `*_formatted` variants for display.
+- Dates are inclusive; the dashboard's default view is the last 30 days.
+- Requests are rate limited (minimum 2 seconds between requests plus an hourly quota); see the `X-RateLimit-*` response headers.
+
+<RequestExample>
+
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/creators?start_date=2026-07-01&end_date=2026-07-31&platform=all&per_page=20" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+</RequestExample>
 
-```json
+<ResponseExample>
+
+```json 200
 {
   "data": [
     {
@@ -110,16 +108,4 @@ curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/creators?start_date
 }
 ```
 
-## Use Cases
-
-- Building creator leaderboards and performance dashboards from your TikTok Shop data
-- Reconciling creator commissions against GMV for payout workflows
-- Comparing on-Growi vs. off-Growi creator performance via the `platform` filter
-- Tracking campaign- or contract-specific creator performance with `campaign_id`
-
-## Notes
-
-- Results are always ordered by total GMV descending; there is no sort parameter.
-- Money fields are raw numbers in display currency units (dollars for USD shops); use the `*_formatted` variants for display.
-- Dates are inclusive; the dashboard's default view is the last 30 days.
-- Requests are rate limited (minimum 2 seconds between requests plus an hourly quota); see the `X-RateLimit-*` response headers.
+</ResponseExample>

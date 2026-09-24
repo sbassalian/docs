@@ -1,11 +1,11 @@
 ---
-title: "Get Top Posts By Views"
+title: "Get top posts by views"
+sidebarTitle: "Top posts by views"
 openapi: "GET /stats/top_posts_by_views"
+description: "Retrieves your top-performing posts ranked by views within a specified date range."
 ---
 
-Retrieves your top-performing posts ranked by views within a specified date range.
-
-## Request Parameters
+## Request parameters
 
 | Parameter                | Type    | Description                                                                                                                                                                       | Required |
 | ------------------------ | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
@@ -31,33 +31,19 @@ Retrieves your top-performing posts ranked by views within a specified date rang
 
 Returns top posts created Oct 15 – Nov 1, 2025, ranked by their view delta Oct 1 – Nov 14, 2025.
 
-## Response Fields
+<RequestExample>
 
-| Field               | Description                                                                  |
-| ------------------- | ---------------------------------------------------------------------------- |
-| `id`                | Unique identifier for the post                                               |
-| `title`             | Post title or caption                                                        |
-| `share_url`         | Direct URL to the post                                                       |
-| `platform`          | Social media platform (e.g., "tik_tok", "instagram", "youtube")              |
-| `content_type`      | Type of content (e.g., "video", "image")                                     |
-| `external_id`       | External platform identifier for the post                                    |
-| `username`          | Username of the creator                                                      |
-| `name`              | Display name of the creator                                                  |
-| `profile_share_url` | URL to the creator's profile                                                 |
-| `metrics`           | Object containing engagement metrics (views, likes, comments, shares)        |
-| `gmv`               | Gross Merchandise Value for the post (only included when `include_gmv=true`) |
-
-## Request Example
-
-```bash
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/stats/top_posts_by_views?start_date=01/01/2023&end_date=01/31/2023&limit=5&page=1&per_page=20&include_gmv=true" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+</RequestExample>
 
-```json
+<ResponseExample>
+
+```json 200
 {
   "success": true,
   "data": {
@@ -142,3 +128,5 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_posts_by_views?start_d
   }
 }
 ```
+
+</ResponseExample>

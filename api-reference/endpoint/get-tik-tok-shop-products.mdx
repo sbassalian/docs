@@ -1,11 +1,11 @@
 ---
-title: 'Top TikTok Shop Products by GMV'
-openapi: 'GET /stats/tik_tok_shop_products'
+title: "Get top TikTok Shop products by GMV"
+sidebarTitle: "Top products by GMV"
+openapi: "GET /stats/tik_tok_shop_products"
+description: "Retrieves TikTok Shop product-level Gross Merchandise Value (GMV) data. Returns aggregated statistics for each product including total GMV, order counts, and the number of unique videos that promoted each product within the specified date range."
 ---
 
-Retrieves TikTok Shop product-level Gross Merchandise Value (GMV) data. Returns aggregated statistics for each product including total GMV, order counts, and the number of unique videos that promoted each product within the specified date range.
-
-## Response Fields
+## Response fields
 
 Each product object contains the following fields:
 
@@ -17,24 +17,36 @@ Each product object contains the following fields:
 | `total_orders` | Integer | Total number of orders for this product |
 | `unique_videos` | Integer | Number of unique videos that promoted this product |
 
-## Request Parameters
+## Use cases
 
-| Parameter | Type | Description | Required | Default |
-| --- | --- | --- | --- | --- |
-| `start_date` | String | Start date in MM/DD/YYYY format | Yes | Current date - 30 days |
-| `end_date` | String | End date in MM/DD/YYYY format | Yes | Current date |
+This endpoint is useful for:
+- Identifying top-performing products by GMV
+- Analyzing which products generate the most orders
+- Understanding product reach through unique video counts
+- Optimizing inventory and marketing strategies based on product performance
+- Building product performance dashboards
+- Tracking product-level attribution across influencer campaigns
+- Comparing product performance across different time periods
 
-## Request Example
+## Notes
 
-```bash
+- Products are returned sorted by `total_gmv` in descending order (highest GMV first)
+- The `unique_videos` count represents distinct videos that featured or promoted the product
+- GMV values represent actual revenue generated, not including refunds or cancellations
+
+<RequestExample>
+
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/stats/tik_tok_shop_products?start_date=10/04/2025&end_date=11/03/2025" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+</RequestExample>
 
-```json
+<ResponseExample>
+
+```json 200
 {
   "success": true,
   "data": {
@@ -68,20 +80,4 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/tik_tok_shop_products?star
 }
 ```
 
-## Use Cases
-
-This endpoint is useful for:
-- Identifying top-performing products by GMV
-- Analyzing which products generate the most orders
-- Understanding product reach through unique video counts
-- Optimizing inventory and marketing strategies based on product performance
-- Building product performance dashboards
-- Tracking product-level attribution across influencer campaigns
-- Comparing product performance across different time periods
-
-## Notes
-
-- Products are returned sorted by `total_gmv` in descending order (highest GMV first)
-- The `unique_videos` count represents distinct videos that featured or promoted the product
-- GMV values represent actual revenue generated, not including refunds or cancellations
-
+</ResponseExample>

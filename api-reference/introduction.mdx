@@ -1,23 +1,38 @@
 ---
-title: 'Introduction'
-description: 'Growi API documentation for showcasing endpoints and authentication methods'
+title: "API reference"
+sidebarTitle: "Introduction"
+description: "A REST API over HTTPS with JSON in and out, authenticated with a Bearer token."
 ---
 
-<Note>
- If you're looking to integrate with Growi's powerful affiliate management platform, this documentation is for you. Here you'll find all the details you need to authenticate and interact with our API endpoints.
-</Note>
+## Base URL
 
-## Welcome
-
-Welcome to the Growi API documentation. Here you will find all the information you need to interact with the Growi platform through our API. You can build comprehensive affiliate management solutions and integrate seamlessly with our services.
+```text
+https://api.growi.io/api/public/v1
+```
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens. To authenticate your requests, you need to include the Authorization header with your API key.
+Send your API key in the `Authorization` header on every request:
 
-To authenticate, pass up an Authorization header with the value:<br/>`Bearer <api-key>`:
-
-```json
-Base Url https://api.growi.io/api/public/v1
+```text
 Authorization: Bearer YOUR_API_KEY
 ```
+
+Don't have a key yet? [Authentication](/authentication) shows where to create one.
+
+## What's in here
+
+<CardGroup cols={2}>
+  <Card title="Conversions" icon="send" href="/api-reference/endpoint/create-affiliate-sale">
+    Record, list and update affiliate sales.
+  </Card>
+  <Card title="Campaign affiliates" icon="tag" href="/api-reference/endpoint/list-campaign-affiliates">
+    Creator enrollments and their affiliate codes.
+  </Card>
+  <Card title="Stats" icon="chart-line" href="/api-reference/endpoint/get-snapshots">
+    Creators, content, GMV and payouts.
+  </Card>
+  <Card title="TikTok Shop" icon="store" href="/api-reference/endpoint/get-tik-tok-shop-store-creators">
+    Store creators, videos, LIVE streams and products.
+  </Card>
+</CardGroup>

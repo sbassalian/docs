@@ -1,48 +1,27 @@
 ---
-title: 'Get Creators 24h'
-openapi: 'GET /stats/creators_24h'
+title: "Get creators (24h)"
+openapi: "GET /stats/creators_24h"
+description: "Retrieves daily creator metrics with comparison to previous period. This endpoint tracks both new creators (who joined your database) and active creators (who made posts) for each date."
 ---
 
-Retrieves daily creator metrics with comparison to previous period. This endpoint tracks both new creators (who joined your database) and active creators (who made posts) for each date.
-
-## Key Definitions
+## Key definitions
 
 - **New Creators**: Creators who joined your database on that specific date
 - **Active Creators**: Creators who made at least one post on that specific date
 
-## Request Parameters
+<RequestExample>
 
-| Parameter | Type | Description | Required |
-| --- | --- | --- | --- |
-| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
-| `end_date` | String | End date in MM/DD/YYYY format | Yes |
-
-## Response Fields
-
-| Field | Description |
-| --- | --- |
-| `date` | Date string for the current day (YYYY-MM-DD format) |
-| `last_date` | Date string for the comparison day from the previous period (YYYY-MM-DD format) |
-| `current_new` | Number of new creators who joined on the current date |
-| `last_new` | Number of new creators who joined on the comparison date |
-| `total_new` | Cumulative total of new creators in the current period |
-| `last_total_new` | Cumulative total of new creators in the comparison period |
-| `current_active` | Number of creators who made posts on the current date |
-| `last_active` | Number of creators who made posts on the comparison date |
-| `total_active` | Cumulative total of active creators in the current period |
-| `last_total_active` | Cumulative total of active creators in the comparison period |
-
-## Request Example
-
-```bash
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/stats/creators_24h?start_date=01/01/2023&end_date=01/31/2023" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+</RequestExample>
 
-```json
+<ResponseExample>
+
+```json 200
 {
   "success": true,
   "data": {
@@ -86,3 +65,6 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/creators_24h?start_date=01
     ]
   }
 } 
+```
+
+</ResponseExample>

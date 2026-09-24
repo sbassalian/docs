@@ -1,11 +1,10 @@
 ---
-title: "Get Ambassador Stats"
+title: "Get ambassador stats"
 openapi: "GET /stats/query_ambassadors"
+description: "Retrieves aggregated statistics for campaign ambassadors, grouped by individual affiliate. This endpoint provides performance metrics including revenue, commission, order counts, refund amounts, and clicks for ambassadors within a specified date range."
 ---
 
-Retrieves aggregated statistics for campaign ambassadors, grouped by individual affiliate. This endpoint provides performance metrics including revenue, commission, order counts, refund amounts, and clicks for ambassadors within a specified date range.
-
-## Request Parameters
+## Request parameters
 
 | Parameter        | Type    | Description                                                       | Required |
 | ---------------- | ------- | ----------------------------------------------------------------- | -------- |
@@ -20,64 +19,7 @@ Retrieves aggregated statistics for campaign ambassadors, grouped by individual 
 | `first_name`     | String  | Filter by ambassador first name (case-insensitive, partial match) | No       |
 | `last_name`      | String  | Filter by ambassador last name (case-insensitive, partial match)  | No       |
 
-## Request Examples
-
-### Basic Request
-
-```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&page=1&per_page=20" \
-     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
-     -H "Content-Type: application/json"
-```
-
-### With Clicks
-
-```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&include_clicks=true" \
-     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
-     -H "Content-Type: application/json"
-```
-
-### With Clicks
-
-```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&include_clicks=true" \
-     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
-```
-
-## Response Example
-
-```json
-{
-  "data": [
-    {
-      "campaign_affiliate_id": 456,
-      "user_id": 789,
-      "email": "ambassador@example.com",
-      "first_name": "John",
-      "last_name": "Doe",
-      "creator_name": "John Doe",
-      "revenue": 5000.5,
-      "commission": 500.05,
-      "orders_count": 45,
-      "clicks": 1500,
-      "refund_amount": 150.25,
-      "joined_campaign_date": "01/15/2024"
-    }
-  ],
-  "meta": {
-    "total_ambassadors": 150,
-    "current_page": 1,
-    "per_page": 20,
-    "total_pages": 8,
-    "start_date": "09/01/2025",
-    "end_date": "09/30/2025",
-    "campaign_id": "123"
-  }
-}
-```
-
-## Response Fields
+## Response fields
 
 | Field                          | Type    | Description                                                                   |
 | ------------------------------ | ------- | ----------------------------------------------------------------------------- |
@@ -103,9 +45,9 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
 | `meta.end_date`                | String  | Query end date                                                                |
 | `meta.campaign_id`             | String  | Campaign ID queried                                                           |
 
-## Filter Examples
+## Filter examples
 
-### Search Filter
+### Search filter
 
 The `search` parameter searches across email, first name, last name, and full name:
 
@@ -114,7 +56,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 
-### Email Filter (Single)
+### Email filter (single)
 
 Filter by a specific ambassador email:
 
@@ -123,7 +65,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 
-### Email Filter (Multiple - Comma Separated)
+### Email filter (multiple, comma separated)
 
 Filter by multiple ambassador emails using comma-separated values:
 
@@ -132,7 +74,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 
-### First Name Filter
+### First name filter
 
 Filter by ambassador first name (case-insensitive, partial match):
 
@@ -141,7 +83,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 
-### Last Name Filter
+### Last name filter
 
 Filter by ambassador last name (case-insensitive, partial match):
 
@@ -150,7 +92,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 
-### Combined Filters
+### Combined filters
 
 You can combine multiple filters:
 
@@ -175,9 +117,9 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_da
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 
-## Important Notes
+## Important notes
 
-### Time Periods
+### Time periods
 
 All metrics (revenue, commission, orders, clicks, refunds) are filtered by the specified date range. The `start_date` and `end_date` parameters filter tracking events by their `occurred_at` timestamp (when the sale or click happened), not by when the ambassador joined the campaign.
 
@@ -196,9 +138,9 @@ To analyze different time periods, make separate API calls with different date r
 - **All ambassadors shown**: Even ambassadors with 0 sales appear in results if they match filters
 - Use `total_pages` in the meta response to iterate through all pages
 
-## Error Responses
+## Error responses
 
-### 400 Bad Request - Missing Required Parameters
+### 400 Bad Request: missing required parameters
 
 ```json
 {
@@ -206,7 +148,7 @@ To analyze different time periods, make separate API calls with different date r
 }
 ```
 
-### 401 Unauthorized - Invalid API Key
+### 401 Unauthorized: invalid API key
 
 ```json
 {
@@ -214,7 +156,7 @@ To analyze different time periods, make separate API calls with different date r
 }
 ```
 
-### 429 Too Many Requests - Rate Limit Exceeded
+### 429 Too Many Requests: rate limit exceeded
 
 ```json
 {
@@ -223,14 +165,14 @@ To analyze different time periods, make separate API calls with different date r
 }
 ```
 
-## Rate Limiting
+## Rate limiting
 
 This endpoint is subject to the standard Public API rate limits:
 
 - **Frequency Limit**: 2-second minimum interval between requests
 - **Hourly Limit**: 40 requests per hour (default, configurable per organization)
 
-## Performance Tips
+## Performance tips
 
 To ensure fast response times:
 
@@ -238,7 +180,7 @@ To ensure fast response times:
 2. **Apply Filters**: Use email/name filters to narrow results
 3. **Clicks**: Only add `include_clicks=true` when you specifically need click data
 
-## Integration Examples
+## Integration examples
 
 ### JavaScript/Node.js
 
@@ -440,9 +382,9 @@ stats['data'].each do |ambassador|
 end
 ```
 
-## Filtering Best Practices
+## Filtering best practices
 
-### Multiple Emails
+### Multiple emails
 
 When filtering by multiple emails, use comma-separated values without spaces (or with spaces - both work):
 
@@ -456,12 +398,12 @@ The system will:
 - Trim whitespace
 - Convert to lowercase for case-insensitive matching
 
-### Search vs Specific Filters
+### Search vs specific filters
 
 - Use **`search`** for broad queries across all name/email fields
 - Use **`email`**, **`first_name`**, or **`last_name`** for precise filtering
 
-### Including Clicks
+### Including clicks
 
 By default, clicks are not included to ensure fast response times. To include click data:
 
@@ -470,3 +412,53 @@ By default, clicks are not included to ensure fast response times. To include cl
 ```
 
 **Note:** Including clicks may increase response time. For optimal performance, combine with specific email filters to limit the number of ambassadors queried.
+
+<RequestExample>
+
+```bash Basic
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&page=1&per_page=20" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+```bash With clicks
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassadors?start_date=09/01/2025&end_date=09/30/2025&campaign_id=123&include_clicks=true" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "data": [
+    {
+      "campaign_affiliate_id": 456,
+      "user_id": 789,
+      "email": "ambassador@example.com",
+      "first_name": "John",
+      "last_name": "Doe",
+      "creator_name": "John Doe",
+      "revenue": 5000.5,
+      "commission": 500.05,
+      "orders_count": 45,
+      "clicks": 1500,
+      "refund_amount": 150.25,
+      "joined_campaign_date": "01/15/2024"
+    }
+  ],
+  "meta": {
+    "total_ambassadors": 150,
+    "current_page": 1,
+    "per_page": 20,
+    "total_pages": 8,
+    "start_date": "09/01/2025",
+    "end_date": "09/30/2025",
+    "campaign_id": "123"
+  }
+}
+```
+
+</ResponseExample>

@@ -1,9 +1,8 @@
 ---
-title: "Create Campaign Application"
+title: "Create campaign application"
 openapi: "POST /campaign_applications"
+description: "Submits an applicant from your own signup form directly into a Growi campaign — so you can host the signup experience on your domain while Growi handles creator onboarding, approval, and tracking."
 ---
-
-Submits an applicant from your own signup form directly into a Growi campaign — so you can host the signup experience on your domain while Growi handles creator onboarding, approval, and tracking.
 
 The endpoint creates the creator account if it doesn't exist yet, files a **pending** application to the campaign (or **accepted**, when the campaign auto-accepts applicants), and stores any marketing attribution you send. When the creator is later approved, or generates a sale, the attribution is **echoed back** on the corresponding [webhook events](/essentials/campaign-creator-webhooks) so you can match the creator in your ad platform (for example, forwarding to the Meta Conversions API).
 
@@ -13,7 +12,7 @@ The endpoint creates the creator account if it doesn't exist yet, files a **pend
 
 **Idempotent**: repeat submissions for the same `email` + `campaign_id` return the existing application with `created: false` instead of creating a duplicate. Attribution keys not seen before are merged in; existing values are never overwritten. This endpoint is also exempt from the 2-second request-interval limit, so bursts of near-simultaneous form submissions are safe.
 
-## Request Body
+## Request body
 
 | Field | Type | Description | Required |
 | --- | --- | --- | --- |
@@ -47,9 +46,45 @@ Everything below is stored verbatim and echoed back inside the `attribution` obj
 | `tiktok_verified` | Integer | `1` when the TikTok account is verified |
 | `enriched_at` | String | When you enriched the TikTok profile data |
 
-## Request Example
+## Response fields
 
-```bash
+| Field | Type | Description |
+| --- | --- | --- |
+| `data.invitation_id` | Integer | The application's id |
+| `data.status` | String | `pending`, or `accepted` when the campaign auto-accepts applicants |
+| `data.user_id` | Integer | The creator's Growi user id |
+| `data.campaign_id` | Integer | The campaign applied to |
+| `data.created` | Boolean | `true` for a new application, `false` for an idempotent repeat |
+
+## Error responses
+
+**403 — plan or key**
+
+```json
+{ "error": "The applications API is not enabled for your plan." }
+```
+
+**404 — campaign not found for your organization**
+
+```json
+{ "error": "Campaign not found." }
+```
+
+**422 — validation**
+
+```json
+{ "error": "email is required" }
+```
+
+## Use cases
+
+- **Host your own signup form**: keep the application experience on your domain (with your pixels and analytics firing natively) while applicants flow straight into Growi for review.
+- **Meta ads attribution**: send `fbp`/`fbc`/`event_id` with each applicant, then forward the `campaign_affiliate.activated` and `affiliate_sale.created` webhook events — which echo the same identifiers — to the Meta Conversions API so your media team can optimize on approvals and revenue.
+- **CRM sync**: pass your internal applicant `id`; it comes back as `attribution.external_id` on webhook events for painless matching.
+
+<RequestExample>
+
+```bash cURL
 curl -X POST "https://api.growi.io/api/public/v1/campaign_applications" \
   -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
   -H "Content-Type: application/json" \
@@ -80,9 +115,11 @@ curl -X POST "https://api.growi.io/api/public/v1/campaign_applications" \
   }'
 ```
 
-## Response Example
+</RequestExample>
 
-```json
+<ResponseExample>
+
+```json 200
 {
   "data": {
     "invitation_id": 98123,
@@ -94,40 +131,4 @@ curl -X POST "https://api.growi.io/api/public/v1/campaign_applications" \
 }
 ```
 
-A repeat submission returns `200` with the same shape and `"created": false`.
-
-## Response Fields
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `data.invitation_id` | Integer | The application's id |
-| `data.status` | String | `pending`, or `accepted` when the campaign auto-accepts applicants |
-| `data.user_id` | Integer | The creator's Growi user id |
-| `data.campaign_id` | Integer | The campaign applied to |
-| `data.created` | Boolean | `true` for a new application, `false` for an idempotent repeat |
-
-## Error Responses
-
-**403 — plan or key**
-
-```json
-{ "error": "The applications API is not enabled for your plan." }
-```
-
-**404 — campaign not found for your organization**
-
-```json
-{ "error": "Campaign not found." }
-```
-
-**422 — validation**
-
-```json
-{ "error": "email is required" }
-```
-
-## Use Cases
-
-- **Host your own signup form**: keep the application experience on your domain (with your pixels and analytics firing natively) while applicants flow straight into Growi for review.
-- **Meta ads attribution**: send `fbp`/`fbc`/`event_id` with each applicant, then forward the `campaign_affiliate.activated` and `affiliate_sale.created` webhook events — which echo the same identifiers — to the Meta Conversions API so your media team can optimize on approvals and revenue.
-- **CRM sync**: pass your internal applicant `id`; it comes back as `attribution.external_id` on webhook events for painless matching.
+</ResponseExample>

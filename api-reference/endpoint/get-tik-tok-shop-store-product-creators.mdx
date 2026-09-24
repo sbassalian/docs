@@ -1,13 +1,14 @@
 ---
-title: 'TikTok Shop Creators by Product'
-openapi: 'GET /tik_tok_shop/product_creators'
+title: "List TikTok Shop product creators"
+sidebarTitle: "List product creators"
+openapi: "GET /tik_tok_shop/product_creators"
 ---
 
 Lists creators with a per-product breakdown of their TikTok Shop sales — one row per creator with an embedded `products[]` array showing how their GMV splits across products for the requested date range. This is the same data as the **Products** tab (Creators view) of the TikTok Shop store page.
 
 For the product-level rollup, see [TikTok Shop Products](/api-reference/endpoint/get-tik-tok-shop-store-products).
 
-## Response Fields
+## Response fields
 
 Each creator row contains:
 
@@ -29,34 +30,32 @@ Each entry in `products[]` contains `external_product_id`, `product_name`, `prod
 
 The response envelope is `{ data, meta, additional_data }`; `meta` additionally includes `page_size`.
 
-## Request Parameters
+## Use cases
 
-| Parameter | Type | Description | Required | Default |
-| --- | --- | --- | --- | --- |
-| `start_date` | String | Start of the GMV date range (ISO 8601, `YYYY-MM-DD`) | Yes | — |
-| `end_date` | String | End of the GMV date range (ISO 8601, `YYYY-MM-DD`) | Yes | — |
-| `page` | Integer | Page number | No | 1 |
-| `per_page` | Integer | Results per page (max 100) | No | 20 |
-| `search` | String | Free-text search by creator | No | — |
-| `campaign_id` | Integer | Filter to a campaign or contract in your organization | No | — |
-| `creator_id` | Integer | Filter to a single Growi creator (user id) | No | — |
-| `platform` | String | `growi` or `all` | No | `growi` |
-| `product_id` | String | Only include creators who sold this TikTok Shop product | No | — |
-| `all_contracts` | String | `'true'` to include creators from all contracts | No | — |
-| `exclude_contests` | String | `'true'` to exclude TikTok Shop contest campaigns | No | — |
-| `organization_id` | Integer | Narrow to a child organization | No | — |
+- Answering "who sold this product?" with `product_id`
+- Building creator × product performance matrices
+- Structuring product-seeding decisions around which creators move which SKUs
+- Reconciling per-product commissions per creator
 
-## Request Example
+## Notes
 
-```bash
+- Results are always ordered by total GMV descending; there is no sort parameter.
+- Without a `product_id` filter, the listing also includes tracked creators with zero sales in the range (matching the dashboard's row counts); with `product_id`, only creators who sold that product are returned.
+- Requests are rate limited (minimum 2 seconds between requests plus an hourly quota); see the `X-RateLimit-*` response headers.
+
+<RequestExample>
+
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/product_creators?start_date=2026-07-01&end_date=2026-07-31&product_id=1729548090545311965" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+</RequestExample>
 
-```json
+<ResponseExample>
+
+```json 200
 {
   "data": [
     {
@@ -110,15 +109,4 @@ curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/product_creators?st
 }
 ```
 
-## Use Cases
-
-- Answering "who sold this product?" with `product_id`
-- Building creator × product performance matrices
-- Structuring product-seeding decisions around which creators move which SKUs
-- Reconciling per-product commissions per creator
-
-## Notes
-
-- Results are always ordered by total GMV descending; there is no sort parameter.
-- Without a `product_id` filter, the listing also includes tracked creators with zero sales in the range (matching the dashboard's row counts); with `product_id`, only creators who sold that product are returned.
-- Requests are rate limited (minimum 2 seconds between requests plus an hourly quota); see the `X-RateLimit-*` response headers.
+</ResponseExample>

@@ -1,11 +1,10 @@
 ---
-title: 'Get Snapshots'
-openapi: 'GET /stats/snapshots'
+title: "Get snapshots"
+openapi: "GET /stats/snapshots"
+description: "Retrieves time-series data for content engagement metrics within a specified date range."
 ---
 
-Retrieves time-series data for content engagement metrics within a specified date range.
-
-## Response Fields
+## Response fields
 
 Each snapshot object contains the following fields:
 
@@ -21,26 +20,19 @@ Each snapshot object contains the following fields:
 | `user_content_ids` | Array | List of user content IDs associated with this date |
 | `organization_id` | Integer/null | Organization ID if applicable |
 
-## Request Parameters
+<RequestExample>
 
-| Parameter | Type | Description | Required | Default |
-| --- | --- | --- | --- | --- |
-| `start_date` | String | Start date in MM/DD/YYYY format | Yes | Current date - 7 days |
-| `end_date` | String | End date in MM/DD/YYYY format | Yes | Current date |
-| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No | 4 |
-| `campaign_id` | Integer | Filter snapshots by specific campaign ID. You can get campaign IDs from the [Get Campaigns](/api-reference/endpoint/get-campaigns) endpoint. | No | - |
-
-## Request Example
-
-```bash
+```bash cURL
 curl -X GET "https://api.growi.io/api/public/v1/stats/snapshots?start_date=10/01/2025&end_date=11/14/2025" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+</RequestExample>
 
-```json
+<ResponseExample>
+
+```json 200
 {
   "success": true,
   "data": {
@@ -82,4 +74,6 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/snapshots?start_date=10/01
     ]
   }
 }
-``` 
+```
+
+</ResponseExample>

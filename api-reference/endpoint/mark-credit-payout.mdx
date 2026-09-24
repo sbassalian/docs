@@ -1,9 +1,8 @@
 ---
-title: "Mark Credit Payout"
+title: "Mark credit payout"
 openapi: "POST /stats/mark_credit_payout"
+description: "Marks a single credit-only creator payout as **paid externally**. Use this after paying a creator their credits in your own system so that the payout's status is reflected in Growi."
 ---
-
-Marks a single credit-only creator payout as **paid externally**. Use this after paying a creator their credits in your own system so that the payout's status is reflected in Growi.
 
 <Note>
   This endpoint is **one-shot** — payouts cannot be partially paid. Each call
@@ -14,13 +13,13 @@ Marks a single credit-only creator payout as **paid externally**. Use this after
   Rate limit: a minimum of **2 seconds** between requests per API key.
 </Note>
 
-## Request Body
+## Request body
 
 | Field                 | Type   | Description                                                  | Required |
 | --------------------- | ------ | ------------------------------------------------------------ | -------- |
 | `creator_payout_uuid` | String | The `uuid` of the payout (from `GET /stats/creator_payouts`) | Yes      |
 
-## Validation Rules
+## Validation rules
 
 The endpoint rejects the request unless all of the following are true:
 
@@ -30,39 +29,7 @@ The endpoint rejects the request unless all of the following are true:
 4. The payout's `total_credit_amount` is greater than `0`.
 5. The payout's `total_cash_amount` is `0` (no mixed cash + credits).
 
-## Request Example
-
-```bash
-curl -X POST "https://api.growi.io/api/public/v1/stats/mark_credit_payout" \
-     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
-     -H "Content-Type: application/json" \
-     -d '{"creator_payout_uuid":"UUID_OF_PAYOUT"}'
-```
-
-## Response Example
-
-**200 OK**
-
-```json
-{
-  "success": true,
-  "creator_payout": {
-    "id": 891439,
-    "uuid": "EXAMPLE_UUID",
-    "creator_name": "Example Creator",
-    "since_date": "03/03/2026",
-    "deal_date": "05/02/2026",
-    "status": "Paid externally",
-    "amount": "$0.00",
-    "credits_enabled": true,
-    "credit_name": "credits",
-    "total_credit_amount": 750,
-    "formatted_total_credit_amount": "750 credits"
-  }
-}
-```
-
-## Response Fields
+## Response fields
 
 | Field                                          | Type           | Description                                                |
 | ---------------------------------------------- | -------------- | ---------------------------------------------------------- |
@@ -80,7 +47,7 @@ curl -X POST "https://api.growi.io/api/public/v1/stats/mark_credit_payout" \
 | `creator_payout.total_credit_amount`           | Integer        | Total credit amount for the payout                         |
 | `creator_payout.formatted_total_credit_amount` | String \| null | Display string (e.g. `"750 credits"`)                      |
 
-## Error Responses
+## Error responses
 
 All errors return a non-2xx response with a JSON body of the form:
 
@@ -103,8 +70,42 @@ All errors return a non-2xx response with a JSON body of the form:
   side.
 </Note>
 
-## Typical Workflow
+## Typical workflow
 
 1. `GET /stats/creator_payouts?start_date=…&end_date=…&credits_only=true` — fetch the list of credit payouts due to your creators.
 2. Pay each creator their credits in your own system.
 3. For each paid creator, `POST /stats/mark_credit_payout` with their `creator_payout_uuid` to record the payout in Growi.
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.growi.io/api/public/v1/stats/mark_credit_payout" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{"creator_payout_uuid":"UUID_OF_PAYOUT"}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "creator_payout": {
+    "id": 891439,
+    "uuid": "EXAMPLE_UUID",
+    "creator_name": "Example Creator",
+    "since_date": "03/03/2026",
+    "deal_date": "05/02/2026",
+    "status": "Paid externally",
+    "amount": "$0.00",
+    "credits_enabled": true,
+    "credit_name": "credits",
+    "total_credit_amount": 750,
+    "formatted_total_credit_amount": "750 credits"
+  }
+}
+```
+
+</ResponseExample>

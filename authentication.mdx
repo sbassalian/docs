@@ -1,0 +1,51 @@
+---
+title: "Authentication"
+description: "Create an API key in the dashboard and send it as a Bearer token."
+---
+
+<Info>
+  **Prerequisite** You need admin access to your Growi dashboard.
+</Info>
+
+<Steps>
+  <Step title="Create an API key">
+    In the Growi dashboard, go to **Settings**, then the **Developer** tab, and create a new API key.
+
+    <Frame>
+      <img src="/images/bearer-1.png" alt="Developer tab in Growi settings" />
+    </Frame>
+  </Step>
+  <Step title="Copy the key">
+    Copy the key and keep it somewhere safe. Treat it like a password and never ship it in client-side code.
+
+    <Frame>
+      <img src="/images/bearer-2.png" alt="Copying an API key in Growi settings" />
+    </Frame>
+  </Step>
+  <Step title="Send it with every request">
+    Put the key in the `Authorization` header as a Bearer token. Every endpoint lives under the same base URL.
+
+    ```bash cURL
+    curl https://api.growi.io/api/public/v1/organizations/brands \
+      -H "Authorization: Bearer $GROWI_API_KEY"
+    ```
+  </Step>
+</Steps>
+
+<Note>
+  The public API expects at least 2 seconds between requests. For bulk work, use the bulk endpoints, like [bulk update campaign affiliates](/api-reference/endpoint/bulk-update-campaign-affiliates), instead of looping.
+</Note>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="My API key doesn't work">
+    Check that you copied the whole key and that it hasn't been deleted. If in doubt, create a new one.
+  </Accordion>
+  <Accordion title="I get authorization errors">
+    The header must be `Authorization: Bearer YOUR_API_KEY`, with one space after `Bearer` and nothing else around the key.
+  </Accordion>
+  <Accordion title="Some endpoints are blocked">
+    Check the key's permissions in the **Developer** tab of your settings.
+  </Accordion>
+</AccordionGroup>

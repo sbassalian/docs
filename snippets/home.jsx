@@ -73,7 +73,7 @@ export const GrowiHome = () => {
             <pre className="g-art-code">
               <span className="g-tk-p">curl</span>
               {` -X POST \\\n  ${base}/affiliate_sales \\\n  -H `}
-              <span className="g-tk-s">"Authorization: Bearer $GROWI_API_KEY"</span>
+              <span className="g-tk-s">"Authorization: Bearer YOUR_PUBLIC_API_KEY"</span>
               {" \\\n  -H "}
               <span className="g-tk-s">"Content-Type: application/json"</span>
               {" \\\n  -d "}
@@ -81,7 +81,7 @@ export const GrowiHome = () => {
             </pre>
             <div className="g-art-res">
               <span className="g-ok">201 Created</span>
-              <span>id 1947457</span>
+              <span>id 1947458</span>
               <span>commission 500</span>
               <span>status unpaid</span>
             </div>
@@ -128,9 +128,9 @@ export const GrowiHome = () => {
         label: "TikTok Shop",
         items: [
           ["users", "List store creators", "Creator performance for your store over a date range.", "/api-reference/endpoint/get-tik-tok-shop-store-creators"],
-          ["video", "Pull videos and lives", "Content performance for your store.", "/api-reference/endpoint/get-tik-tok-shop-store-videos"],
-          ["box", "List store products", "Your catalog with sales data.", "/api-reference/endpoint/get-tik-tok-shop-store-products"],
-          ["chart", "Creators per product", "Who is promoting each product.", "/api-reference/endpoint/get-tik-tok-shop-store-product-creators"],
+          ["video", "Pull shoppable videos", "Video performance for your store over a date range.", "/api-reference/endpoint/get-tik-tok-shop-store-videos"],
+          ["box", "List store products", "Product sales summed across your tracked creators.", "/api-reference/endpoint/get-tik-tok-shop-store-products"],
+          ["chart", "Creators per product", "Each creator's GMV split by product.", "/api-reference/endpoint/get-tik-tok-shop-store-product-creators"],
         ],
       },
     ];
@@ -254,7 +254,7 @@ export const GrowiHome = () => {
               </a>
             ))}
             <a className="g-x-more" href={area.name === "Webhooks" ? "/essentials/campaign-creator-webhooks" : area.rows[0][3]}>
-              {area.name === "Webhooks" ? "Read the webhooks guide" : `See all ${area.count} in the reference`}
+              {area.name === "Webhooks" ? "Read the webhooks guide" : `Open ${area.name} in the reference`}
             </a>
           </div>
         </div>

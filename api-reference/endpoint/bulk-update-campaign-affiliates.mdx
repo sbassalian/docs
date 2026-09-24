@@ -1,19 +1,66 @@
 ---
 title: "Bulk update campaign affiliates"
-sidebarTitle: "Bulk update affiliates"
 openapi: "PATCH /campaign_affiliates/bulk"
-description: "Set affiliate codes for many creators in one request."
 ---
 
-Built for spoken-code migrations: keep the codes creators already use when you move them onto a revenue campaign.
+Sets default affiliate tags for many creators in one request. Built for spoken-code migrations (keep the codes creators already use when you move them onto a revenue campaign).
 
 Each row is independent: valid rows still update when another row fails. Codes must be unique inside your organization. Each successful rename fires `campaign_affiliate.code_updated`.
 
 Maximum **300** affiliates per request.
 
-## Partial failures
+## Request body
 
-If some rows fail, the API returns `422` with an `errors` list. Rows that succeeded are still saved.
+| Field | Type | Description | Required |
+| ----- | ---- | ----------- | -------- |
+| `affiliates` | Array | Rows to update. Each row needs `id` (campaign-affiliate enrollment ID) and `tag` (new code). | Yes |
+
+## Request example
+
+```bash
+curl -X PATCH "https://api.growi.io/api/public/v1/campaign_affiliates/bulk" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "affiliates": [
+         { "id": 3490313, "tag": "OLLYCODE" },
+         { "id": 3490314, "tag": "SURESH10" }
+       ]
+     }'
+```
+
+## Response example
+
+All rows succeeded:
+
+```json
+{
+  "success": true,
+  "updated": [
+    { "id": 3490313, "tag": "ollycode" },
+    { "id": 3490314, "tag": "suresh10" }
+  ],
+  "errors": []
+}
+```
+
+Partial failure (HTTP 422 — successful rows are still saved):
+
+```json
+{
+  "success": false,
+  "updated": [
+    { "id": 3490313, "tag": "ollycode" }
+  ],
+  "errors": [
+    { "id": 0, "error": "Campaign affiliate not found." }
+  ]
+}
+```
+
+## Authentication
+
+Send your organization's public API key as a Bearer token. **Viewer (read-only) keys cannot call this.** See [Rate Limits & Authentication](/api-reference/introduction).
 
 ## Error responses
 
@@ -24,10 +71,6 @@ If some rows fail, the API returns `422` with an `errors` list. Rows that succee
 | `422` | `{ "error": "affiliates is required" }` | Missing / empty `affiliates`. |
 | `422` | `{ "error": "Maximum 300 affiliates per request." }` | More than 300 rows. |
 | `422` | `{ "success": false, "updated": [...], "errors": [...] }` | At least one row failed. Successful rows are still saved. |
-
-## Permissions
-
-**Viewer (read-only) keys can't call this.** Rate limits are on the [Authentication](/authentication) page.
 
 <RequestExample>
 

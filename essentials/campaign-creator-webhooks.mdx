@@ -1,7 +1,6 @@
 ---
-title: "Webhooks overview"
-sidebarTitle: "Overview"
-description: "Get an HTTP POST when creators join, leave, change codes or drive a sale."
+title: "Campaign creator webhooks"
+description: "Receive notifications when creators are added, removed, have their affiliate code updated, or generate sales on campaigns"
 ---
 
 <Info>
@@ -40,21 +39,9 @@ The webhook payload includes an `event` field to differentiate between actions:
 | --- | --- |
 | **Method** | `POST` |
 | **Content-Type** | `application/json` |
-| **Connect timeout** | 10 seconds |
-| **Read timeout** | 30 seconds |
-| **Success criteria** | Any `2xx` response |
+| **Connect Timeout** | 10 seconds |
+| **Read Timeout** | 30 seconds |
+| **Success Criteria** | Any `2xx` response |
 | **Retries** | Up to 3 retries on failure |
 
 Non-2xx responses are treated as failures and will be retried. Delivery is **at-least-once**: use the payload's `idempotency_key` to deduplicate.
-
-<CardGroup cols={3}>
-  <Card title="Payload reference" icon="braces" href="/webhooks/payloads">
-    Every field in the request body.
-  </Card>
-  <Card title="Example payloads" icon="file-json" href="/webhooks/examples">
-    One sample per event.
-  </Card>
-  <Card title="Troubleshooting" icon="life-buoy" href="/webhooks/troubleshooting">
-    Missing, duplicate or slow deliveries.
-  </Card>
-</CardGroup>

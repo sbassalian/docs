@@ -1,19 +1,20 @@
 ---
 title: "Troubleshooting"
-description: "Fixes for missing, duplicate and failing webhook deliveries."
 ---
 
+## Troubleshooting
+
 <AccordionGroup>
-  <Accordion title="Webhooks aren't arriving">
+  <Accordion title="Webhook Not Being Received">
     Ensure your webhook URL is correctly configured in Organization settings and is publicly accessible over HTTPS.
   </Accordion>
-  <Accordion title="I get duplicate events">
+  <Accordion title="Receiving Duplicate Events">
     Implement idempotency in your webhook handler using the `idempotency_key` field to deduplicate events (for older payloads without it, combine `campaign_affiliate_id`, `event`, and `occurred_at`).
   </Accordion>
-  <Accordion title="Deliveries fail with a timeout">
+  <Accordion title="Webhook Failing with Timeout">
     Your endpoint must respond within 10 seconds. Consider processing webhooks asynchronously and returning a 200 response immediately.
   </Accordion>
-  <Accordion title="A creator looks removed after a code change">
+  <Accordion title="Got removed when changing a code">
     Changing a creator's affiliate code does **not** remove them from the campaign. Status webhooks (`activated` / `removed` / `left`) only fire on status changes. Code changes emit `campaign_affiliate.code_updated` instead. If you received a `removed` event around a code change, check whether the creator was also removed (or a delayed status webhook from an earlier action was delivered).
   </Accordion>
 </AccordionGroup>

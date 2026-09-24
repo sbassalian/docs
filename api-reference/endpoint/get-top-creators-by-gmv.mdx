@@ -1,9 +1,196 @@
 ---
 title: "Get top creators by GMV"
-sidebarTitle: "Top creators by GMV"
 openapi: "GET /stats/top_creators_by_gmv"
-description: "Retrieves your top-performing creators ranked by Gross Merchandise Value (GMV) within a specified date range."
 ---
+
+Retrieves your top-performing creators ranked by Gross Merchandise Value (GMV) within a specified date range.
+
+## Request parameters
+
+| Parameter         | Type    | Description                                                             | Required |
+| ----------------- | ------- | ----------------------------------------------------------------------- | -------- |
+| `start_date`      | String  | Start date in MM/DD/YYYY format                                         | Yes      |
+| `end_date`        | String  | End date in MM/DD/YYYY format                                           | Yes      |
+| `limit`           | Integer | Limit the number of results. Default is 4. Maximum is 20.               | No       |
+| `include_discord` | Boolean | Include Discord account ID and username for creators. Default is false. | No       |
+| `organization_id` | Integer | Filter results by specific organization ID                              | No       |
+| `campaign_id`     | Integer | Filter results by specific campaign ID                                  | No       |
+
+## Request example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_gmv?start_date=01/01/2023&end_date=01/31/2023&limit=5&include_discord=true&organization_id=123&campaign_id=16503" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response example
+
+```json
+{
+  "success": true,
+  "data": {
+    "top_creators_by_gmv": [
+      {
+        "brand_name": "Example Brand",
+        "id": 1689332,
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "total_gmv": 1284.53,
+        "discord_id": "779513406264180746",
+        "discord_username": "johndoe",
+        "social_accounts": [
+          {
+            "connected_account_username": "johndoe_official",
+            "platform_name": "tik_tok",
+            "profile_share_url": "https://www.tiktok.com/@johndoe_official",
+            "total_gmv": 1284.53
+          }
+        ],
+        "campaigns": [
+          {
+            "campaign_id": 16503,
+            "campaign_name": "Example Campaign",
+            "total_gmv": 1284.53
+          }
+        ],
+        "brands": ["Brand A", "Brand B"]
+      },
+      {
+        "brand_name": "Example Brand",
+        "id": 1518565,
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "total_gmv": 1030.98,
+        "discord_id": "1298726946167062610",
+        "discord_username": "janesmith",
+        "social_accounts": [
+          {
+            "connected_account_username": "janesmith_creator",
+            "platform_name": "tik_tok",
+            "profile_share_url": "https://www.tiktok.com/@janesmith_creator",
+            "total_gmv": 1030.98
+          },
+          {
+            "connected_account_username": "janesmith_official",
+            "platform_name": "tik_tok",
+            "profile_share_url": "https://www.tiktok.com/@janesmith_official",
+            "total_gmv": 0.0
+          }
+        ],
+        "campaigns": [
+          {
+            "campaign_id": 16425,
+            "campaign_name": "Example Campaign 2",
+            "total_gmv": 1030.98
+          }
+        ],
+        "brands": ["Brand C"]
+      },
+      {
+        "brand_name": "Example Brand",
+        "id": 1518526,
+        "name": "Alex Johnson",
+        "email": "alex.johnson@example.com",
+        "total_gmv": 914.76,
+        "discord_id": "1298730253337886761",
+        "discord_username": "alexjohnson",
+        "social_accounts": [
+          {
+            "connected_account_username": "alexjohnson_official",
+            "platform_name": "tik_tok",
+            "profile_share_url": "https://www.tiktok.com/@alexjohnson_official",
+            "total_gmv": 810.46
+          },
+          {
+            "connected_account_username": "alexjohnson_alt",
+            "platform_name": "tik_tok",
+            "profile_share_url": "https://www.tiktok.com/@alexjohnson_alt",
+            "total_gmv": 104.3
+          }
+        ],
+        "campaigns": [
+          {
+            "campaign_id": 16421,
+            "campaign_name": "Example Campaign 3",
+            "total_gmv": 914.76
+          }
+        ],
+        "brands": ["Brand D", "Brand E"]
+      },
+      {
+        "brand_name": "Example Brand",
+        "id": 1513063,
+        "name": "Sarah Wilson",
+        "email": "sarah.wilson@example.com",
+        "total_gmv": 900.66,
+        "discord_id": "1002332508874096720",
+        "discord_username": "sarahwilson",
+        "social_accounts": [
+          {
+            "connected_account_username": "sarahwilson_main",
+            "platform_name": "tik_tok",
+            "profile_share_url": "https://www.tiktok.com/@sarahwilson_main",
+            "total_gmv": 791.66
+          },
+          {
+            "connected_account_username": "sarahwilson_brand",
+            "platform_name": "tik_tok",
+            "profile_share_url": "https://www.tiktok.com/@sarahwilson_brand",
+            "total_gmv": 109.0
+          }
+        ],
+        "campaigns": [
+          {
+            "campaign_id": 16424,
+            "campaign_name": "Example Campaign 4",
+            "total_gmv": 900.66
+          }
+        ],
+        "brands": ["Brand F"]
+      }
+    ]
+  },
+  "meta": {
+    "current_page": 4,
+    "per_page": 4,
+    "row_count": 448,
+    "page_count": 112,
+    "has_more": true
+  }
+}
+```
+
+## Response fields
+
+| Field                                                                     | Type    | Description                                             |
+| ------------------------------------------------------------------------- | ------- | ------------------------------------------------------- |
+| `success`                                                                 | Boolean | Indicates whether the request was successful            |
+| `data`                                                                    | Object  | Container for the response data                         |
+| `data.top_creators_by_gmv`                                                | Array   | Array of creator objects ranked by GMV                  |
+| `data.top_creators_by_gmv[].brand_name`                                   | String  | Name of the brand the creator is associated with        |
+| `data.top_creators_by_gmv[].id`                                           | Integer | Unique identifier for the creator                       |
+| `data.top_creators_by_gmv[].name`                                         | String  | Display name of the creator                             |
+| `data.top_creators_by_gmv[].email`                                        | String  | Email address of the creator                            |
+| `data.top_creators_by_gmv[].total_gmv`                                    | Number  | Total GMV generated by the creator                      |
+| `data.top_creators_by_gmv[].social_accounts`                              | Array   | Array of connected social media accounts                |
+| `data.top_creators_by_gmv[].social_accounts[].connected_account_username` | String  | Username on the social media platform                   |
+| `data.top_creators_by_gmv[].social_accounts[].platform_name`              | String  | Name of the social media platform                       |
+| `data.top_creators_by_gmv[].social_accounts[].profile_share_url`          | String  | Direct URL to the creator's profile                     |
+| `data.top_creators_by_gmv[].social_accounts[].total_gmv`                  | Number  | GMV generated through this specific social account      |
+| `data.top_creators_by_gmv[].campaigns`                                    | Array   | Array of campaigns the creator is associated with       |
+| `data.top_creators_by_gmv[].campaigns[].campaign_id`                      | Integer | Unique identifier for the campaign                      |
+| `data.top_creators_by_gmv[].campaigns[].campaign_name`                    | String  | Name of the campaign                                    |
+| `data.top_creators_by_gmv[].campaigns[].total_gmv`                        | Number  | Total GMV generated by the creator for this campaign    |
+| `data.top_creators_by_gmv[].brands`                                       | Array   | Array of brand names the creator is associated with     |
+| `data.top_creators_by_gmv[].discord_id`                                   | String  | Discord user ID (included when `include_discord=true`)  |
+| `data.top_creators_by_gmv[].discord_username`                             | String  | Discord username (included when `include_discord=true`) |
+| `meta`                                                                    | Object  | Pagination metadata                                     |
+| `meta.current_page`                                                       | Integer | Current page number                                     |
+| `meta.per_page`                                                           | Integer | Number of results per page                              |
+| `meta.row_count`                                                          | Integer | Total number of rows/records                            |
+| `meta.page_count`                                                         | Integer | Total number of pages                                   |
+| `meta.has_more`                                                           | Boolean | Whether there are more pages available                  |
 
 <RequestExample>
 

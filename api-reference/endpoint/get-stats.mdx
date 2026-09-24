@@ -1,8 +1,9 @@
 ---
 title: "Get stats"
-openapi: "GET /stats/{endpoint}"
-description: "This endpoint allows you to retrieve various statistics data from the Growi platform. Replace `{endpoint}` with the specific stats endpoint you want to access."
+openapi: 'GET /stats/{endpoint}'
 ---
+
+This endpoint allows you to retrieve various statistics data from the Growi platform. Replace `{endpoint}` with the specific stats endpoint you want to access.
 
 ## Available stats endpoints
 
@@ -29,19 +30,19 @@ All stats endpoints require the following parameters:
 
 | Parameter | Type | Description | Required |
 | --- | --- | --- | --- |
-| `start_date` | string | Start date in MM/DD/YYYY format | Yes |
-| `end_date` | string | End date in MM/DD/YYYY format | Yes |
-| `limit` | integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
+| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
+| `end_date` | String | End date in MM/DD/YYYY format | Yes |
+| `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
 
 ## Response format
 
 Responses are returned in JSON format. A successful response includes:
 
-```json JSON
+```json
 {
   "success": true,
   "data": {
     // Endpoint-specific data
   }
 }
-```
+``` 

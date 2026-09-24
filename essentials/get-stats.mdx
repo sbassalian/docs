@@ -1,29 +1,73 @@
 ---
 title: "Getting stats"
-description: "Pull creator, content and GMV stats for your campaigns."
+description: "Learn how to authenticate and access Growi statistics"
 ---
 
 <Info>
-  **Prerequisite** You need an API key. See [Authentication](/authentication) to create one.
+  **Prerequisite** You should have administrative access to your Growi dashboard.
 </Info>
 
-Every stats endpoint is a `GET` under `/stats`, authenticated with your API key as a Bearer token.
+# How to Access Growi Statistics
 
-## Make your first request
+Follow these steps to set up authentication and start accessing Growi's statistics endpoints.
 
-```bash cURL
-curl "https://api.growi.io/api/public/v1/stats/snapshots?start_date=2026-09-01&end_date=2026-09-24" \
-  -H "Authorization: Bearer $GROWI_API_KEY"
+## 1. Generate your API key
+
+First, navigate to the "Settings" section of your Growi dashboard, then click on the "Developer" tab. Here you can create a new API key for accessing the statistics endpoints.
+
+<Frame>
+  <img
+    src="/images/bearer-1.png"
+    alt="Navigate to Developer Settings"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+## 2. Copy your API key
+
+Once you've created your API key, you can copy it to use in your API requests. Keep this key secure and don't share it publicly.
+
+<Frame>
+  <img
+    src="/images/bearer-2.png"
+    alt="Copy API Key"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+## 3. Making authenticated requests
+
+To make requests to any of our stats endpoints, you'll need to include your API key in the Authorization header using Bearer authentication:
+
+```bash
+Base URL: https://api.growi.io/api/public/v1
+Authorization: Bearer YOUR_API_KEY
 ```
 
-## What you can pull
+## Available statistics endpoints
 
-| Area | Endpoints |
-| --- | --- |
-| Overview | [Snapshots](/api-reference/endpoint/get-snapshots), [creators (24h)](/api-reference/endpoint/get-creators-24h), [refresh data](/api-reference/endpoint/refresh-data) |
-| Content | [User content](/api-reference/endpoint/get-user-contents), [content by platform](/api-reference/endpoint/get-content-platform-composition), [content (24h)](/api-reference/endpoint/get-content-24h-data) |
-| Leaderboards | [Top creators by engagement](/api-reference/endpoint/get-top-creators), [by posts](/api-reference/endpoint/get-top-creators-by-posts), [by GMV](/api-reference/endpoint/get-top-creators-by-gmv), [top posts by views](/api-reference/endpoint/get-top-posts-by-views) |
-| Payouts | [Creator payouts](/api-reference/endpoint/get-creator-payouts), [transactions](/api-reference/endpoint/get-transactions) |
-| Ambassadors | [Ambassadors](/api-reference/endpoint/get-ambassadors), [ambassador sales](/api-reference/endpoint/get-ambassador-sales), [ambassador stats](/api-reference/endpoint/get-ambassador-stats) |
+You can access various statistics through our API endpoints:
 
-Each endpoint page lists its parameters and lets you try it live.
+- Get Snapshots
+- Content Platform Composition
+- 24-Hour Content Data
+- Creator Statistics
+- Top Creators
+- Top Posts
+- User Contents
+
+For detailed information about each endpoint and their specific parameters, please refer to our [API Documentation](/api-reference/introduction).
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="API Key Not Working">
+    Verify that you're using the correct API key and that it hasn't expired. You may need to generate a new one if you're experiencing issues.
+  </Accordion>
+  <Accordion title="Authorization Errors">
+    Ensure you're formatting the Authorization header correctly with 'Bearer' followed by your API key. Check that there are no extra spaces or special characters.
+  </Accordion>
+  <Accordion title="Cannot Access Certain Endpoints">
+    Confirm that your API key has the necessary permissions for the endpoints you're trying to access. You may need to adjust the permissions in your developer settings.
+  </Accordion>
+</AccordionGroup> 

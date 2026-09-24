@@ -1,10 +1,9 @@
 ---
 title: "Create campaign application"
 openapi: "POST /campaign_applications"
-description: "Submit an applicant from your own signup form into a Growi campaign."
 ---
 
-You host the signup experience on your domain, and Growi handles creator onboarding, approval and tracking.
+Submits an applicant from your own signup form directly into a Growi campaign — so you can host the signup experience on your domain while Growi handles creator onboarding, approval, and tracking.
 
 The endpoint creates the creator account if it doesn't exist yet, files a **pending** application to the campaign (or **accepted**, when the campaign auto-accepts applicants), and stores any marketing attribution you send. When the creator is later approved, or generates a sale, the attribution is **echoed back** on the corresponding [webhook events](/essentials/campaign-creator-webhooks) so you can match the creator in your ad platform (for example, forwarding to the Meta Conversions API).
 
@@ -18,13 +17,13 @@ The endpoint creates the creator account if it doesn't exist yet, files a **pend
 
 | Field | Type | Description | Required |
 | --- | --- | --- | --- |
-| `campaign_id` | integer | Growi campaign the applicant is applying to | Yes |
-| `email` | string | Applicant's email address | Yes |
-| `first_name` | string | Applicant's first name | No |
-| `last_name` | string | Applicant's last name | No |
-| `tiktok_handle` | string | TikTok handle or profile URL; attached to the creator's profile | No |
-| `id` | integer | Your internal applicant id, stored as attribution `external_id` | No |
-| `created_at` | string | When the applicant submitted your form, stored as attribution `submitted_at` | No |
+| `campaign_id` | Integer | Growi campaign the applicant is applying to | Yes |
+| `email` | String | Applicant's email address | Yes |
+| `first_name` | String | Applicant's first name | No |
+| `last_name` | String | Applicant's last name | No |
+| `tiktok_handle` | String | TikTok handle or profile URL; attached to the creator's profile | No |
+| `id` | Integer | Your internal applicant id, stored as attribution `external_id` | No |
+| `created_at` | String | When the applicant submitted your form, stored as attribution `submitted_at` | No |
 
 ### Attribution fields (all optional)
 
@@ -32,46 +31,105 @@ Everything below is stored verbatim and echoed back inside the `attribution` obj
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `fbp` | string | Meta browser id cookie (`_fbp`) |
-| `fbc` | string | Meta click id cookie (`_fbc`) |
-| `fbclid` | string | Meta click id from the landing page URL |
-| `event_id` | string | Your event id. Use it to deduplicate against Meta Conversions API |
-| `event_name` | string | Your event name (e.g. `AffiliateLead`) |
-| `event_source_url` | string | URL the applicant submitted the form from |
-| `client_ip_address` | string | Applicant's IP address |
-| `client_user_agent` | string | Applicant's browser user agent |
-| `referrer` | string | HTTP referrer of the signup page |
-| `utm_source` / `utm_medium` / `utm_campaign` / `utm_content` / `utm_term` | string | UTM parameters from the landing URL |
-| `follower_count` | integer | Applicant's TikTok follower count |
-| `likes_count` | integer | Applicant's TikTok likes count |
-| `video_count` | integer | Applicant's TikTok video count |
-| `tiktok_verified` | integer | `1` when the TikTok account is verified |
-| `enriched_at` | string | When you enriched the TikTok profile data |
+| `fbp` | String | Meta browser id cookie (`_fbp`) |
+| `fbc` | String | Meta click id cookie (`_fbc`) |
+| `fbclid` | String | Meta click id from the landing page URL |
+| `event_id` | String | Your event id — use it to deduplicate against Meta Conversions API |
+| `event_name` | String | Your event name (e.g. `AffiliateLead`) |
+| `event_source_url` | String | URL the applicant submitted the form from |
+| `client_ip_address` | String | Applicant's IP address |
+| `client_user_agent` | String | Applicant's browser user agent |
+| `referrer` | String | HTTP referrer of the signup page |
+| `utm_source` / `utm_medium` / `utm_campaign` / `utm_content` / `utm_term` | String | UTM parameters from the landing URL |
+| `follower_count` | Integer | Applicant's TikTok follower count |
+| `likes_count` | Integer | Applicant's TikTok likes count |
+| `video_count` | Integer | Applicant's TikTok video count |
+| `tiktok_verified` | Integer | `1` when the TikTok account is verified |
+| `enriched_at` | String | When you enriched the TikTok profile data |
+
+## Request example
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/campaign_applications" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "campaign_id": 51812,
+    "email": "maria.92.ambriz@gmail.com",
+    "first_name": "Maria",
+    "last_name": "Ambriz",
+    "tiktok_handle": "maria.ambriz66",
+    "id": 11177,
+    "created_at": "2026-07-31 13:13:16",
+    "fbp": "fb.1.1785503550741.5188770206",
+    "fbc": "fb.1.1785503550741.PAcGRvZgJmZGlk",
+    "fbclid": "PAcGRvZgJmZGlk",
+    "event_id": "012e8a42-6b26-43cf-9a66-0242c6bc0fd1",
+    "event_name": "AffiliateLead",
+    "event_source_url": "https://shop.example.com/tiktok-partner?utm_source=facebook",
+    "client_ip_address": "203.0.113.7",
+    "client_user_agent": "Mozilla/5.0 (iPhone)",
+    "referrer": "https://instagram.com/",
+    "utm_source": "facebook",
+    "utm_medium": "paid",
+    "utm_campaign": "COFFEE | LEAD | BOF",
+    "follower_count": 2992,
+    "likes_count": 16000,
+    "video_count": 139,
+    "tiktok_verified": 1
+  }'
+```
+
+## Response example
+
+```json
+{
+  "data": {
+    "invitation_id": 98123,
+    "status": "pending",
+    "user_id": 45678,
+    "campaign_id": 51812,
+    "created": true
+  }
+}
+```
+
+A repeat submission returns `200` with the same shape and `"created": false`.
+
+## Response fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `data.invitation_id` | Integer | The application's id |
+| `data.status` | String | `pending`, or `accepted` when the campaign auto-accepts applicants |
+| `data.user_id` | Integer | The creator's Growi user id |
+| `data.campaign_id` | Integer | The campaign applied to |
+| `data.created` | Boolean | `true` for a new application, `false` for an idempotent repeat |
 
 ## Error responses
 
-**403: plan or key**
+**403 — plan or key**
 
-```json JSON
+```json
 { "error": "The applications API is not enabled for your plan." }
 ```
 
-**404: campaign not found for your organization**
+**404 — campaign not found for your organization**
 
-```json JSON
+```json
 { "error": "Campaign not found." }
 ```
 
-**422: validation**
+**422 — validation**
 
-```json JSON
+```json
 { "error": "email is required" }
 ```
 
 ## Use cases
 
 - **Host your own signup form**: keep the application experience on your domain (with your pixels and analytics firing natively) while applicants flow straight into Growi for review.
-- **Meta ads attribution**: send `fbp`/`fbc`/`event_id` with each applicant, then forward the `campaign_affiliate.activated` and `affiliate_sale.created` webhook events, which echo the same identifiers, to the Meta Conversions API so your media team can optimize on approvals and revenue.
+- **Meta ads attribution**: send `fbp`/`fbc`/`event_id` with each applicant, then forward the `campaign_affiliate.activated` and `affiliate_sale.created` webhook events — which echo the same identifiers — to the Meta Conversions API so your media team can optimize on approvals and revenue.
 - **CRM sync**: pass your internal applicant `id`; it comes back as `attribution.external_id` on webhook events for painless matching.
 
 <RequestExample>
@@ -111,7 +169,7 @@ curl -X POST "https://api.growi.io/api/public/v1/campaign_applications" \
 
 <ResponseExample>
 
-```json 200
+```json 201
 {
   "data": {
     "invitation_id": 98123,

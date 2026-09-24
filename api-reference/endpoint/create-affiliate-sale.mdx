@@ -1,10 +1,9 @@
 ---
 title: "Create affiliate sale"
 openapi: "POST /affiliate_sales"
-description: "Record a sale and attribute it to a creator."
 ---
 
-Use this to report conversions from your website, iOS or Android apps, custom checkout flows or server-side integrations.
+Creates a conversion and attributes it to a campaign affiliate. Use this endpoint to report conversions from your website, iOS/Android apps, custom checkout flows, or server-side integrations.
 
 By default, sales are created with `platform: website`. Pass `platform: ios` or `platform: android` to create mobile app sales that show up in iOS/Android analytics (same `AffiliateSale` rows those dashboards already read).
 
@@ -14,50 +13,153 @@ This endpoint is **idempotent**: sending the same `order_id` again for the same 
 
 You can attribute the sale using one of two methods:
 
-1. **Affiliate tag** (`campaign_affiliate_id`): Use the creator's unique affiliate tag/code
+1. **Affiliate Tag** (`campaign_affiliate_id`): Use the creator's unique affiliate tag/code
 2. **Growi IDs** (`growi_user_id` + `growi_campaign_id`): Use the Growi user ID and campaign ID directly
+
+## Request body
+
+| Field                  | Type    | Description                                                                           | Required |
+| ---------------------- | ------- | ------------------------------------------------------------------------------------- | -------- |
+| `order_id`             | String  | Your unique order/transaction identifier                                              | Yes      |
+| `total`                | Integer | Total order amount in **cents** (e.g., 9999 = $99.99). At least one of `total` or `subtotal` is required. | Conditional |
+| `subtotal`             | Integer | Order subtotal in **cents** (before shipping/tax). At least one of `total` or `subtotal` is required. | Conditional |
+| `currency`             | String  | Currency code: `usd`, `eur`, `gbp`, etc.                                              | Yes      |
+| `platform`             | String  | Conversion platform: `website` (default), `ios`, or `android`. Defaults to `website` if omitted. For `ios`/`android`, the organization must have that app connected in Growi. | No |
+| `campaign_affiliate_id`| String  | Affiliate tag for attribution (required if not using growi_user_id + growi_campaign_id) | Conditional |
+| `growi_user_id`        | Integer | Growi user ID (required with growi_campaign_id if not using campaign_affiliate_id)    | Conditional |
+| `growi_campaign_id`    | Integer | Growi campaign ID (required with growi_user_id if not using campaign_affiliate_id)    | Conditional |
+| `occurred_at`          | String  | ISO 8601 timestamp when the sale occurred. Defaults to current time.                  | No       |
+| `due_at`               | String  | ISO 8601 timestamp when commission becomes due                                        | No       |
+| `customer_email`       | String  | Customer's email address                                                              | No       |
+| `customer_name`        | String  | Customer's name                                                                       | No       |
+| `visitor_uid`          | String  | Visitor unique identifier (for tracking purposes)                                     | No       |
+| `sale_type`            | String  | Type of sale: `one_time` or `subscription`. Default is `one_time`.                    | No       |
+| `commission`           | Integer | Override commission amount in **cents**. If omitted, calculated from campaign rules for the given platform.  | No       |
+| `sub_id`               | String  | Custom source/sub-ID tag (e.g., `instagram`, `youtube`) for platform-level tracking within a single campaign. Returned in sale responses and filterable on the list endpoint. For custom-website traffic, put the same value on the landing URL as `utm_source` (same campaign + tag, no extra campaigns). | No       |
+
+## Request example
+
+Using affiliate tag (website — default):
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "order_id": "ORD-12345",
+       "total": 9999,
+       "currency": "usd",
+       "campaign_affiliate_id": "SUMMER2025",
+       "occurred_at": "2025-09-30T12:00:00Z"
+     }'
+```
+
+Using Growi IDs:
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "order_id": "ORD-67890",
+       "total": 4999,
+       "currency": "usd",
+       "growi_user_id": 12345,
+       "growi_campaign_id": 16200,
+       "occurred_at": "2025-09-30T14:30:00Z"
+     }'
+```
+
+iOS app sale:
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "order_id": "ORD-IOS-12345",
+       "total": 9999,
+       "currency": "usd",
+       "platform": "ios",
+       "campaign_affiliate_id": "SUMMER2025",
+       "occurred_at": "2025-09-30T12:00:00Z"
+     }'
+```
+
+## Response example
+
+**201 Created** - Sale created successfully (or already exists with same order_id + platform):
+
+```json
+{
+  "data": {
+    "id": 1947458,
+    "external_id": "ORD-12345",
+    "platform": "website",
+    "status": "unpaid",
+    "occurred_at": "2025-09-30T12:00:00.000Z",
+    "total": 9999,
+    "commission": 500,
+    "currency": "usd"
+  }
+}
+```
+
+## Response fields
+
+| Field              | Type    | Description                                                      |
+| ------------------ | ------- | ---------------------------------------------------------------- |
+| `data`             | Object  | The created affiliate sale object                                |
+| `data.id`          | Integer | Unique Growi identifier for the sale                             |
+| `data.external_id` | String  | Your order ID (same as the `order_id` you provided)              |
+| `data.platform`    | String  | `website`, `ios`, or `android` (defaults to `website`)           |
+| `data.status`      | String  | Initial status: `unpaid`                                         |
+| `data.occurred_at` | String  | ISO 8601 timestamp when the sale occurred                        |
+| `data.total`       | Integer | Total order amount in cents                                      |
+| `data.commission`  | Integer | Commission amount in cents (calculated or overridden)            |
+| `data.currency`    | String  | Currency code                                                    |
 
 ## Error responses
 
 **422 Unprocessable Entity** - Missing required fields or invalid attribution:
 
-```json JSON
+```json
 {
   "error": "Order ID is required."
 }
 ```
 
-```json JSON
+```json
 {
   "error": "Currency is required."
 }
 ```
 
-```json JSON
+```json
 {
   "error": "Total or subtotal is required."
 }
 ```
 
-```json JSON
+```json
 {
   "error": "Platform must be one of: website, ios, android."
 }
 ```
 
-```json JSON
+```json
 {
   "error": "iOS app not found for this organization."
 }
 ```
 
-```json JSON
+```json
 {
   "error": "Attribution required: provide campaign_affiliate_id OR both growi_user_id and growi_campaign_id."
 }
 ```
 
-```json JSON
+```json
 {
   "error": "Campaign affiliate not found."
 }
@@ -67,13 +169,13 @@ You can attribute the sale using one of two methods:
 
 This endpoint is useful for:
 
-- **Server-Side conversion tracking**: Report conversions from your backend after a successful checkout
-- **iOS / Android in-App purchases**: Report mobile payments with `platform: ios` or `platform: android` (preferred over tracking-events for sales)
-- **Custom checkout flows**: Integrate with headless commerce or custom payment systems
-- **Webhook handlers**: Process payment webhooks (idempotent design ensures safe retries)
-- **CRM integration**: Create conversions when deals close in your CRM
-- **Manual attribution**: Attribute offline or phone sales to specific creators
-- **Commission override**: Specify custom commission amounts for special promotions
+- **Server-Side Conversion Tracking**: Report conversions from your backend after a successful checkout
+- **iOS / Android In-App Purchases**: Report mobile payments with `platform: ios` or `platform: android` (preferred over tracking-events for sales)
+- **Custom Checkout Flows**: Integrate with headless commerce or custom payment systems
+- **Webhook Handlers**: Process payment webhooks (idempotent design ensures safe retries)
+- **CRM Integration**: Create conversions when deals close in your CRM
+- **Manual Attribution**: Attribute offline or phone sales to specific creators
+- **Commission Override**: Specify custom commission amounts for special promotions
 
 <RequestExample>
 

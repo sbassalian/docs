@@ -1,16 +1,100 @@
 ---
-title: "List creator payouts"
+title: "Get creator payouts"
 openapi: "GET /stats/creator_payouts"
-description: "A paginated list of creator payouts for your organization."
 ---
 
-Includes credit fields and a `credits_only` filter for organizations that use creator credits.
+Returns a paginated list of creator payouts for the authenticated organization. Includes credit fields and a `credits_only` filter for organizations that use creator credits.
 
 <Note>
   Rate limit: a minimum of **2 seconds** between requests per API key.
 </Note>
 
-## About the response
+## Request parameters
+
+| Parameter        | Type                | Description                                                                               | Required |
+| ---------------- | ------------------- | ----------------------------------------------------------------------------------------- | -------- |
+| `start_date`     | String (YYYY-MM-DD) | Filters by payout cycle start                                                             | Yes      |
+| `end_date`       | String (YYYY-MM-DD) | Filters by payout cycle end                                                               | Yes      |
+| `status`         | String              | One of `paid`, `pending`, `open`, `failed`, `void`, `canceled`, `completed`               | No       |
+| `credits_only`   | Boolean             | When `true`, only returns credit-based payouts                                            | No       |
+| `campaign_id`    | Integer / CSV / Array | Filter by campaign (single ID, comma-separated list, or array)                          | No       |
+| `creator_id`     | Integer             | Filter by creator                                                                         | No       |
+| `tag_id`         | Integer             | Organization payout tag                                                                   | No       |
+| `creator_tag_id` | Integer             | Creator tag                                                                               | No       |
+| `page`           | Integer             | Page number for pagination. Defaults to 1.                                                | No       |
+| `per_page`       | Integer             | Results per page. Defaults to 4, maximum 40. (`limit` is accepted as an alias.)           | No       |
+
+## Request example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?start_date=2026-03-01&end_date=2026-05-31&credits_only=true&per_page=20" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response example
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 891439,
+      "uuid": "EXAMPLE_UUID",
+      "creator_name": "Example Creator",
+      "creator_avatar_url": "https://avatar.vercel.sh/12345",
+      "creator_id": 12345,
+      "amount": "$0.00",
+      "deal_date": "05/02/2026",
+      "since_date": "03/03/2026",
+      "campaign_category": "Ambassador Program",
+      "campaign_name": "Example Campaign",
+      "views": "Completed",
+      "status": "Pending",
+      "contents_delivered": 2,
+      "contents_required": 2,
+      "credits_enabled": true,
+      "credit_name": "credits",
+      "total_credit_amount": 750,
+      "formatted_total_credit_amount": "750 credits"
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "row_count": 184,
+    "page_count": 46
+  }
+}
+```
+
+## Response fields
+
+| Field                                | Type            | Description                                                                                                                                                         |
+| ------------------------------------ | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `success`                            | Boolean         | Indicates whether the request was successful                                                                                                                        |
+| `data`                               | Array           | Array of creator payout objects                                                                                                                                     |
+| `data[].id`                          | Integer         | Internal identifier for the payout record                                                                                                                           |
+| `data[].uuid`                        | String          | Stable identifier; use this with `mark_credit_payout`                                                                                                               |
+| `data[].creator_name`                | String          | Creator's display name                                                                                                                                              |
+| `data[].creator_avatar_url`          | String          | URL to the creator's avatar image                                                                                                                                   |
+| `data[].creator_id`                  | Integer         | Unique identifier for the creator                                                                                                                                   |
+| `data[].amount`                      | String          | Cash amount, formatted with currency                                                                                                                                |
+| `data[].deal_date`                   | String          | Billing cycle end / due date (MM/DD/YYYY)                                                                                                                           |
+| `data[].since_date`                  | String          | Start date of the payout period (MM/DD/YYYY)                                                                                                                        |
+| `data[].campaign_category`           | String          | Category of the campaign                                                                                                                                            |
+| `data[].campaign_name`               | String          | Name of the associated campaign                                                                                                                                     |
+| `data[].views`                       | String          | View status or completion status                                                                                                                                    |
+| `data[].status`                      | String          | One of `Due`, `Pending`, `Paid`, `Sent from account`, `Paid externally`, `Canceled`, `In progress`                                                                  |
+| `data[].contents_delivered`          | Integer         | Number of content pieces delivered                                                                                                                                  |
+| `data[].contents_required`           | Integer         | Number of content pieces required                                                                                                                                   |
+| `data[].credits_enabled`             | Boolean         | Whether the campaign has credits enabled                                                                                                                            |
+| `data[].credit_name`                 | String \| null  | Org-defined label (e.g. `"credits"`); `null` if the credits feature is not enabled for the org                                                                      |
+| `data[].total_credit_amount`         | Integer         | Sum of all credit components (fixed + commission + residual + bonus + milestone bonus + meta ad fee + acceptance bonus). `0` when the feature is off               |
+| `data[].formatted_total_credit_amount` | String \| null | Display string; `null` if the amount is `0` or the feature is off                                                                                                   |
+| `meta`                               | Object          | Pagination metadata                                                                                                                                                 |
+| `meta.current_page`                  | Integer         | Current page number                                                                                                                                                 |
+| `meta.row_count`                     | Integer         | Total number of rows                                                                                                                                                |
+| `meta.page_count`                    | Integer         | Total number of pages                                                                                                                                               |
 
 <Note>
   Credit fields are populated only for organizations in the credits allowlist. For other orgs, `credits_enabled` is `false`, `total_credit_amount` is `0`, and `credit_name` / `formatted_total_credit_amount` are `null`.
@@ -18,7 +102,7 @@ Includes credit fields and a `credits_only` filter for organizations that use cr
 
 ## Typical workflow
 
-1. `GET /stats/creator_payouts?start_date=…&end_date=…&credits_only=true`: fetch the list of credit payouts due to your creators.
+1. `GET /stats/creator_payouts?start_date=…&end_date=…&credits_only=true` — fetch the list of credit payouts due to your creators.
 2. Pay each creator their credits in your own system.
 3. For each paid creator, `POST /stats/mark_credit_payout` with their `creator_payout_uuid` to record the payout in Growi.
 

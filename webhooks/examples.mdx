@@ -1,11 +1,12 @@
 ---
 title: "Example payloads"
-description: "A sample request body for each webhook event."
 ---
 
-## Creator added to a campaign
+## Example payloads
 
-```json campaign_affiliate.activated
+### Creator added to campaign
+
+```json
 {
   "event": "campaign_affiliate.activated",
   "occurred_at": "2026-02-27T18:33:12-05:00",
@@ -35,9 +36,9 @@ description: "A sample request body for each webhook event."
   `attribution` appears only for creators submitted through the campaign applications API. Approval events are delivered a couple of minutes after the approval, once the creator's affiliate code has been generated.
 </Note>
 
-## Sale attributed to a creator
+### Sale attributed to a creator
 
-```json affiliate_sale.created
+```json
 {
   "event": "affiliate_sale.created",
   "idempotency_key": "affiliate_sale.created:31337",
@@ -70,9 +71,9 @@ description: "A sample request body for each webhook event."
 }
 ```
 
-## Creator removed from a campaign
+### Creator removed from campaign
 
-```json campaign_affiliate.removed
+```json
 {
   "event": "campaign_affiliate.removed",
   "occurred_at": "2026-02-27T18:35:02-05:00",
@@ -84,9 +85,9 @@ description: "A sample request body for each webhook event."
 }
 ```
 
-## Creator affiliate code updated
+### Creator affiliate code updated
 
-```json campaign_affiliate.code_updated
+```json
 {
   "event": "campaign_affiliate.code_updated",
   "occurred_at": "2026-07-14T16:10:00-04:00",

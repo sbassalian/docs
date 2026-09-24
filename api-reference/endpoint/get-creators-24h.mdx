@@ -1,15 +1,92 @@
 ---
-title: "Get creators (24h)"
-openapi: "GET /stats/creators_24h"
-description: "Daily new and active creators, compared with the previous period."
+title: "Get creators 24h"
+openapi: 'GET /stats/creators_24h'
 ---
 
-New creators joined your database that day. Active creators made posts that day.
+Retrieves daily creator metrics with comparison to previous period. This endpoint tracks both new creators (who joined your database) and active creators (who made posts) for each date.
 
 ## Key definitions
 
-- **New creators**: Creators who joined your database on that specific date
-- **Active creators**: Creators who made at least one post on that specific date
+- **New Creators**: Creators who joined your database on that specific date
+- **Active Creators**: Creators who made at least one post on that specific date
+
+## Request parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `start_date` | String | Start date in MM/DD/YYYY format | Yes |
+| `end_date` | String | End date in MM/DD/YYYY format | Yes |
+
+## Response fields
+
+| Field | Description |
+| --- | --- |
+| `date` | Date string for the current day (YYYY-MM-DD format) |
+| `last_date` | Date string for the comparison day from the previous period (YYYY-MM-DD format) |
+| `current_new` | Number of new creators who joined on the current date |
+| `last_new` | Number of new creators who joined on the comparison date |
+| `total_new` | Cumulative total of new creators in the current period |
+| `last_total_new` | Cumulative total of new creators in the comparison period |
+| `current_active` | Number of creators who made posts on the current date |
+| `last_active` | Number of creators who made posts on the comparison date |
+| `total_active` | Cumulative total of active creators in the current period |
+| `last_total_active` | Cumulative total of active creators in the comparison period |
+
+## Request example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/stats/creators_24h?start_date=01/01/2023&end_date=01/31/2023" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+## Response example
+
+```json
+{
+  "success": true,
+  "data": {
+    "creators_24h": [
+      {
+        "date": "2025-09-06",
+        "last_date": "2025-06-29",
+        "current_new": 16,
+        "last_new": 0,
+        "total_new": 27,
+        "last_total_new": 24,
+        "current_active": 0,
+        "last_active": 0,
+        "total_active": 1,
+        "last_total_active": 1
+      },
+      {
+        "date": "2025-09-07",
+        "last_date": "2025-06-30",
+        "current_new": 5,
+        "last_new": 0,
+        "total_new": 27,
+        "last_total_new": 24,
+        "current_active": 0,
+        "last_active": 0,
+        "total_active": 1,
+        "last_total_active": 1
+      },
+      {
+        "date": "2025-09-17",
+        "last_date": "2025-07-10",
+        "current_new": 0,
+        "last_new": 1,
+        "total_new": 27,
+        "last_total_new": 24,
+        "current_active": 1,
+        "last_active": 0,
+        "total_active": 1,
+        "last_total_active": 1
+      }
+    ]
+  }
+} 
+```
 
 <RequestExample>
 

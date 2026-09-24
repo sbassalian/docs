@@ -42,7 +42,7 @@ export const GrowiHome = () => {
       '    "order_id": "ORD-12345",',
       '    "total": 9999,',
       '    "currency": "usd",',
-      '    "campaign_affiliate_id": "SARAH20",',
+      '    "campaign_affiliate_id": "SUMMER2025",',
       '    "sub_id": "instagram"',
       "  }'",
     ].join("\n");
@@ -59,7 +59,7 @@ export const GrowiHome = () => {
           <p className="g-lead">Record sales, sync creator codes and pull campaign stats from one REST API.</p>
           <div className="g-btns">
             <a className="g-btn" href="/api-reference/introduction">Browse the API</a>
-            <a className="g-btn g-btn-ghost" href="/authentication">Get an API key</a>
+            <a className="g-btn g-btn-ghost" href="/essentials/get-stats#1-generate-your-api-key">Get an API key</a>
           </div>
           <button type="button" className="g-base" onClick={copy} aria-label="Copy base URL">
             <span className="g-base-label">base url</span>
@@ -74,6 +74,8 @@ export const GrowiHome = () => {
               <span className="g-tk-p">curl</span>
               {` -X POST \\\n  ${base}/affiliate_sales \\\n  -H `}
               <span className="g-tk-s">"Authorization: Bearer $GROWI_API_KEY"</span>
+              {" \\\n  -H "}
+              <span className="g-tk-s">"Content-Type: application/json"</span>
               {" \\\n  -d "}
               <span className="g-tk-s">{body}</span>
             </pre>
@@ -96,17 +98,17 @@ export const GrowiHome = () => {
         label: "Your own checkout",
         items: [
           ["send", "Record a sale", "POST a sale from your server when an order completes.", "/api-reference/endpoint/create-affiliate-sale"],
-          ["pointer", "Track clicks and signups", "Send tracking events for the steps before a sale.", "/api-reference/endpoint/create"],
+          ["pointer", "Send tracking events", "Record storefront events like page views, cart and checkout steps.", "/api-reference/endpoint/create"],
           ["tag", "Set creator codes in bulk", "Update many affiliate codes in one call.", "/api-reference/endpoint/bulk-update-campaign-affiliates"],
-          ["refund", "Update or refund a sale", "PATCH a sale when an order changes.", "/api-reference/endpoint/update-affiliate-sale"],
+          ["refund", "Update a sale", "Change details such as the total, commission, status or customer info.", "/api-reference/endpoint/update-affiliate-sale"],
         ],
       },
       {
         id: "shopify",
         label: "Shopify",
         items: [
-          ["bag", "Add the tracking scripts", "Keep attribution working on a headless storefront.", "/essentials/shopify-headless-integration#1-add-tracking-scripts-to-your-root-file"],
-          ["form", "Embed the signup form", "Let creators join your program from your site.", "/essentials/shopify-headless-integration#2-embed-the-signup-form-optional"],
+          ["bag", "Add the tracking scripts", "Track affiliate sales on a headless storefront.", "/essentials/shopify-headless-integration#1-add-tracking-scripts-to-your-root-file"],
+          ["form", "Embed the signup form", "Let visitors sign up as ambassadors on your site.", "/essentials/shopify-headless-integration#2-embed-the-signup-form-optional"],
           ["bell", "Get sale webhooks", "Hear about every attributed order.", "/essentials/campaign-creator-webhooks"],
           ["chart", "Pull GMV by creator", "Rank creators by the revenue they drive.", "/api-reference/endpoint/get-top-creators-by-gmv"],
         ],
@@ -125,7 +127,7 @@ export const GrowiHome = () => {
         id: "tiktok",
         label: "TikTok Shop",
         items: [
-          ["users", "List store creators", "Every creator selling your products.", "/api-reference/endpoint/get-tik-tok-shop-store-creators"],
+          ["users", "List store creators", "Creator performance for your store over a date range.", "/api-reference/endpoint/get-tik-tok-shop-store-creators"],
           ["video", "Pull videos and lives", "Content performance for your store.", "/api-reference/endpoint/get-tik-tok-shop-store-videos"],
           ["box", "List store products", "Your catalog with sales data.", "/api-reference/endpoint/get-tik-tok-shop-store-products"],
           ["chart", "Creators per product", "Who is promoting each product.", "/api-reference/endpoint/get-tik-tok-shop-store-product-creators"],
@@ -183,32 +185,32 @@ export const GrowiHome = () => {
         ["post", "Create campaign application", "/campaign_applications", ep("create-campaign-application")],
       ] },
       { icon: "building", name: "Organization", text: "Brands and campaigns", count: 2, rows: [
-        ["get", "List brands", "/organizations/brands", ep("get-brands")],
-        ["get", "List campaigns", "/organizations/campaigns", ep("get-campaigns")],
+        ["get", "Get brands", "/organizations/brands", ep("get-brands")],
+        ["get", "Get campaigns", "/organizations/campaigns", ep("get-campaigns")],
       ] },
       { icon: "chart", name: "Stats", text: "Creators, content, GMV and payouts", count: 17, rows: [
         ["get", "Get snapshots", "/stats/snapshots", ep("get-snapshots")],
         ["get", "Get top creators by GMV", "/stats/top_creators_by_gmv", ep("get-top-creators-by-gmv")],
         ["get", "Get top posts by views", "/stats/top_posts_by_views", ep("get-top-posts-by-views")],
-        ["get", "List transactions", "/stats/transactions", ep("get-transactions")],
+        ["get", "Get transactions", "/stats/transactions", ep("get-transactions")],
         ["post", "Refresh data", "/stats/refresh_data", ep("refresh-data")],
       ] },
       { icon: "video", name: "TikTok Shop", text: "Store creators, videos, LIVE streams, products", count: 7, rows: [
-        ["get", "List TikTok Shop creators", "/tik_tok_shop/creators", ep("get-tik-tok-shop-store-creators")],
-        ["get", "List TikTok Shop videos", "/tik_tok_shop/videos", ep("get-tik-tok-shop-store-videos")],
-        ["get", "List TikTok Shop LIVE streams", "/tik_tok_shop/lives", ep("get-tik-tok-shop-store-lives")],
-        ["get", "List TikTok Shop products", "/tik_tok_shop/products", ep("get-tik-tok-shop-store-products")],
-        ["get", "Get top TikTok Shop products by GMV", "/stats/tik_tok_shop_products", ep("get-tik-tok-shop-products")],
+        ["get", "TikTok Shop creators", "/tik_tok_shop/creators", ep("get-tik-tok-shop-store-creators")],
+        ["get", "TikTok Shop videos", "/tik_tok_shop/videos", ep("get-tik-tok-shop-store-videos")],
+        ["get", "TikTok Shop LIVE streams", "/tik_tok_shop/lives", ep("get-tik-tok-shop-store-lives")],
+        ["get", "TikTok Shop products", "/tik_tok_shop/products", ep("get-tik-tok-shop-store-products")],
+        ["get", "Top TikTok Shop products by GMV", "/stats/tik_tok_shop_products", ep("get-tik-tok-shop-products")],
       ] },
-      { icon: "pointer", name: "Tracking events", text: "Clicks, signups and custom events", count: 1, rows: [
+      { icon: "pointer", name: "Tracking events", text: "Storefront, cart and checkout events", count: 1, rows: [
         ["post", "Create tracking event", "/tracking_events", ep("create")],
       ] },
       { icon: "bell", name: "Webhooks", text: "Push events to your server", count: 5, rows: [
-        ["event", "Creator activated", "campaign_affiliate.activated", "/webhooks/examples"],
-        ["event", "Creator removed", "campaign_affiliate.removed", "/webhooks/examples"],
-        ["event", "Creator left", "campaign_affiliate.left", "/webhooks/examples"],
-        ["event", "Code updated", "campaign_affiliate.code_updated", "/webhooks/examples"],
-        ["event", "Sale attributed", "affiliate_sale.created", "/webhooks/examples"],
+        ["event", "Creator activated", "campaign_affiliate.activated", "/essentials/campaign-creator-webhooks"],
+        ["event", "Creator removed", "campaign_affiliate.removed", "/essentials/campaign-creator-webhooks"],
+        ["event", "Creator left", "campaign_affiliate.left", "/essentials/campaign-creator-webhooks"],
+        ["event", "Code updated", "campaign_affiliate.code_updated", "/essentials/campaign-creator-webhooks"],
+        ["event", "Sale attributed", "affiliate_sale.created", "/essentials/campaign-creator-webhooks"],
       ] },
     ];
     const area = areas[active];
@@ -263,7 +265,7 @@ export const GrowiHome = () => {
   const guideCards = () => {
     const cards = [
       { icon: "card", tone: "blue", title: "Stripe", text: "Link Stripe, add growi.js, pass the code in payment metadata.", tags: ["Payments"], href: "/essentials/stripe-integration" },
-      { icon: "bag", tone: "ink", title: "Shopify headless", text: "Carry the affiliate code from landing page through checkout.", tags: ["Storefront"], href: "/essentials/shopify-headless-integration" },
+      { icon: "bag", tone: "ink", title: "Shopify headless", text: "Track affiliate sales and discount codes on a headless storefront.", tags: ["Storefront"], href: "/essentials/shopify-headless-integration" },
       { icon: "bell", tone: "soft", title: "Webhooks", text: "Get notified when creators join, leave, change codes or drive a sale.", tags: ["Events"], href: "/essentials/campaign-creator-webhooks" },
     ];
     return (

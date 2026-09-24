@@ -1,7 +1,8 @@
 ---
 title: "Payload reference"
-description: "Every field Growi sends in a webhook request body."
 ---
+
+## Payload format
 
 The request body is a single JSON object with the following fields:
 
@@ -62,7 +63,7 @@ The request body is a single JSON object with the following fields:
 </ResponseField>
 
 <ResponseField name="attribution" type="object">
-  Present when the creator was submitted through the [campaign applications API](/api-reference/endpoint/create-campaign-application). Echoes the marketing attribution you sent with the applicant (`fbp`, `fbc`, `fbclid`, `event_id`, `event_source_url`, UTM parameters, your `external_id`, and TikTok enrichment) so you can match the creator in your ad platform (for example, forwarding to Meta Conversions API).
+  Present when the creator was submitted through the [campaign applications API](/api-reference/endpoint/create-campaign-application). Echoes the marketing attribution you sent with the applicant — `fbp`, `fbc`, `fbclid`, `event_id`, `event_source_url`, UTM parameters, your `external_id`, and TikTok enrichment — so you can match the creator in your ad platform (for example, forwarding to Meta Conversions API).
 </ResponseField>
 
 <Note>

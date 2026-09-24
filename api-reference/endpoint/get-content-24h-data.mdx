@@ -1,11 +1,11 @@
 ---
-title: 'Get Content 24h Data'
+title: "Get content 24h data"
 openapi: 'GET /stats/content_24h_data'
 ---
 
 Retrieves 24-hour views and engagement metrics with comparison to previous period. For each date, you get that day's metrics along with the corresponding data from a period before for comparison.
 
-## Request Parameters
+## Request parameters
 
 | Parameter | Type | Description | Required |
 | --- | --- | --- | --- |
@@ -13,7 +13,7 @@ Retrieves 24-hour views and engagement metrics with comparison to previous perio
 | `end_date` | String | End date in MM/DD/YYYY format | Yes |
 | `limit` | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No |
 
-## Response Fields
+## Response fields
 
 | Field | Description |
 | --- | --- |
@@ -24,7 +24,7 @@ Retrieves 24-hour views and engagement metrics with comparison to previous perio
 | `total` | Running total as of the latest date |
 | `last_total` | Running total as of the comparison period's latest date |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/stats/content_24h_data?start_date=01/01/2023&end_date=01/31/2023" \
@@ -32,7 +32,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/content_24h_data?start_dat
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -82,3 +82,68 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/content_24h_data?start_dat
     }
   }
 } 
+```
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/stats/content_24h_data?start_date=01/01/2023&end_date=01/31/2023" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "data": {
+    "content_24h_data": {
+      "views_24h": [
+        {
+          "date": 1747267200,
+          "last_date": 1746662400,
+          "current": 1498351,
+          "last": 1398120,
+          "name": "Views",
+          "total": 12897783,
+          "last_total": 11245632
+        },
+        {
+          "date": 1747353600,
+          "last_date": 1746748800,
+          "current": 1731260,
+          "last": 1625480,
+          "name": "Views",
+          "total": 12897783,
+          "last_total": 11245632
+        }
+      ],
+      "likes_24h": [
+        {
+          "date": 1747267200,
+          "last_date": 1746662400,
+          "current": 51590,
+          "last": 48234,
+          "name": "Likes",
+          "total": 448104,
+          "last_total": 396514
+        },
+        {
+          "date": 1747353600,
+          "last_date": 1746748800,
+          "current": 67440,
+          "last": 62180,
+          "name": "Likes",
+          "total": 448104,
+          "last_total": 396514
+        }
+      ]
+    }
+  }
+} 
+```
+
+</ResponseExample>

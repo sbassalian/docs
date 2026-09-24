@@ -1,0 +1,106 @@
+---
+title: "Example payloads"
+---
+
+## Example payloads
+
+### Creator added to campaign
+
+```json
+{
+  "event": "campaign_affiliate.activated",
+  "occurred_at": "2026-02-27T18:33:12-05:00",
+  "campaign_affiliate_id": 123,
+  "campaign_id": 456,
+  "organization_id": 789,
+  "user_id": 42,
+  "status": "active",
+  "campaign_name": "Spring Promo",
+  "organization_slug": "acme",
+  "user_email": "creator@example.com",
+  "user_name": "Creator Name",
+  "tag": "creator-default-tag",
+  "idempotency_key": "campaign_affiliate.activated:123:2026-02-27T18:33:12-05:00",
+  "attribution": {
+    "fbp": "fb.1.1785503550741.5188770206",
+    "fbc": "fb.1.1785503550741.PAcGRvZgJmZGlk",
+    "event_id": "012e8a42-6b26-43cf-9a66-0242c6bc0fd1",
+    "event_source_url": "https://shop.example.com/tiktok-partner",
+    "utm_source": "facebook",
+    "external_id": 11177
+  }
+}
+```
+
+<Note>
+  `attribution` appears only for creators submitted through the campaign applications API. Approval events are delivered a couple of minutes after the approval, once the creator's affiliate code has been generated.
+</Note>
+
+### Sale attributed to a creator
+
+```json
+{
+  "event": "affiliate_sale.created",
+  "idempotency_key": "affiliate_sale.created:31337",
+  "occurred_at": "2026-08-20T12:00:00Z",
+  "affiliate_sale_id": 31337,
+  "order_id": "5723098317101",
+  "campaign_affiliate_id": 123,
+  "campaign_id": 456,
+  "organization_id": 789,
+  "user_id": 42,
+  "total_cents": 5900,
+  "subtotal_cents": 5400,
+  "commission_cents": 590,
+  "currency": "usd",
+  "platform": "shopify",
+  "sale_type": "one_time",
+  "sale_occurrence": "initial",
+  "status": "unpaid",
+  "campaign_name": "Spring Promo",
+  "organization_slug": "acme",
+  "user_email": "creator@example.com",
+  "user_name": "Creator Name",
+  "tag": "creator-default-tag",
+  "attribution": {
+    "fbp": "fb.1.1785503550741.5188770206",
+    "event_id": "012e8a42-6b26-43cf-9a66-0242c6bc0fd1",
+    "utm_source": "facebook",
+    "external_id": 11177
+  }
+}
+```
+
+### Creator removed from campaign
+
+```json
+{
+  "event": "campaign_affiliate.removed",
+  "occurred_at": "2026-02-27T18:35:02-05:00",
+  "campaign_affiliate_id": 123,
+  "campaign_id": 456,
+  "organization_id": 789,
+  "user_id": 42,
+  "status": "removed"
+}
+```
+
+### Creator affiliate code updated
+
+```json
+{
+  "event": "campaign_affiliate.code_updated",
+  "occurred_at": "2026-07-14T16:10:00-04:00",
+  "campaign_affiliate_id": 123,
+  "campaign_id": 456,
+  "organization_id": 789,
+  "user_id": 42,
+  "status": "active",
+  "campaign_name": "Spring Promo",
+  "organization_slug": "acme",
+  "user_email": "creator@example.com",
+  "user_name": "Creator Name",
+  "previous_tag": "old-code",
+  "tag": "new-code"
+}
+```

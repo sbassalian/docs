@@ -1,11 +1,11 @@
 ---
-title: "Get Ambassadors"
+title: "Get ambassadors"
 openapi: "GET /stats/ambassadors"
 ---
 
 Retrieves all ambassadors from ambassador program campaigns for the organization. Returns ambassador profile information including their social accounts, custom field answers from their application, and contact details.
 
-## Request Parameters
+## Request parameters
 
 | Parameter             | Type    | Description                                                                                      | Required |
 | --------------------- | ------- | ------------------------------------------------------------------------------------------------ | -------- |
@@ -20,14 +20,14 @@ Retrieves all ambassadors from ambassador program campaigns for the organization
 | `approved_at_to`      | String  | Filter ambassadors approved on or before this date (YYYY-MM-DD format)                           | No       |
 | `campaign_id`         | Integer or Array | Filter by campaign ID. Pass a single ID or array of IDs (e.g., `campaign_id[]=123&campaign_id[]=456`) | No       |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/stats/ambassadors?page=1&per_page=20" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -80,7 +80,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/ambassadors?page=1&per_pag
 }
 ```
 
-## Response Fields
+## Response fields
 
 | Field                                  | Type    | Description                                                      |
 | -------------------------------------- | ------- | ---------------------------------------------------------------- |
@@ -111,7 +111,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/ambassadors?page=1&per_pag
 | `meta.per_page`                        | Integer | Number of results per page                                       |
 | `meta.total_pages`                     | Integer | Total number of pages available                                  |
 
-## Use Cases
+## Use cases
 
 This endpoint is useful for:
 
@@ -120,3 +120,67 @@ This endpoint is useful for:
 - **Profile Pages**: Populate individual ambassador profile pages with their info and social links
 - **Application Data**: Access custom field answers from applications (including uploaded images)
 - **Contact Management**: Retrieve ambassador contact details including phone numbers and locations
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/stats/ambassadors?page=1&per_page=20" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "data": [
+    {
+      "campaign_affiliate_id": 3490313,
+      "user_id": 2628998,
+      "email": "creator@example.com",
+      "first_name": "Natalie",
+      "last_name": "Garay",
+      "name": "Natalie Garay",
+      "joined_at": "2026-01-16T20:15:36Z",
+      "social_accounts": [
+        {
+          "username": "nataliemgaray",
+          "platform": "Instagram",
+          "profile_share_url": "https://www.instagram.com/nataliemgaray/"
+        },
+        {
+          "username": "dancingnatnat",
+          "platform": "Tik Tok",
+          "profile_share_url": "https://www.tiktok.com/@dancingnatnat"
+        }
+      ],
+      "custom_field_answers": [
+        {
+          "question": "What college do you attend?",
+          "answer": "UCLA",
+          "field_type": "text"
+        },
+        {
+          "question": "Upload your best photo",
+          "answer": "https://imagedelivery.net/...",
+          "field_type": "image"
+        }
+      ],
+      "user_location": "Temecula, CA 92591, US",
+      "user_phone_number": "+15551234567",
+      "approved_at": "2026-01-16T20:15:36Z",
+      "campaign_id": 123,
+      "campaign_name": "Ambassador Program"
+    }
+  ],
+  "meta": {
+    "total_ambassadors": 150,
+    "current_page": 1,
+    "per_page": 20,
+    "total_pages": 8
+  }
+}
+```
+
+</ResponseExample>

@@ -1,23 +1,23 @@
 ---
-title: 'Get Creators 24h'
+title: "Get creators 24h"
 openapi: 'GET /stats/creators_24h'
 ---
 
 Retrieves daily creator metrics with comparison to previous period. This endpoint tracks both new creators (who joined your database) and active creators (who made posts) for each date.
 
-## Key Definitions
+## Key definitions
 
 - **New Creators**: Creators who joined your database on that specific date
 - **Active Creators**: Creators who made at least one post on that specific date
 
-## Request Parameters
+## Request parameters
 
 | Parameter | Type | Description | Required |
 | --- | --- | --- | --- |
 | `start_date` | String | Start date in MM/DD/YYYY format | Yes |
 | `end_date` | String | End date in MM/DD/YYYY format | Yes |
 
-## Response Fields
+## Response fields
 
 | Field | Description |
 | --- | --- |
@@ -32,7 +32,7 @@ Retrieves daily creator metrics with comparison to previous period. This endpoin
 | `total_active` | Cumulative total of active creators in the current period |
 | `last_total_active` | Cumulative total of active creators in the comparison period |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/stats/creators_24h?start_date=01/01/2023&end_date=01/31/2023" \
@@ -40,7 +40,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/creators_24h?start_date=01
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -86,3 +86,64 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/creators_24h?start_date=01
     ]
   }
 } 
+```
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/stats/creators_24h?start_date=01/01/2023&end_date=01/31/2023" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "data": {
+    "creators_24h": [
+      {
+        "date": "2025-09-06",
+        "last_date": "2025-06-29",
+        "current_new": 16,
+        "last_new": 0,
+        "total_new": 27,
+        "last_total_new": 24,
+        "current_active": 0,
+        "last_active": 0,
+        "total_active": 1,
+        "last_total_active": 1
+      },
+      {
+        "date": "2025-09-07",
+        "last_date": "2025-06-30",
+        "current_new": 5,
+        "last_new": 0,
+        "total_new": 27,
+        "last_total_new": 24,
+        "current_active": 0,
+        "last_active": 0,
+        "total_active": 1,
+        "last_total_active": 1
+      },
+      {
+        "date": "2025-09-17",
+        "last_date": "2025-07-10",
+        "current_new": 0,
+        "last_new": 1,
+        "total_new": 27,
+        "last_total_new": 24,
+        "current_active": 1,
+        "last_active": 0,
+        "total_active": 1,
+        "last_total_active": 1
+      }
+    ]
+  }
+} 
+```
+
+</ResponseExample>

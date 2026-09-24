@@ -1,5 +1,5 @@
 ---
-title: "Update Affiliate Sale"
+title: "Update affiliate sale"
 openapi: "PATCH /affiliate_sales/{id}"
 ---
 
@@ -7,19 +7,19 @@ Updates an existing affiliate sale that was created via the Public API. Use this
 
 Only sales created through the public API (`POST /affiliate_sales`, including `website`, `ios`, and `android` with manual attribution) can be updated with this endpoint. Sales from other sources (e.g., Shopify, SDK cart attribution) cannot be modified via this API.
 
-## Important Behavior
+## Important behavior
 
 - **Commission recalculation**: If you update `total` without providing `commission`, the commission will be automatically recalculated based on campaign rules.
 - **Audit logging**: Every successful update is recorded in an internal audit log for support and debugging purposes.
 - **Cancelled sales**: Sales with status `cancelled` cannot be updated.
 
-## Path Parameters
+## Path parameters
 
 | Parameter | Type    | Description                                           | Required |
 | --------- | ------- | ----------------------------------------------------- | -------- |
 | `id`      | Integer | ID of the affiliate sale to update                    | Yes      |
 
-## Request Body
+## Request body
 
 All fields are optional. Only include the fields you want to update.
 
@@ -36,7 +36,7 @@ All fields are optional. Only include the fields you want to update.
 | `status`         | String  | Sale status: `unpaid`, `paid`, `paid_externally`, or `cancelled`.                               |
 | `sub_id`         | String  | Custom source/sub-ID tag (e.g., `instagram`, `youtube`) for platform-level tracking.            |
 
-## Request Example
+## Request example
 
 Update the total and let commission recalculate:
 
@@ -73,7 +73,7 @@ curl -X PATCH "https://api.growi.io/api/public/v1/affiliate_sales/1947458" \
      }'
 ```
 
-## Response Example
+## Response example
 
 **200 OK** - Sale updated successfully:
 
@@ -92,7 +92,7 @@ curl -X PATCH "https://api.growi.io/api/public/v1/affiliate_sales/1947458" \
 }
 ```
 
-## Response Fields
+## Response fields
 
 | Field              | Type    | Description                                          |
 | ------------------ | ------- | ---------------------------------------------------- |
@@ -107,7 +107,7 @@ curl -X PATCH "https://api.growi.io/api/public/v1/affiliate_sales/1947458" \
 | `data.currency`    | String  | Currency code                                        |
 | `data.sub_id`      | String  | Custom source/sub-ID tag captured on the sale        |
 
-## Error Responses
+## Error responses
 
 **404 Not Found** - Sale does not exist or does not belong to your organization:
 
@@ -131,7 +131,7 @@ curl -X PATCH "https://api.growi.io/api/public/v1/affiliate_sales/1947458" \
 }
 ```
 
-## Use Cases
+## Use cases
 
 This endpoint is useful for:
 
@@ -140,3 +140,55 @@ This endpoint is useful for:
 - **Status Management**: Mark sales as paid or cancelled
 - **Data Corrections**: Fix customer information or sale dates
 - **Sync with External Systems**: Keep Growi in sync when orders are modified in your system
+
+<RequestExample>
+
+```bash Update total
+curl -X PATCH "https://api.growi.io/api/public/v1/affiliate_sales/1947458" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "total": 12999
+     }'
+```
+
+```bash Mark as paid
+curl -X PATCH "https://api.growi.io/api/public/v1/affiliate_sales/1947458" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "status": "paid"
+     }'
+```
+
+```bash Explicit commission
+curl -X PATCH "https://api.growi.io/api/public/v1/affiliate_sales/1947458" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "total": 15000,
+       "commission": 750,
+       "customer_email": "updated@example.com"
+     }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "data": {
+    "id": 1947458,
+    "external_id": "ORD-12345",
+    "platform": "website",
+    "status": "unpaid",
+    "occurred_at": "2025-09-30T12:00:00.000Z",
+    "total": 12999,
+    "commission": 650,
+    "currency": "usd"
+  }
+}
+```
+
+</ResponseExample>

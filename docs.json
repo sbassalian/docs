@@ -1,0 +1,288 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "aspen",
+  "name": "Growi Docs",
+  "description": "Record sales, sync creator codes and pull campaign stats from the Growi API.",
+  "colors": {
+    "primary": "#0646CC",
+    "light": "#7C9DFF",
+    "dark": "#1E5AE0"
+  },
+  "background": {
+    "color": {
+      "light": "#FFFFFF",
+      "dark": "#080808"
+    }
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "/"
+  },
+  "favicon": "/favicon.svg",
+  "fonts": {
+    "heading": {
+      "family": "DM Sans",
+      "weight": 700
+    },
+    "body": {
+      "family": "DM Sans",
+      "weight": 400
+    }
+  },
+  "appearance": {
+    "default": "light"
+  },
+  "icons": {
+    "library": "lucide"
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs",
+    "codeblocks": "dark"
+  },
+  "search": {
+    "prompt": "Search the docs"
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude"
+    ],
+    "display": "header"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:info@growi.io"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Open dashboard",
+      "href": "https://growi.io"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guides",
+        "icon": "book-open",
+        "groups": [
+          {
+            "group": "Get started",
+            "icon": "zap",
+            "pages": [
+              "introduction"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "icon": "plug",
+            "pages": [
+              "essentials/stripe-integration",
+              "essentials/shopify-headless-integration"
+            ]
+          },
+          {
+            "group": "Reporting",
+            "icon": "chart-column",
+            "pages": [
+              "essentials/get-stats"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API reference",
+        "icon": "code",
+        "groups": [
+          {
+            "group": "Overview",
+            "icon": "book-open",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
+          {
+            "group": "Conversions",
+            "icon": "send",
+            "pages": [
+              "api-reference/endpoint/list-affiliate-sales",
+              "api-reference/endpoint/create-affiliate-sale",
+              "api-reference/endpoint/update-affiliate-sale"
+            ]
+          },
+          {
+            "group": "Tracking events",
+            "icon": "mouse-pointer-click",
+            "pages": [
+              "api-reference/endpoint/create"
+            ]
+          },
+          {
+            "group": "Campaign affiliates",
+            "icon": "tag",
+            "pages": [
+              "api-reference/endpoint/list-campaign-affiliates",
+              "api-reference/endpoint/update-campaign-affiliate",
+              "api-reference/endpoint/bulk-update-campaign-affiliates"
+            ]
+          },
+          {
+            "group": "Organization",
+            "icon": "building-2",
+            "pages": [
+              "api-reference/endpoint/get-brands",
+              "api-reference/endpoint/get-campaigns"
+            ]
+          },
+          {
+            "group": "Applications",
+            "icon": "inbox",
+            "pages": [
+              "api-reference/endpoint/create-campaign-application"
+            ]
+          },
+          {
+            "group": "Stats",
+            "icon": "chart-line",
+            "pages": [
+              {
+                "group": "Summary",
+                "pages": [
+                  "api-reference/endpoint/get-snapshots",
+                  "api-reference/endpoint/get-creators-24h",
+                  "api-reference/endpoint/refresh-data"
+                ]
+              },
+              {
+                "group": "Content",
+                "pages": [
+                  "api-reference/endpoint/get-user-contents",
+                  "api-reference/endpoint/get-content-platform-composition",
+                  "api-reference/endpoint/get-content-24h-data"
+                ]
+              },
+              {
+                "group": "Leaderboards",
+                "pages": [
+                  "api-reference/endpoint/get-top-creators",
+                  "api-reference/endpoint/get-top-creators-by-posts",
+                  "api-reference/endpoint/get-top-creators-by-gmv",
+                  "api-reference/endpoint/get-top-connected-accounts-by-engagement",
+                  "api-reference/endpoint/get-top-posts-by-views"
+                ]
+              },
+              {
+                "group": "Payouts",
+                "pages": [
+                  "api-reference/endpoint/get-creator-payouts",
+                  "api-reference/endpoint/mark-credit-payout",
+                  "api-reference/endpoint/get-transactions"
+                ]
+              },
+              {
+                "group": "Ambassadors",
+                "pages": [
+                  "api-reference/endpoint/get-ambassadors",
+                  "api-reference/endpoint/get-ambassador-sales",
+                  "api-reference/endpoint/get-ambassador-stats"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "TikTok Shop",
+            "icon": "store",
+            "pages": [
+              "api-reference/endpoint/get-tik-tok-shop-store-creators",
+              "api-reference/endpoint/get-tik-tok-shop-store-videos",
+              "api-reference/endpoint/get-tik-tok-shop-store-lives",
+              "api-reference/endpoint/get-tik-tok-shop-store-products",
+              "api-reference/endpoint/get-tik-tok-shop-store-product-creators",
+              "api-reference/endpoint/get-tik-tok-shop-gmv-24h",
+              "api-reference/endpoint/get-tik-tok-shop-products"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Webhooks",
+        "icon": "webhook",
+        "groups": [
+          {
+            "group": "Webhooks",
+            "icon": "bell",
+            "pages": [
+              "essentials/campaign-creator-webhooks",
+              "webhooks/payloads",
+              "webhooks/examples",
+              "webhooks/troubleshooting"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "redirects": [
+    {
+      "source": "/quickstart",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/development",
+      "destination": "/essentials/stripe-integration"
+    },
+    {
+      "source": "/essentials/code",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/essentials/images",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/essentials/markdown",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/essentials/navigation",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/essentials/reusable-snippets",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/essentials/settings",
+      "destination": "/introduction"
+    }
+  ],
+  "footer": {
+    "links": [
+      {
+        "header": "Growi",
+        "items": [
+          {
+            "label": "Website",
+            "href": "https://growi.io"
+          },
+          {
+            "label": "Support",
+            "href": "mailto:info@growi.io"
+          }
+        ]
+      }
+    ]
+  },
+  "errors": {
+    "404": {
+      "redirect": false,
+      "title": "Page not found",
+      "description": "This page moved or never existed. Try [the homepage](/), [the API reference](/api-reference/introduction) or search with ⌘K."
+    }
+  }
+}

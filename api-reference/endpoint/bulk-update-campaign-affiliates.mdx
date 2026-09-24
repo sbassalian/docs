@@ -1,5 +1,5 @@
 ---
-title: "Bulk Update Campaign Affiliates"
+title: "Bulk update campaign affiliates"
 openapi: "PATCH /campaign_affiliates/bulk"
 ---
 
@@ -9,13 +9,13 @@ Each row is independent: valid rows still update when another row fails. Codes m
 
 Maximum **300** affiliates per request.
 
-## Request Body
+## Request body
 
 | Field | Type | Description | Required |
 | ----- | ---- | ----------- | -------- |
 | `affiliates` | Array | Rows to update. Each row needs `id` (campaign-affiliate enrollment ID) and `tag` (new code). | Yes |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X PATCH "https://api.growi.io/api/public/v1/campaign_affiliates/bulk" \
@@ -29,7 +29,7 @@ curl -X PATCH "https://api.growi.io/api/public/v1/campaign_affiliates/bulk" \
      }'
 ```
 
-## Response Example
+## Response example
 
 All rows succeeded:
 
@@ -62,7 +62,7 @@ Partial failure (HTTP 422 — successful rows are still saved):
 
 Send your organization's public API key as a Bearer token. **Viewer (read-only) keys cannot call this.** See [Rate Limits & Authentication](/api-reference/introduction).
 
-## Error Responses
+## Error responses
 
 | Status | Body | When |
 | ------ | ---- | ---- |
@@ -71,3 +71,46 @@ Send your organization's public API key as a Bearer token. **Viewer (read-only) 
 | `422` | `{ "error": "affiliates is required" }` | Missing / empty `affiliates`. |
 | `422` | `{ "error": "Maximum 300 affiliates per request." }` | More than 300 rows. |
 | `422` | `{ "success": false, "updated": [...], "errors": [...] }` | At least one row failed. Successful rows are still saved. |
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.growi.io/api/public/v1/campaign_affiliates/bulk" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "affiliates": [
+         { "id": 3490313, "tag": "OLLYCODE" },
+         { "id": 3490314, "tag": "SURESH10" }
+       ]
+     }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "updated": [
+    { "id": 3490313, "tag": "ollycode" },
+    { "id": 3490314, "tag": "suresh10" }
+  ],
+  "errors": []
+}
+```
+
+```json 422 partial
+{
+  "success": false,
+  "updated": [
+    { "id": 3490313, "tag": "ollycode" }
+  ],
+  "errors": [
+    { "id": 0, "error": "Campaign affiliate not found." }
+  ]
+}
+```
+
+</ResponseExample>

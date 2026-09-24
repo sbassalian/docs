@@ -1,11 +1,11 @@
 ---
-title: "Get Ambassador Sales"
+title: "Get ambassador sales"
 openapi: "GET /stats/query_ambassador_sales"
 ---
 
 Retrieves detailed ambassador sales data including order information, commission amounts, and program details within a specified date range. This endpoint supports filtering by payment status, creator email, and pagination.
 
-## Request Parameters
+## Request parameters
 
 | Parameter        | Type    | Description                                                           | Required |
 | ---------------- | ------- | --------------------------------------------------------------------- | -------- |
@@ -18,7 +18,7 @@ Retrieves detailed ambassador sales data including order information, commission
 | `affiliate_tag`  | String  | Filter by affiliate tag                                               | No       |
 | `order_id`       | String  | Filter by a Shopify order id                                          | No       |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?start_date=09/01/2025&end_date=09/30/2025&page=1&per_page=20&status=pending&creator_email=example@example.com" \
@@ -26,7 +26,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?sta
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -91,7 +91,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?sta
 }
 ```
 
-## Response Fields
+## Response fields
 
 | Field                                   | Type    | Description                                                            |
 | --------------------------------------- | ------- | ---------------------------------------------------------------------- |
@@ -142,7 +142,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?sta
 | `additional_data.total_returned_amount` | Number  | Total amount returned                                                  |
 | `additional_data.total_posts`           | Integer | Total number of posts associated with sales                            |
 
-## Status Filter Options
+## Status filter options
 
 The `status` parameter accepts the following values:
 
@@ -153,7 +153,7 @@ The `status` parameter accepts the following values:
 - `canceled` - Returns canceled sales
 - `refunded` - Returns refunded sales
 
-## Use Cases
+## Use cases
 
 This endpoint is useful for:
 
@@ -164,3 +164,80 @@ This endpoint is useful for:
 - **Self-Referral Detection**: Filter out or identify self-referral transactions
 - **Email Filtering**: Filter sales by ambassador’s email for precision reporting
 - **Affiliate Tag Filtering**: Find sales by affiliate tags
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?start_date=09/01/2025&end_date=09/30/2025&page=1&per_page=20&status=pending&creator_email=example@example.com" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "data": [
+    {
+      "id": 0,
+      "ambassador": {
+        "id": 0,
+        "name": "0",
+        "email": "example@example.com",
+        "avatar_url": null
+      },
+      "program": {
+        "id": 0,
+        "name": "Test Program",
+        "affiliate_status": "active"
+      },
+      "order": {
+        "id": 0,
+        "total": "$1.70",
+        "subtotal": "$1.50",
+        "logs": []
+      },
+      "sale_amount": {
+        "formatted": "$1.70",
+        "cents": 170
+      },
+      "commission": {
+        "amount": 1.75,
+        "formatted": "$1.75",
+        "original_amount": 1.75,
+        "original_formatted": "$1.75",
+        "override": 0.0,
+        "has_override": false
+      },
+      "occurred_at": "2025-09-30T23:55:29.000Z",
+      "due_in_days": 50,
+      "invoice": null,
+      "status": "pending",
+      "refunded": false,
+      "disable_attribution": false,
+      "self_referral": false
+    }
+  ],
+  "meta": {
+    "row_count": 0,
+    "page_count": 0,
+    "current_page": 1
+  },
+  "additional_data": {
+    "total_gmv": 0,
+    "total_commission": 0,
+    "paid_commission": 0.0,
+    "unpaid_commission": 0,
+    "total_orders": 0,
+    "total_quantity": 0,
+    "total_refunded_amount": 0,
+    "total_returned_amount": 0,
+    "total_posts": 0
+  },
+  "user_contents": []
+}
+```
+
+</ResponseExample>

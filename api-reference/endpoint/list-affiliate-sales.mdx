@@ -1,5 +1,5 @@
 ---
-title: "List Affiliate Sales"
+title: "List affiliate sales"
 openapi: "GET /affiliate_sales"
 ---
 
@@ -9,7 +9,7 @@ For **website** conversions, call with `store_platform=website` (no `store_id` r
 
 The response includes `data` (array of sales), `meta` (pagination info), and `additional_data` (aggregate totals like total GMV, commission breakdown, and order counts).
 
-## Request Parameters
+## Request parameters
 
 | Parameter           | Type    | Description                                                                                           | Required |
 | ------------------- | ------- | ----------------------------------------------------------------------------------------------------- | -------- |
@@ -29,7 +29,7 @@ The response includes `data` (array of sales), `meta` (pagination info), and `ad
 | `store_platform`    | String  | Platform type: `website` or `shopify_store`. Use `website` for website-sourced conversions.           | No       |
 | `ambassador_program`| Boolean | Filter to only ambassador program sales. Default is false.                                            | No       |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=website&page=1&per_page=20" \
@@ -43,7 +43,7 @@ curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=w
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -76,7 +76,7 @@ curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=w
 }
 ```
 
-## Response Fields
+## Response fields
 
 | Field                               | Type    | Description                                                       |
 | ----------------------------------- | ------- | ----------------------------------------------------------------- |
@@ -103,7 +103,7 @@ curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=w
 | `additional_data.total_orders`      | Integer | Total number of orders                                            |
 | `additional_data.total_refunded_amount` | Number | Total refunded amount in dollars                              |
 
-## Use Cases
+## Use cases
 
 This endpoint is useful for:
 
@@ -113,3 +113,52 @@ This endpoint is useful for:
 - **Creator Performance**: Filter by `creator_id` or `creator_email` to analyze individual creator performance
 - **Campaign Analytics**: Filter by `campaign_id` to measure campaign-specific conversion metrics
 - **Financial Reporting**: Use `additional_data` totals for GMV and commission reporting
+
+<RequestExample>
+
+```bash Basic
+curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=website&page=1&per_page=20" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+```bash Date range and status
+curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=website&start_date=01/01/2025&end_date=01/31/2025&status=unpaid" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "data": [
+    {
+      "id": 1947457,
+      "external_id": "ORD-12345",
+      "platform": "website",
+      "status": "unpaid",
+      "occurred_at": "2025-09-30T23:55:29.000Z",
+      "total": 9999,
+      "commission": 500,
+      "currency": "usd"
+    }
+  ],
+  "meta": {
+    "row_count": 150,
+    "page_count": 8,
+    "current_page": 1
+  },
+  "additional_data": {
+    "total_gmv": 14245.57,
+    "total_commission": 1403.31,
+    "paid_commission": 500.00,
+    "unpaid_commission": 903.31,
+    "total_vat": 0.0,
+    "total_orders": 150,
+    "total_refunded_amount": 0.0
+  }
+}
+```
+
+</ResponseExample>

@@ -1,5 +1,5 @@
 ---
-title: "Create Affiliate Sale"
+title: "Create affiliate sale"
 openapi: "POST /affiliate_sales"
 ---
 
@@ -9,14 +9,14 @@ By default, sales are created with `platform: website`. Pass `platform: ios` or 
 
 This endpoint is **idempotent**: sending the same `order_id` again for the same `platform` returns the existing sale with a 201 status code, making it safe for webhook handlers and retry logic.
 
-## Attribution Methods
+## Attribution methods
 
 You can attribute the sale using one of two methods:
 
 1. **Affiliate Tag** (`campaign_affiliate_id`): Use the creator's unique affiliate tag/code
 2. **Growi IDs** (`growi_user_id` + `growi_campaign_id`): Use the Growi user ID and campaign ID directly
 
-## Request Body
+## Request body
 
 | Field                  | Type    | Description                                                                           | Required |
 | ---------------------- | ------- | ------------------------------------------------------------------------------------- | -------- |
@@ -37,7 +37,7 @@ You can attribute the sale using one of two methods:
 | `commission`           | Integer | Override commission amount in **cents**. If omitted, calculated from campaign rules for the given platform.  | No       |
 | `sub_id`               | String  | Custom source/sub-ID tag (e.g., `instagram`, `youtube`) for platform-level tracking within a single campaign. Returned in sale responses and filterable on the list endpoint. For custom-website traffic, put the same value on the landing URL as `utm_source` (same campaign + tag, no extra campaigns). | No       |
 
-## Request Example
+## Request example
 
 Using affiliate tag (website — default):
 
@@ -86,7 +86,7 @@ curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
      }'
 ```
 
-## Response Example
+## Response example
 
 **201 Created** - Sale created successfully (or already exists with same order_id + platform):
 
@@ -105,7 +105,7 @@ curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
 }
 ```
 
-## Response Fields
+## Response fields
 
 | Field              | Type    | Description                                                      |
 | ------------------ | ------- | ---------------------------------------------------------------- |
@@ -119,7 +119,7 @@ curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
 | `data.commission`  | Integer | Commission amount in cents (calculated or overridden)            |
 | `data.currency`    | String  | Currency code                                                    |
 
-## Error Responses
+## Error responses
 
 **422 Unprocessable Entity** - Missing required fields or invalid attribution:
 
@@ -165,7 +165,7 @@ curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
 }
 ```
 
-## Use Cases
+## Use cases
 
 This endpoint is useful for:
 
@@ -176,3 +176,67 @@ This endpoint is useful for:
 - **CRM Integration**: Create conversions when deals close in your CRM
 - **Manual Attribution**: Attribute offline or phone sales to specific creators
 - **Commission Override**: Specify custom commission amounts for special promotions
+
+<RequestExample>
+
+```bash Affiliate tag
+curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "order_id": "ORD-12345",
+       "total": 9999,
+       "currency": "usd",
+       "campaign_affiliate_id": "SUMMER2025",
+       "occurred_at": "2025-09-30T12:00:00Z"
+     }'
+```
+
+```bash Growi IDs
+curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "order_id": "ORD-67890",
+       "total": 4999,
+       "currency": "usd",
+       "growi_user_id": 12345,
+       "growi_campaign_id": 16200,
+       "occurred_at": "2025-09-30T14:30:00Z"
+     }'
+```
+
+```bash iOS app
+curl -X POST "https://api.growi.io/api/public/v1/affiliate_sales" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "order_id": "ORD-IOS-12345",
+       "total": 9999,
+       "currency": "usd",
+       "platform": "ios",
+       "campaign_affiliate_id": "SUMMER2025",
+       "occurred_at": "2025-09-30T12:00:00Z"
+     }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 201
+{
+  "data": {
+    "id": 1947458,
+    "external_id": "ORD-12345",
+    "platform": "website",
+    "status": "unpaid",
+    "occurred_at": "2025-09-30T12:00:00.000Z",
+    "total": 9999,
+    "commission": 500,
+    "currency": "usd"
+  }
+}
+```
+
+</ResponseExample>

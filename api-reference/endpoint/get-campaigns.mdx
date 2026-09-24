@@ -1,11 +1,11 @@
 ---
-title: "Get Campaigns"
+title: "Get campaigns"
 openapi: "GET /organizations/campaigns"
 ---
 
 Retrieves a list of all available campaigns for your organization. This endpoint returns basic campaign information including campaign IDs, names, types, and statuses that can be used for filtering and organization purposes.
 
-## Request Parameters
+## Request parameters
 
 This endpoint does not require any specific parameters, but standard authentication is required.
 
@@ -13,7 +13,7 @@ This endpoint does not require any specific parameters, but standard authenticat
 | --------- | ---- | --------------------------------------------------- | -------- |
 | None      | -    | This endpoint does not accept additional parameters | -        |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/organizations/campaigns" \
@@ -21,7 +21,7 @@ curl -X GET "https://api.growi.io/api/public/v1/organizations/campaigns" \
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -49,7 +49,7 @@ curl -X GET "https://api.growi.io/api/public/v1/organizations/campaigns" \
 }
 ```
 
-## Response Fields
+## Response fields
 
 | Field                      | Type    | Description                                    |
 | -------------------------- | ------- | ---------------------------------------------- |
@@ -60,7 +60,7 @@ curl -X GET "https://api.growi.io/api/public/v1/organizations/campaigns" \
 | `campaigns[].campaign_type`| String  | Type of campaign (Campaign, Contract, Ambassador Program) |
 | `campaigns[].status`       | String  | Current status of the campaign (Active, Paused, Canceled, Completed, Archived, Void) |
 
-## Use Cases
+## Use cases
 
 - **Campaign Filtering**: Use campaign IDs to filter data in other API endpoints
 - **Campaign Management**: Retrieve available campaigns for management interfaces
@@ -68,7 +68,7 @@ curl -X GET "https://api.growi.io/api/public/v1/organizations/campaigns" \
 - **Reporting**: Include campaign names and statuses in reports and analytics dashboards
 - **Status Monitoring**: Track campaign statuses across your organization
 
-## Error Responses
+## Error responses
 
 ```json
 {
@@ -82,3 +82,43 @@ Common error scenarios:
 - **403 Forbidden**: API key doesn't have permission to access campaigns
 - **422 Unprocessable Entity**: Organization not found
 - **500 Internal Server Error**: Server-side error occurred
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/organizations/campaigns" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "campaigns": [
+    {
+      "id": 16425,
+      "name": "Campaign Name",
+      "campaign_type": "Campaign",
+      "status": "Active"
+    },
+    {
+      "id": 16426,
+      "name": "Summer Collection 2024",
+      "campaign_type": "Contract",
+      "status": "Paused"
+    },
+    {
+      "id": 16427,
+      "name": "Brand Ambassador Program",
+      "campaign_type": "Ambassador Program",
+      "status": "Active"
+    }
+  ]
+}
+```
+
+</ResponseExample>

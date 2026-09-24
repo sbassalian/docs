@@ -1,11 +1,11 @@
 ---
-title: "Get Top Creators By Engagement"
+title: "Get top creators by engagement"
 openapi: "GET /stats/top_creators_by_engagement"
 ---
 
 Retrieves your top-performing creators ranked by total engagement within a specified date range.
 
-## Request Parameters
+## Request parameters
 
 | Parameter    | Type    | Description                                                                                  | Required |
 | ------------ | ------- | -------------------------------------------------------------------------------------------- | -------- |
@@ -15,7 +15,7 @@ Retrieves your top-performing creators ranked by total engagement within a speci
 | `page`       | Integer | Page number for pagination. Default is 1.                                                    | No       |
 | `per_page`   | Integer | Number of results per page. Default is 40. Maximum is 100.                                   | No       |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_engagement?start_date=01/01/2023&end_date=01/31/2023&limit=5&page=1&per_page=20" \
@@ -23,7 +23,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_engagement
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -89,3 +89,82 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_engagement
   }
 }
 ```
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/stats/top_creators_by_engagement?start_date=01/01/2023&end_date=01/31/2023&limit=5&page=1&per_page=20" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "data": {
+    "top_creators_by_engagement": [
+      {
+        "id": 100001,
+        "name": "Ella Matthews",
+        "email": "ella.matthews@example.com",
+        "metrics": {
+          "views": 1771846,
+          "likes": 40279,
+          "comments": 840,
+          "shares": 16436,
+          "total_engagement": 1829401
+        }
+      },
+      {
+        "id": 100002,
+        "name": "Carlos Bennett",
+        "email": "carlos.bennett@example.com",
+        "metrics": {
+          "views": 801298,
+          "likes": 23163,
+          "comments": 514,
+          "shares": 1877,
+          "total_engagement": 826852
+        }
+      },
+      {
+        "id": 100003,
+        "name": "Zara Patel",
+        "email": "zara.patel@example.com",
+        "metrics": {
+          "views": 409630,
+          "likes": 13975,
+          "comments": 76,
+          "shares": 0,
+          "total_engagement": 423681
+        }
+      },
+      {
+        "id": 100004,
+        "name": "Leo Fischer",
+        "email": "leo.fischer@example.com",
+        "metrics": {
+          "views": 350616,
+          "likes": 20011,
+          "comments": 206,
+          "shares": 5930,
+          "total_engagement": 376763
+        }
+      }
+    ]
+  },
+  "meta": {
+    "current_page": 1,
+    "per_page": 20,
+    "row_count": 127,
+    "page_count": 7,
+    "has_more": true
+  }
+}
+```
+
+</ResponseExample>

@@ -30,7 +30,7 @@ All API endpoints are prefixed with:
 https://api.growi.io/api/public/v1
 ```
 
-## Available Endpoints
+## Available endpoints
 
 The Stats API provides the following endpoints:
 
@@ -42,7 +42,7 @@ Get available filters for your organization.
 GET /stats/filters?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
-### Content Platform Composition
+### Content platform composition
 
 Get a breakdown of content by platform.
 
@@ -58,7 +58,7 @@ Get time-series data for content engagement metrics.
 GET /stats/snapshots?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
-### Content 24h Data
+### Content 24h data
 
 Get 24-hour views and engagement metrics with comparison to previous period.
 
@@ -74,7 +74,7 @@ Get creator acquisition data with comparison to previous period.
 GET /stats/creators_24h?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
-### Top Creators by Engagement
+### Top creators by engagement
 
 Get your top-performing creators ranked by total engagement.
 
@@ -82,7 +82,7 @@ Get your top-performing creators ranked by total engagement.
 GET /stats/top_creators_by_engagement?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
 ```
 
-### Top Creators by Posts
+### Top creators by posts
 
 Get your most active creators ranked by post count.
 
@@ -90,7 +90,7 @@ Get your most active creators ranked by post count.
 GET /stats/top_creators_by_posts?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
 ```
 
-### Top Connected Accounts by Engagement
+### Top connected accounts by engagement
 
 Get your top-performing social accounts ranked by engagement.
 
@@ -98,7 +98,7 @@ Get your top-performing social accounts ranked by engagement.
 GET /stats/top_connected_accounts_by_engagement?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
 ```
 
-### Top Earning Creators
+### Top earning creators
 
 Get your top creators ranked by earnings.
 
@@ -114,7 +114,7 @@ Get payout data with comparison to previous period.
 GET /stats/payouts_24h?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
-### User Contents
+### User contents
 
 Get all user content creation data within a date range.
 
@@ -130,7 +130,7 @@ Get TikTok Shop GMV data with comparison to previous period.
 GET /stats/tik_tok_shop_gmv_24h?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
-### Top Posts by Views
+### Top posts by views
 
 Get your top-performing posts ranked by views. Optionally restrict the candidate post set by post creation time using `posted_at_start_date` and `posted_at_end_date` (both required together).
 
@@ -139,7 +139,7 @@ GET /stats/top_posts_by_views?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
 GET /stats/top_posts_by_views?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&posted_at_start_date=MM/DD/YYYY&posted_at_end_date=MM/DD/YYYY
 ```
 
-### Manual Campaign Progress
+### Manual campaign progress
 
 Get progress metrics for your manual campaigns.
 
@@ -147,7 +147,7 @@ Get progress metrics for your manual campaigns.
 GET /stats/manual_campaign_progress?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY
 ```
 
-### Top Creators by GMV
+### Top creators by GMV
 
 Get your top-performing creators ranked by Gross Merchandise Value (GMV).
 
@@ -155,7 +155,7 @@ Get your top-performing creators ranked by Gross Merchandise Value (GMV).
 GET /stats/top_creators_by_gmv?start_date=MM/DD/YYYY&end_date=MM/DD/YYYY&limit=5
 ```
 
-## Request Parameters
+## Request parameters
 
 All endpoints require the following parameters:
 
@@ -165,7 +165,7 @@ All endpoints require the following parameters:
 | `end_date`    | String  | End date in MM/DD/YYYY format            | Yes      |
 | `limit`       | Integer | Limit the number of results. Default is 4. Recommended is 20. Set to 10,000 to get all data. | No       |
 
-## Response Format
+## Response format
 
 Responses are returned in JSON format. A successful response includes:
 
@@ -178,7 +178,7 @@ Responses are returned in JSON format. A successful response includes:
 }
 ```
 
-## Example Usage
+## Example usage
 
 ### JavaScript/TypeScript
 
@@ -249,7 +249,7 @@ def fetch_content_platform_composition():
   </Accordion>
 </AccordionGroup>
 
-## Additional Resources
+## Additional resources
 
 - [API Reference](/api-reference)
 - [Authentication Guide](/authentication)

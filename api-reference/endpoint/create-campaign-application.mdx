@@ -1,5 +1,5 @@
 ---
-title: "Create Campaign Application"
+title: "Create campaign application"
 openapi: "POST /campaign_applications"
 ---
 
@@ -13,7 +13,7 @@ The endpoint creates the creator account if it doesn't exist yet, files a **pend
 
 **Idempotent**: repeat submissions for the same `email` + `campaign_id` return the existing application with `created: false` instead of creating a duplicate. Attribution keys not seen before are merged in; existing values are never overwritten. This endpoint is also exempt from the 2-second request-interval limit, so bursts of near-simultaneous form submissions are safe.
 
-## Request Body
+## Request body
 
 | Field | Type | Description | Required |
 | --- | --- | --- | --- |
@@ -47,7 +47,7 @@ Everything below is stored verbatim and echoed back inside the `attribution` obj
 | `tiktok_verified` | Integer | `1` when the TikTok account is verified |
 | `enriched_at` | String | When you enriched the TikTok profile data |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X POST "https://api.growi.io/api/public/v1/campaign_applications" \
@@ -80,7 +80,7 @@ curl -X POST "https://api.growi.io/api/public/v1/campaign_applications" \
   }'
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -96,7 +96,7 @@ curl -X POST "https://api.growi.io/api/public/v1/campaign_applications" \
 
 A repeat submission returns `200` with the same shape and `"created": false`.
 
-## Response Fields
+## Response fields
 
 | Field | Type | Description |
 | --- | --- | --- |
@@ -106,7 +106,7 @@ A repeat submission returns `200` with the same shape and `"created": false`.
 | `data.campaign_id` | Integer | The campaign applied to |
 | `data.created` | Boolean | `true` for a new application, `false` for an idempotent repeat |
 
-## Error Responses
+## Error responses
 
 **403 — plan or key**
 
@@ -126,8 +126,59 @@ A repeat submission returns `200` with the same shape and `"created": false`.
 { "error": "email is required" }
 ```
 
-## Use Cases
+## Use cases
 
 - **Host your own signup form**: keep the application experience on your domain (with your pixels and analytics firing natively) while applicants flow straight into Growi for review.
 - **Meta ads attribution**: send `fbp`/`fbc`/`event_id` with each applicant, then forward the `campaign_affiliate.activated` and `affiliate_sale.created` webhook events — which echo the same identifiers — to the Meta Conversions API so your media team can optimize on approvals and revenue.
 - **CRM sync**: pass your internal applicant `id`; it comes back as `attribution.external_id` on webhook events for painless matching.
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.growi.io/api/public/v1/campaign_applications" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "campaign_id": 51812,
+    "email": "maria.92.ambriz@gmail.com",
+    "first_name": "Maria",
+    "last_name": "Ambriz",
+    "tiktok_handle": "maria.ambriz66",
+    "id": 11177,
+    "created_at": "2026-07-31 13:13:16",
+    "fbp": "fb.1.1785503550741.5188770206",
+    "fbc": "fb.1.1785503550741.PAcGRvZgJmZGlk",
+    "fbclid": "PAcGRvZgJmZGlk",
+    "event_id": "012e8a42-6b26-43cf-9a66-0242c6bc0fd1",
+    "event_name": "AffiliateLead",
+    "event_source_url": "https://shop.example.com/tiktok-partner?utm_source=facebook",
+    "client_ip_address": "203.0.113.7",
+    "client_user_agent": "Mozilla/5.0 (iPhone)",
+    "referrer": "https://instagram.com/",
+    "utm_source": "facebook",
+    "utm_medium": "paid",
+    "utm_campaign": "COFFEE | LEAD | BOF",
+    "follower_count": 2992,
+    "likes_count": 16000,
+    "video_count": 139,
+    "tiktok_verified": 1
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 201
+{
+  "data": {
+    "invitation_id": 98123,
+    "status": "pending",
+    "user_id": 45678,
+    "campaign_id": 51812,
+    "created": true
+  }
+}
+```
+
+</ResponseExample>

@@ -1,11 +1,11 @@
 ---
-title: 'TikTok Shop LIVE Streams'
+title: "TikTok Shop LIVE streams"
 openapi: 'GET /tik_tok_shop/lives'
 ---
 
 Lists LIVE streams for your TikTok Shop — one row per LIVE with GMV totals plus the full set of LIVE engagement metrics (viewers, impressions, click-through rates, GPM) for the requested date range. This is the same data as the **Lives** tab of the TikTok Shop store page, with every filter the dashboard offers.
 
-## Response Fields
+## Response fields
 
 Each LIVE row contains:
 
@@ -37,7 +37,7 @@ Each LIVE row contains:
 
 The response envelope is `{ data, meta, additional_data }` (see the Creators endpoint for the envelope shape).
 
-## Request Parameters
+## Request parameters
 
 | Parameter | Type | Description | Required | Default |
 | --- | --- | --- | --- | --- |
@@ -54,7 +54,7 @@ The response envelope is `{ data, meta, additional_data }` (see the Creators end
 | `gmv_min` / `gmv_max` | Number | GMV range bounds in display currency units | No | — |
 | `organization_id` | Integer | Narrow to a child organization | No | — |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/lives?start_date=2026-07-01&end_date=2026-07-31&platform=all" \
@@ -62,7 +62,7 @@ curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/lives?start_date=20
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -114,7 +114,7 @@ curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/lives?start_date=20
 }
 ```
 
-## Use Cases
+## Use cases
 
 - Measuring LIVE selling performance (GMV, GPM, AOV) per stream
 - Comparing LIVE engagement funnels: impressions → product clicks → sales
@@ -127,3 +127,67 @@ curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/lives?start_date=20
 - The `total_*` money fields are raw display-currency numbers; the passthrough `*_amount` metrics (`gpm_amount`, `aov_amount`, `average_gmv_per_customer_amount`) are integer cents.
 - Rate fields (`engagement_rate`, `tap_through_rate`, `live_product_click_through_rate`) are display strings as provided by TikTok Shop.
 - Requests are rate limited (minimum 2 seconds between requests plus an hourly quota); see the `X-RateLimit-*` response headers.
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/lives?start_date=2026-07-01&end_date=2026-07-31&platform=all" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "data": [
+    {
+      "id": 55443,
+      "external_id": "7523400011122233344",
+      "external_creator_id": "7495033444...",
+      "title": "Summer restock LIVE 🍑",
+      "truncated_title": "Summer restock LIVE 🍑...",
+      "duration": "July 15, 2026 18:00 - 19:00",
+      "start_time": "2026-07-15T18:00:00Z",
+      "end_time": "2026-07-15T19:00:00Z",
+      "product": {
+        "id": 887766,
+        "title": "Peach Perfect Multivitamin",
+        "image_url": "https://..."
+      },
+      "affiliate_name": "Jane Creator",
+      "total_gmv": 7500.0,
+      "total_gmv_formatted": "$7,500.00",
+      "total_units_sold": 260,
+      "total_units_sold_formatted": "260",
+      "gpm_amount": 1250,
+      "aov_amount": 2885,
+      "unique_viewer_count": 4300,
+      "impression_count": 15800,
+      "engagement_rate": "8.4%",
+      "tap_through_rate": "3.1%"
+    }
+  ],
+  "meta": {
+    "row_count": 42,
+    "total_pages": 3,
+    "current_page": 1,
+    "next_page": 2,
+    "prev_page": null
+  },
+  "additional_data": {
+    "total_gmv": 98000.0,
+    "total_units_sold": 3400,
+    "total_sku_orders": 2980,
+    "total_commission": 14700.0,
+    "total_items_refunded": 85,
+    "total_refunded_amount": 2100.0,
+    "currency_symbol": "$",
+    "currency": "usd"
+  }
+}
+```
+
+</ResponseExample>

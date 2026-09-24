@@ -1,5 +1,5 @@
 ---
-title: "Get Creator Payouts"
+title: "Get creator payouts"
 openapi: "GET /stats/creator_payouts"
 ---
 
@@ -9,7 +9,7 @@ Returns a paginated list of creator payouts for the authenticated organization. 
   Rate limit: a minimum of **2 seconds** between requests per API key.
 </Note>
 
-## Request Parameters
+## Request parameters
 
 | Parameter        | Type                | Description                                                                               | Required |
 | ---------------- | ------------------- | ----------------------------------------------------------------------------------------- | -------- |
@@ -24,7 +24,7 @@ Returns a paginated list of creator payouts for the authenticated organization. 
 | `page`           | Integer             | Page number for pagination. Defaults to 1.                                                | No       |
 | `per_page`       | Integer             | Results per page. Defaults to 4, maximum 40. (`limit` is accepted as an alias.)           | No       |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?start_date=2026-03-01&end_date=2026-05-31&credits_only=true&per_page=20" \
@@ -32,7 +32,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?start_date
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -67,7 +67,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?start_date
 }
 ```
 
-## Response Fields
+## Response fields
 
 | Field                                | Type            | Description                                                                                                                                                         |
 | ------------------------------------ | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -100,8 +100,55 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?start_date
   Credit fields are populated only for organizations in the credits allowlist. For other orgs, `credits_enabled` is `false`, `total_credit_amount` is `0`, and `credit_name` / `formatted_total_credit_amount` are `null`.
 </Note>
 
-## Typical Workflow
+## Typical workflow
 
 1. `GET /stats/creator_payouts?start_date=…&end_date=…&credits_only=true` — fetch the list of credit payouts due to your creators.
 2. Pay each creator their credits in your own system.
 3. For each paid creator, `POST /stats/mark_credit_payout` with their `creator_payout_uuid` to record the payout in Growi.
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?start_date=2026-03-01&end_date=2026-05-31&credits_only=true&per_page=20" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "data": [
+    {
+      "id": 891439,
+      "uuid": "EXAMPLE_UUID",
+      "creator_name": "Example Creator",
+      "creator_avatar_url": "https://avatar.vercel.sh/12345",
+      "creator_id": 12345,
+      "amount": "$0.00",
+      "deal_date": "05/02/2026",
+      "since_date": "03/03/2026",
+      "campaign_category": "Ambassador Program",
+      "campaign_name": "Example Campaign",
+      "views": "Completed",
+      "status": "Pending",
+      "contents_delivered": 2,
+      "contents_required": 2,
+      "credits_enabled": true,
+      "credit_name": "credits",
+      "total_credit_amount": 750,
+      "formatted_total_credit_amount": "750 credits"
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "row_count": 184,
+    "page_count": 46
+  }
+}
+```
+
+</ResponseExample>

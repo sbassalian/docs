@@ -1,5 +1,5 @@
 ---
-title: "List Campaign Affiliates"
+title: "List campaign affiliates"
 openapi: "GET /campaign_affiliates"
 ---
 
@@ -38,7 +38,7 @@ curl -X GET "https://api.growi.io/api/public/v1/campaign_affiliates?campaign_id=
 An unknown `campaign_id`, or one that belongs to a different organization, returns **HTTP 200 with an empty `affiliates` array** — not a `404`. There is no cross-organization data leakage. Check for an empty list rather than relying on an error status.
 </Note>
 
-## Request Parameters
+## Request parameters
 
 | Parameter     | Type    | Description                                                                                                                                                                  | Required |
 | ------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
@@ -51,7 +51,7 @@ An unknown `campaign_id`, or one that belongs to a different organization, retur
 Page size is fixed server-side at **25**. There is no `per`/`per_page` parameter on this endpoint.
 </Note>
 
-## Request Examples
+## Request examples
 
 List the active creators in a specific campaign:
 
@@ -74,7 +74,7 @@ curl -X GET "https://api.growi.io/api/public/v1/campaign_affiliates?campaign_id=
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
 ```
 
-## Response Example
+## Response example
 
 Without pagination, the response is `{ "affiliates": [ ... ] }`. The example below is trimmed to the documented fields; the real payload contains additional campaign-configuration and commission fields per creator.
 
@@ -128,7 +128,7 @@ When `pagination=true`, the response also includes a `meta` block:
 }
 ```
 
-## Response Fields
+## Response fields
 
 The documented subset most useful for listing the creators in a campaign:
 
@@ -175,7 +175,7 @@ Send your organization's public API key as a Bearer token:
 
 This is a read-only `GET`, so **viewer (read-only) API keys** can call it. Keys are scoped to a single organization, and results are always anchored to the key's organization. See [Rate Limits & Authentication](/api-reference/introduction) for shared rate-limit details (a 2-second burst minimum and an hourly cap per key, with `X-RateLimit-*` response headers).
 
-## Error Responses
+## Error responses
 
 | Status | Body                                                                                                          | When                            |
 | ------ | ------------------------------------------------------------------------------------------------------------- | ------------------------------- |
@@ -187,7 +187,7 @@ This is a read-only `GET`, so **viewer (read-only) API keys** can call it. Keys 
 There is **no `404`** for an unknown `campaign_id` — the endpoint returns `200` with an empty `affiliates` array. This is a common integrator gotcha; check for an empty list rather than an error status.
 </Note>
 
-## Use Cases
+## Use cases
 
 This endpoint is useful for:
 
@@ -196,3 +196,74 @@ This endpoint is useful for:
 - **Status segmentation**: Filter by `status` to separate active, completed, or removed creators within a campaign.
 - **Performance review**: Use `revenue_generated`, `affiliate_amount_earned`, and `order_count` to rank creators in a campaign.
 - **Drill-down**: Use `affiliates[].id` with the single campaign-affiliate endpoint, or `user_id` to join against other API data.
+
+<RequestExample>
+
+```bash Active creators
+curl -X GET "https://api.growi.io/api/public/v1/campaign_affiliates?campaign_id=123" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+```bash By status
+curl -X GET "https://api.growi.io/api/public/v1/campaign_affiliates?campaign_id=123&status=completed" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+```bash Paginated
+curl -X GET "https://api.growi.io/api/public/v1/campaign_affiliates?campaign_id=123&pagination=true&page=2" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "affiliates": [
+    {
+      "id": 3490313,
+      "user_id": 2628998,
+      "campaign_id": 123,
+      "campaign_name": "Summer Collection 2024",
+      "status": "active",
+      "affiliate_name": "Natalie Garay",
+      "affiliate_email": "creator@example.com",
+      "affiliate_phone_number": "+15551234567",
+      "affiliate_avatar_url": "https://imagedelivery.net/abc/avatar.png",
+      "affiliate_location": "Temecula, CA 92591, US",
+      "affiliate_age": 24,
+      "affiliate_gender": "female",
+      "connected_accounts": [
+        {
+          "platform": "Instagram",
+          "username": "nataliemgaray",
+          "profile_share_url": "https://www.instagram.com/nataliemgaray/"
+        }
+      ],
+      "discord_id": null,
+      "tag": "natalie-g",
+      "unique_tag": "natalie-g-3490313",
+      "affiliate_link": "https://growi.io/r/natalie-g",
+      "revenue_generated": 14245.57,
+      "affiliate_amount_earned": 1403.31,
+      "order_count": 150,
+      "created_at": "January 16, 2026"
+      // ... additional campaign-config & commission fields omitted
+    }
+  ]
+}
+```
+
+```json 200 paginated
+{
+  "affiliates": [ /* ... */ ],
+  "meta": {
+    "row_count": 132,
+    "page_count": 6,
+    "current_page": 1
+  }
+}
+```
+
+</ResponseExample>

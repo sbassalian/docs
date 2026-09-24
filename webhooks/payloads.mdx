@@ -1,0 +1,115 @@
+---
+title: "Payload reference"
+---
+
+## Payload format
+
+The request body is a single JSON object with the following fields:
+
+<ResponseField name="event" type="string" required>
+  Event name that indicates what happened.
+</ResponseField>
+
+<ResponseField name="occurred_at" type="string" required>
+  ISO-8601 timestamp of the underlying record update.
+</ResponseField>
+
+<ResponseField name="campaign_affiliate_id" type="integer" required>
+  Internal ID of the campaign-creator association record.
+</ResponseField>
+
+<ResponseField name="campaign_id" type="integer" required>
+  Campaign ID.
+</ResponseField>
+
+<ResponseField name="organization_id" type="integer" required>
+  Organization ID.
+</ResponseField>
+
+<ResponseField name="user_id" type="integer" required>
+  Creator's user ID.
+</ResponseField>
+
+<ResponseField name="status" type="string" required>
+  The raw status value on the record (e.g., `active`, `removed`, `left`).
+</ResponseField>
+
+<ResponseField name="campaign_name" type="string">
+  Campaign name, when available.
+</ResponseField>
+
+<ResponseField name="organization_slug" type="string">
+  Brand slug, when available.
+</ResponseField>
+
+<ResponseField name="user_email" type="string">
+  Creator email, when available.
+</ResponseField>
+
+<ResponseField name="user_name" type="string">
+  Creator name, when available.
+</ResponseField>
+
+<ResponseField name="tag" type="string">
+  Default affiliate tag for the creator on this campaign, when available. For `code_updated`, this is the **new** code.
+</ResponseField>
+
+<ResponseField name="previous_tag" type="string">
+  Present on `campaign_affiliate.code_updated` only. The affiliate code **before** the change.
+</ResponseField>
+
+<ResponseField name="idempotency_key" type="string">
+  Stable key for deduplicating redelivered events (delivery is at-least-once).
+</ResponseField>
+
+<ResponseField name="attribution" type="object">
+  Present when the creator was submitted through the [campaign applications API](/api-reference/endpoint/create-campaign-application). Echoes the marketing attribution you sent with the applicant — `fbp`, `fbc`, `fbclid`, `event_id`, `event_source_url`, UTM parameters, your `external_id`, and TikTok enrichment — so you can match the creator in your ad platform (for example, forwarding to Meta Conversions API).
+</ResponseField>
+
+<Note>
+  Optional fields are omitted when values are not present. For status events, `occurred_at` uses the campaign affiliation record's `updated_at` timestamp. For `code_updated`, it is the time the code change was committed.
+</Note>
+
+## Sale events
+
+`affiliate_sale.created` fires when a sale is attributed to one of your creators (Shopify, website/API conversions, and app sales). On top of the shared fields above (`campaign_name`, `organization_slug`, `user_email`, `user_name`, `tag`, `attribution`), the payload carries:
+
+<ResponseField name="affiliate_sale_id" type="integer" required>
+  Growi's id for the sale.
+</ResponseField>
+
+<ResponseField name="order_id" type="string" required>
+  The external order id (e.g. the Shopify order).
+</ResponseField>
+
+<ResponseField name="total_cents" type="integer" required>
+  Order total in cents.
+</ResponseField>
+
+<ResponseField name="subtotal_cents" type="integer">
+  Order subtotal in cents.
+</ResponseField>
+
+<ResponseField name="commission_cents" type="integer">
+  The creator's commission in cents.
+</ResponseField>
+
+<ResponseField name="currency" type="string" required>
+  ISO currency code (lowercase, e.g. `usd`).
+</ResponseField>
+
+<ResponseField name="platform" type="string" required>
+  `shopify`, `website`, `ios`, or `android`.
+</ResponseField>
+
+<ResponseField name="sale_type" type="string">
+  `one_time` or `subscription`.
+</ResponseField>
+
+<ResponseField name="sale_occurrence" type="string">
+  `initial` for the customer's first attributed sale, `recurring` for later purchases.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Payout status of the sale (e.g. `unpaid`).
+</ResponseField>

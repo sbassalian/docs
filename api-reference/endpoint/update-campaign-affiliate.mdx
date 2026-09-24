@@ -1,5 +1,5 @@
 ---
-title: "Update Campaign Affiliate"
+title: "Update campaign affiliate"
 openapi: "PATCH /campaign_affiliates/{id}"
 ---
 
@@ -9,19 +9,19 @@ Codes are unique inside your organization. A rename fires `campaign_affiliate.co
 
 For 300+ creators, prefer [Bulk Update Campaign Affiliates](/api-reference/endpoint/bulk-update-campaign-affiliates) instead of looping this endpoint (the public API also enforces a 2-second gap between requests).
 
-## Path Parameters
+## Path parameters
 
 | Parameter | Type    | Description                                              | Required |
 | --------- | ------- | -------------------------------------------------------- | -------- |
 | `id`      | Integer | Campaign-affiliate (enrollment) ID from the list endpoint | Yes      |
 
-## Request Body
+## Request body
 
 | Field | Type   | Description                                              | Required |
 | ----- | ------ | -------------------------------------------------------- | -------- |
 | `tag` | String | New default affiliate tag. Stored lowercase. Must be unique in the org. | Yes      |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X PATCH "https://api.growi.io/api/public/v1/campaign_affiliates/3490313" \
@@ -32,7 +32,7 @@ curl -X PATCH "https://api.growi.io/api/public/v1/campaign_affiliates/3490313" \
      }'
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -46,7 +46,7 @@ curl -X PATCH "https://api.growi.io/api/public/v1/campaign_affiliates/3490313" \
 
 Send your organization's public API key as a Bearer token. **Viewer (read-only) keys cannot call this.** See [Rate Limits & Authentication](/api-reference/introduction).
 
-## Error Responses
+## Error responses
 
 | Status | Body | When |
 | ------ | ---- | ---- |
@@ -55,3 +55,28 @@ Send your organization's public API key as a Bearer token. **Viewer (read-only) 
 | `422` | `{ "error": "Campaign affiliate not found." }` | Unknown or foreign enrollment id. |
 | `422` | `{ "error": "tag is required" }` | Missing / blank `tag`. |
 | `422` | `{ "error": "Sorry, that code is already taken. Please try a different one." }` | Another creator in the org already holds this tag. |
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.growi.io/api/public/v1/campaign_affiliates/3490313" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "tag": "THEIREXISTINGCODE"
+     }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "id": 3490313,
+  "tag": "theirexistingcode"
+}
+```
+
+</ResponseExample>

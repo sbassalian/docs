@@ -1,18 +1,18 @@
 ---
-title: 'Get TikTok Shop GMV 24h'
+title: "Get TikTok Shop GMV 24h"
 openapi: 'GET /stats/tik_tok_shop_gmv_24h'
 ---
 
 Retrieves TikTok Shop Gross Merchandise Value (GMV) data with daily breakdown and comparison to previous period. Returns time-series data showing GMV performance, order counts, and period-over-period comparisons for each day in the specified date range.
 
-## Request Parameters
+## Request parameters
 
 | Parameter | Type | Description | Required |
 | --- | --- | --- | --- |
 | `start_date` | String | Start date in MM/DD/YYYY format | Yes |
 | `end_date` | String | End date in MM/DD/YYYY format | Yes |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/stats/tik_tok_shop_gmv_24h?start_date=10/04/2025&end_date=11/03/2025" \
@@ -20,7 +20,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/tik_tok_shop_gmv_24h?start
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -68,7 +68,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/tik_tok_shop_gmv_24h?start
 }
 ```
 
-## Response Fields
+## Response fields
 
 | Field | Type | Description |
 | --- | --- | --- |
@@ -83,7 +83,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/tik_tok_shop_gmv_24h?start
 | `total_order_count` | Integer | Cumulative order count for the current period |
 | `last_total_order_count` | Integer | Cumulative order count for the previous period |
 
-## Use Cases
+## Use cases
 
 This endpoint is useful for:
 - Tracking daily TikTok Shop GMV performance over time
@@ -91,3 +91,63 @@ This endpoint is useful for:
 - Building custom GMV dashboards and analytics
 - Monitoring order volume trends
 - Calculating period-over-period growth rates 
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/stats/tik_tok_shop_gmv_24h?start_date=10/04/2025&end_date=11/03/2025" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "data": {
+    "tik_tok_shop_gmv_24h": [
+      {
+        "date": "2025-10-04",
+        "last_date": 1756872000,
+        "current": "$1,985.10",
+        "last": "$2,684.88",
+        "last_total": "$78,445.73",
+        "total": "$55,991.01",
+        "order_count": 68,
+        "last_order_count": 99,
+        "total_order_count": 1759,
+        "last_total_order_count": 2489
+      },
+      {
+        "date": "2025-10-05",
+        "last_date": 1756958400,
+        "current": "$1,885.52",
+        "last": "$2,628.08",
+        "last_total": "$78,445.73",
+        "total": "$55,991.01",
+        "order_count": 57,
+        "last_order_count": 92,
+        "total_order_count": 1759,
+        "last_total_order_count": 2489
+      },
+      {
+        "date": "2025-10-06",
+        "last_date": 1757044800,
+        "current": "$1,832.69",
+        "last": "$4,073.24",
+        "last_total": "$78,445.73",
+        "total": "$55,991.01",
+        "order_count": 57,
+        "last_order_count": 138,
+        "total_order_count": 1759,
+        "last_total_order_count": 2489
+      }
+    ]
+  }
+}
+```
+
+</ResponseExample>

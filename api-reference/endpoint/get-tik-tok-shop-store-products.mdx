@@ -1,5 +1,5 @@
 ---
-title: 'TikTok Shop Products'
+title: "TikTok Shop products"
 openapi: 'GET /tik_tok_shop/products'
 ---
 
@@ -7,7 +7,7 @@ Lists products for your TikTok Shop — one row per product, with GMV, units sol
 
 For the per-creator breakdown of product sales, see [TikTok Shop Creators by Product](/api-reference/endpoint/get-tik-tok-shop-store-product-creators).
 
-## Response Fields
+## Response fields
 
 Each product row contains:
 
@@ -32,7 +32,7 @@ Each product row contains:
 
 The response envelope is `{ data, meta, additional_data }`; `meta` additionally includes `page_size` (rows on this page) and `additional_data` includes `product_count`.
 
-## Request Parameters
+## Request parameters
 
 | Parameter | Type | Description | Required | Default |
 | --- | --- | --- | --- | --- |
@@ -48,7 +48,7 @@ The response envelope is `{ data, meta, additional_data }`; `meta` additionally 
 | `exclude_contests` | String | `'true'` to exclude TikTok Shop contest campaigns | No | — |
 | `organization_id` | Integer | Narrow to a child organization | No | — |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/products?start_date=2026-07-01&end_date=2026-07-31" \
@@ -56,7 +56,7 @@ curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/products?start_date
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -104,7 +104,7 @@ curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/products?start_date
 }
 ```
 
-## Use Cases
+## Use cases
 
 - Ranking products by creator-driven GMV
 - Tracking how many creators and how much content each product has
@@ -116,3 +116,63 @@ curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/products?start_date
 - Results are always ordered by total GMV descending; there is no sort parameter.
 - Totals are summed across your organization's tracked creators (creators with tracked content), matching the dashboard's Products tab.
 - Requests are rate limited (minimum 2 seconds between requests plus an hourly quota); see the `X-RateLimit-*` response headers.
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/products?start_date=2026-07-01&end_date=2026-07-31" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "data": [
+    {
+      "id": "1729548090545311965",
+      "external_product_id": "1729548090545311965",
+      "product_name": "Peach Perfect Multivitamin",
+      "product_image_url": "https://...",
+      "latest_date": "2026-07-30",
+      "total_gmv": 127054.59,
+      "total_gmv_formatted": "$127,054.59",
+      "total_units_sold": 4086,
+      "total_units_sold_formatted": "4,086",
+      "total_sku_orders": 3900,
+      "total_sku_orders_formatted": "3,900",
+      "total_commission": 19058.19,
+      "total_commission_formatted": "$19,058.19",
+      "total_videos": 456,
+      "total_videos_formatted": "456",
+      "total_lives": 12,
+      "total_lives_formatted": "12",
+      "sales_creator_count": 210,
+      "sales_creator_count_formatted": "210"
+    }
+  ],
+  "meta": {
+    "row_count": 58,
+    "total_pages": 3,
+    "current_page": 1,
+    "next_page": 2,
+    "prev_page": null,
+    "page_size": 20
+  },
+  "additional_data": {
+    "total_gmv": 250000.5,
+    "total_units_sold": 10400,
+    "total_sku_orders": 9020,
+    "total_commission": 37500.25,
+    "total_items_refunded": 310,
+    "total_refunded_amount": 6100.0,
+    "currency_symbol": "$",
+    "currency": "usd"
+  }
+}
+```
+
+</ResponseExample>

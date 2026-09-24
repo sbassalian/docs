@@ -1,11 +1,11 @@
 ---
-title: "Get Brands"
+title: "Get brands"
 openapi: "GET /organizations/brands"
 ---
 
 Retrieves a list of all available brands for your organization. This endpoint returns basic brand information including brand IDs and names that can be used for filtering and organization purposes.
 
-## Request Parameters
+## Request parameters
 
 This endpoint does not require any specific parameters, but standard authentication is required.
 
@@ -13,7 +13,7 @@ This endpoint does not require any specific parameters, but standard authenticat
 | --------- | ---- | --------------------------------------------------- | -------- |
 | None      | -    | This endpoint does not accept additional parameters | -        |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/organizations/brands" \
@@ -21,7 +21,7 @@ curl -X GET "https://api.growi.io/api/public/v1/organizations/brands" \
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -39,7 +39,7 @@ curl -X GET "https://api.growi.io/api/public/v1/organizations/brands" \
 }
 ```
 
-## Response Fields
+## Response fields
 
 | Field           | Type    | Description                                  |
 | --------------- | ------- | -------------------------------------------- |
@@ -48,14 +48,14 @@ curl -X GET "https://api.growi.io/api/public/v1/organizations/brands" \
 | `brands[].id`   | Integer | Unique identifier for the brand              |
 | `brands[].name` | String  | Display name of the brand                    |
 
-## Use Cases
+## Use cases
 
 - **Brand Filtering**: Use brand IDs to filter data in other API endpoints
 - **Brand Management**: Retrieve available brands for management interfaces
 - **Organization Setup**: Get brand information for initial application setup
 - **Reporting**: Include brand names in reports and analytics dashboards
 
-## Error Responses
+## Error responses
 
 ```json
 {
@@ -68,3 +68,33 @@ Common error scenarios:
 - **401 Unauthorized**: Invalid or missing Bearer token
 - **403 Forbidden**: API key doesn't have permission to access brands
 - **500 Internal Server Error**: Server-side error occurred
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/organizations/brands" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "brands": [
+    {
+      "id": 0,
+      "name": "Name"
+    },
+    {
+      "id": 1,
+      "name": "Name 2"
+    }
+  ]
+}
+```
+
+</ResponseExample>

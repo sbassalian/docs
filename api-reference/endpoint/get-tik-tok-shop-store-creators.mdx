@@ -1,11 +1,11 @@
 ---
-title: 'TikTok Shop Creators'
+title: "TikTok Shop creators"
 openapi: 'GET /tik_tok_shop/creators'
 ---
 
 Lists creator performance for your TikTok Shop — one row per creator with GMV, units sold, orders, commission, and refund totals for the requested date range. This is the same data as the **Creators** tab of the TikTok Shop store page, with every filter the dashboard offers.
 
-## Response Fields
+## Response fields
 
 Each creator row contains:
 
@@ -30,7 +30,7 @@ Each creator row contains:
 
 The response envelope is `{ data, meta, additional_data }`: `meta` carries pagination (`row_count`, `total_pages`, `current_page`, `next_page`, `prev_page`) and `additional_data` carries raw totals across the full result set plus `currency` / `currency_symbol`.
 
-## Request Parameters
+## Request parameters
 
 | Parameter | Type | Description | Required | Default |
 | --- | --- | --- | --- | --- |
@@ -49,7 +49,7 @@ The response envelope is `{ data, meta, additional_data }`: `meta` carries pagin
 | `exclude_contests` | String | `'true'` to exclude TikTok Shop contest campaigns | No | — |
 | `organization_id` | Integer | Narrow to a child organization of the API key organization | No | — |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/creators?start_date=2026-07-01&end_date=2026-07-31&platform=all&per_page=20" \
@@ -57,7 +57,7 @@ curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/creators?start_date
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -110,7 +110,7 @@ curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/creators?start_date
 }
 ```
 
-## Use Cases
+## Use cases
 
 - Building creator leaderboards and performance dashboards from your TikTok Shop data
 - Reconciling creator commissions against GMV for payout workflows
@@ -123,3 +123,68 @@ curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/creators?start_date
 - Money fields are raw numbers in display currency units (dollars for USD shops); use the `*_formatted` variants for display.
 - Dates are inclusive; the dashboard's default view is the last 30 days.
 - Requests are rate limited (minimum 2 seconds between requests plus an hourly quota); see the `X-RateLimit-*` response headers.
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/tik_tok_shop/creators?start_date=2026-07-01&end_date=2026-07-31&platform=all&per_page=20" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "data": [
+    {
+      "id": 123456,
+      "external_id": "7495033444...",
+      "affiliate_id": 98765,
+      "affiliate_name": "Jane Creator",
+      "affiliate_email": "jane@example.com",
+      "affiliate_avatar_url": "https://...",
+      "connected_account": {
+        "id": 4321,
+        "username": "janecreates",
+        "profile_share_url": "https://www.tiktok.com/@janecreates"
+      },
+      "total_gmv": 12345.67,
+      "total_gmv_formatted": "$12,345.67",
+      "total_units_sold": 480,
+      "total_units_sold_formatted": "480",
+      "total_sku_orders": 402,
+      "total_sku_orders_formatted": "402",
+      "total_commission": 1851.85,
+      "total_commission_formatted": "$1,851.85",
+      "total_refunded_amount": 250.0,
+      "total_refunded_amount_formatted": "$250.00",
+      "total_items_refunded": 12,
+      "total_items_refunded_formatted": "12",
+      "total_posts_with_gmv": 35,
+      "total_posts_with_gmv_formatted": "35"
+    }
+  ],
+  "meta": {
+    "row_count": 214,
+    "total_pages": 11,
+    "current_page": 1,
+    "next_page": 2,
+    "prev_page": null
+  },
+  "additional_data": {
+    "total_gmv": 250000.5,
+    "total_units_sold": 10400,
+    "total_sku_orders": 9020,
+    "total_commission": 37500.25,
+    "total_items_refunded": 310,
+    "total_refunded_amount": 6100.0,
+    "currency_symbol": "$",
+    "currency": "usd"
+  }
+}
+```
+
+</ResponseExample>

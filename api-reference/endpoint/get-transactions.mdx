@@ -1,11 +1,11 @@
 ---
-title: "Get Transactions"
+title: "Get transactions"
 openapi: "GET /stats/transactions"
 ---
 
 Retrieves transaction history including payments, payouts, deposits, withdrawals, and disputes with detailed financial information.
 
-## Request Parameters
+## Request parameters
 
 | Parameter                | Type    | Description                                                          | Required |
 | ------------------------ | ------- | -------------------------------------------------------------------- | -------- |
@@ -17,7 +17,7 @@ Retrieves transaction history including payments, payouts, deposits, withdrawals
 | `transaction_type`       | String  | Filter by transaction type (payment, payout, deposit, withdrawal, dispute) | No |
 | `search`                 | String  | Search transactions by creator name                                  | No       |
 
-## Request Example
+## Request example
 
 ```bash
 curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_page=20&transaction_type=payout&start_date=10/01/25&end_date=10/31/25" \
@@ -25,7 +25,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
      -H "Content-Type: application/json"
 ```
 
-## Response Example
+## Response example
 
 ```json
 {
@@ -109,9 +109,9 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
 }
 ```
 
-## Response Fields
+## Response fields
 
-### Transaction Object
+### Transaction object
 
 | Field                    | Type    | Description                                              |
 | ------------------------ | ------- | -------------------------------------------------------- |
@@ -138,7 +138,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
 | `organization_slug`      | String  | Organization slug identifier                             |
 | `invoice_description`    | String  | Description from associated invoice                      |
 
-### Invoice Object (when applicable)
+### Invoice object (when applicable)
 
 | Field                                    | Type    | Description                                    |
 | ---------------------------------------- | ------- | ---------------------------------------------- |
@@ -154,7 +154,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
 | `invoice.payment_method`                 | String  | Payment method used                            |
 | `invoice.line_items`                     | Array   | Array of line item objects                     |
 
-### Line Item Object
+### Line item object
 
 | Field                          | Type    | Description                           |
 | ------------------------------ | ------- | ------------------------------------- |
@@ -176,7 +176,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
 | `meta.page_count`    | Integer | Total number of pages          |
 | `meta.current_page`  | Integer | Current page number            |
 
-### Additional Data (Financial Summary)
+### Additional data (financial summary)
 
 | Field                              | Type   | Description                                      |
 | ---------------------------------- | ------ | ------------------------------------------------ |
@@ -190,7 +190,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
 | `additional_data.payout_other_sum` | Number | Total payouts from payment methods (in cents)  |
 | `additional_data.payout_balance_sum` | Number | Total payouts from balance (in cents)         |
 
-## Transaction Types
+## Transaction types
 
 - **Payment**: Incoming payments from customers
 - **Payout**: Outgoing payments to creators or external accounts
@@ -202,10 +202,106 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
 
 This endpoint requires viewer role or higher. Users with 'viewer' role will receive a 401 Unauthorized error.
 
-## Error Responses
+## Error responses
 
 | Status Code | Description                                    |
 | ----------- | ---------------------------------------------- |
 | 401         | Unauthorized - Invalid API key or viewer role  |
 | 400         | Bad Request - Invalid parameters               |
 | 500         | Internal Server Error                          |
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_page=20&transaction_type=payout&start_date=10/01/25&end_date=10/31/25" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "data": [
+    {
+      "id": 5525,
+      "formatted_amount": "-$1,250.00",
+      "transaction_type": "Payout",
+      "currency": "usd",
+      "formatted_fee_amount": "$0.00",
+      "formatted_total": "-$1,250.00",
+      "status": "Paid",
+      "balance": 0,
+      "pending_balance": 0,
+      "description": "",
+      "organization_id": 12077,
+      "creator_payout_id": null,
+      "invoice_id": 14438,
+      "payment_method_id": null,
+      "external_id": "8cbb9e8b-0a5b-4a39-92c6-c166fd067136",
+      "source": "Balance",
+      "destination": "Multiple Creators",
+      "created": 1759952556,
+      "organization_name": "Growi",
+      "organization_logo_url": "https://imagedelivery.net/BFyhPbEwK3CmNvljb-vAxA/3cd500ed-879f-4eb4-ae82-8dbd539d6b00/public",
+      "invoice": {
+        "id": 14438,
+        "currency": "usd",
+        "hosted_invoice_url": null,
+        "status": "paid",
+        "total_formatted": 1250,
+        "created_at_formatted": "10/08/25",
+        "description": "brand manager - mo #2 - 50% upfront - retainer bump",
+        "pretty_status": "Paid",
+        "line_items": [
+          {
+            "id": 40958,
+            "amount": 1250,
+            "user_name": "Sophia",
+            "campaign_name": "Growi campaign",
+            "user_id": 162177,
+            "order_id": null,
+            "status": "sent_from_account",
+            "creator_payout_id": 164340,
+            "description": "",
+            "refunded": false
+          }
+        ],
+        "organization_slug": "growi",
+        "organization_name": "Growi",
+        "invoice_contract_document_status": null,
+        "download_invoice_contract_document": null,
+        "summary": null,
+        "processing_fee": null,
+        "paid_at": "2025-10-08T19:42:36.661Z",
+        "payment_method": "Balance",
+        "organization_location": null,
+        "organization_vat_number": null,
+        "organization_company_registration": null
+      },
+      "organization_slug": "growi",
+      "invoice_description": ""
+    }
+  ],
+  "meta": {
+    "row_count": 42,
+    "page_count": 3,
+    "current_page": 1
+  },
+  "additional_data": {
+    "amount_sum": 7283.73,
+    "fee_sum": -557.4,
+    "payout_sum": -11916.27,
+    "payment_sum": 19200,
+    "deposit_sum": 0,
+    "withdrawal_sum": 0,
+    "dispute_sum": 0,
+    "payout_other_sum": 0,
+    "payout_balance_sum": -11916.27
+  }
+}
+```
+
+</ResponseExample>

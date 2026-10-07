@@ -1,0 +1,205 @@
+---
+title: "Connect Claude to Growi"
+description: "Ask Claude about your campaigns, creators, sales and payouts, and let it make changes you approve."
+---
+
+<Info>
+  **Prerequisite** A Growi organization on the Growth plan or higher, and a
+  Growi login that belongs to that organization. Claude Code and Cursor also
+  need an API key from Settings → Developer.
+</Info>
+
+# How to connect Claude to Growi
+
+Growi runs an MCP server at `https://api.growi.io/mcp`. Once Claude is
+connected, it can look up your campaigns, creators, orders, posts and payouts,
+explain how a payout was calculated, and export the results. It works in
+claude.ai, Claude Desktop, Claude Code, Cursor, and any other client that
+supports MCP.
+
+You can find the connection details in the dashboard under **Settings →
+Developer → AI assistants**.
+
+## What Claude can do, by role
+
+What Claude can do depends on your role in the organization you connect.
+
+| Your role | What Claude can do |
+| --- | --- |
+| **Viewer** | Read your organization's data: campaigns, creators, orders, sales, posts, products, payouts, invoices and sample applications. |
+| **Owner or admin** | Everything a viewer can do. Claude can also make changes you approve, such as campaign settings, commission and tier rates, discount codes and adding or removing creators. It can also see masked customer details and creator verification info. |
+
+- Every change Claude makes is logged, with who asked for it.
+- Claude only ever sees the organization you connected. A parent organization
+  also sees its child brands, the same as the API.
+- Growi's internal platform tools are never available to Claude.
+
+<Note>
+  Claude only offers to read data if you connected with an older API key or a
+  key nobody owns. Reconnect through claude.ai (or create a new key while signed
+  in) to get the tools your role allows.
+</Note>
+
+## 1. Connect in claude.ai or Claude Desktop (recommended)
+
+This option needs no API key. You sign in with your Growi login, so Claude
+gets the access that matches your role.
+
+1. In claude.ai or Claude Desktop, open **Settings → Connectors** and click
+   **Add custom connector**.
+2. Name it `Growi` and paste the URL `https://api.growi.io/mcp`.
+3. Click **Connect**. Claude sends you to Growi to sign in.
+4. Pick the organization you want to connect and click **Allow**.
+
+The consent screen tells you what Claude will be able to do. If you are an
+owner or admin, it reads: "Claude can read your organization's Growi data, make
+changes you approve, and see masked customer details and creator verification
+info. Every change is logged."
+
+Approving creates a key named `growi-oauth-…` in **Settings → Developer → API
+keys**. Delete that key to disconnect.
+
+ChatGPT's custom connector dialog uses the same URL and sign-in.
+
+## 2. Connect with an API key
+
+Claude Code, Cursor and Claude Desktop's config file authenticate with an API
+key instead. Create one in **Settings → Developer → API keys**. The AI
+assistants panel below it fills your key into these snippets.
+
+<Tabs>
+  <Tab title="Claude Code">
+    ```bash
+    claude mcp add --transport http growi https://api.growi.io/mcp \
+      --header "Authorization: Bearer growi-sk-YOUR-API-KEY"
+    ```
+  </Tab>
+  <Tab title="Cursor">
+    Add to `.cursor/mcp.json`:
+
+    ```json
+    {
+      "mcpServers": {
+        "growi": {
+          "url": "https://api.growi.io/mcp",
+          "headers": { "Authorization": "Bearer growi-sk-YOUR-API-KEY" }
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Claude Desktop">
+    Add to `claude_desktop_config.json` (**Settings → Developer → Edit
+    Config**). This needs Node.js.
+
+    ```json
+    {
+      "mcpServers": {
+        "growi": {
+          "command": "npx",
+          "args": ["-y", "mcp-remote", "https://api.growi.io/mcp",
+                   "--header", "Authorization: Bearer growi-sk-YOUR-API-KEY"]
+        }
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+A key acts as the person who created it, with their current role. If their
+role changes, so does what the key can do. If they leave the organization, the
+key stops working.
+
+<Warning>
+  Keys created before keys were tied to a person, and keys with no owner, are
+  **read-only** on the MCP server. To let Claude make changes, create a new key
+  while signed in as an owner or admin, or connect with your Growi login
+  instead.
+</Warning>
+
+Anyone who has your key can use your access, so treat it like a password.
+
+## 3. How changes work
+
+Claude asks before it changes anything.
+
+1. Ask for the change, for example "Raise the Spring campaign's commission to
+   15%".
+2. Claude previews the change and shows you exactly what will happen.
+3. Confirm, and Claude applies it.
+
+For changes that affect money or remove data, such as commission and tier
+rates, view payouts, removing creators or refunding your balance, Growi itself
+requires the confirmation. It works once and expires after 10 minutes. If any
+detail changes after the preview, Claude has to preview again.
+
+## 4. Getting data out
+
+Reports such as view bonus counts and payout breakdowns come with a download
+link.
+
+- **CSV links** expire after **1 hour**. They contain every row, even when
+  Claude's reply only summarizes the top results.
+- **PDF reports** are available for view bonus summaries and payout
+  explanations. Use them when you need a formal record to share. Their links
+  also expire after 1 hour.
+- **Large exports** of more than 50,000 rows are too big to download directly.
+  Growi emails them to the person who connected Claude instead.
+
+A link stops working if the key is deleted or the person leaves the
+organization.
+
+## 5. Example prompts
+
+- "How many 10K and 100K view bonuses did Jane Doe and John Smith earn in
+  September?"
+- "Why was this creator paid $1,240 last cycle?"
+- "Which creator payouts are due this week?"
+- "What were my top posts last month?"
+- "Which creators drove the most revenue in the Spring campaign?"
+- "Show me the sample applications still waiting for approval."
+
+Claude can also look up how Growi works, for example how payout cycles and
+view bonuses are counted, so you can ask "how" and "why" questions as well.
+
+## Limits
+
+Each connection gets **60 units per minute** and **1,000 units per hour**.
+These limits are separate from the REST API's limits.
+
+| Call | Units |
+| --- | --- |
+| A normal read | 1 |
+| A change | 3 |
+| A heavy report, such as view bonus counts, payout explanations or sales attribution | 5 |
+
+If you go over a limit, Claude is told how long to wait before trying again.
+
+## Revoking access
+
+Open **Settings → Developer → API keys** and delete the key. Keys added by
+claude.ai and Claude Desktop sign-in start with `growi-oauth-`. Deleting a key
+disconnects Claude right away and stops any download links it created.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Claude can read data but won't make changes">
+    Check three things. You need the owner or admin role in the organization.
+    An API key must have been created by an owner or admin, after keys were
+    tied to a person. Changes must also be turned on for your organization.
+    Connecting with your Growi login fixes the first two.
+  </Accordion>
+  <Accordion title="Claude says it is not authenticated">
+    The key was deleted, or the person it belongs to left the organization or
+    is only a campaign viewer. Reconnect, or create a new key.
+  </Accordion>
+  <Accordion title="A download link doesn't work">
+    Links expire after 1 hour. Ask Claude to run the report again for a fresh
+    link.
+  </Accordion>
+  <Accordion title="The organization I want isn't listed when I sign in">
+    You need the viewer, admin or owner role in that organization. Ask an
+    owner to invite you.
+  </Accordion>
+</AccordionGroup>

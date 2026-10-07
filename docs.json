@@ -92,6 +92,13 @@
             "pages": [
               "essentials/get-stats"
             ]
+          },
+          {
+            "group": "AI assistants",
+            "icon": "sparkles",
+            "pages": [
+              "essentials/connect-claude"
+            ]
           }
         ]
       },

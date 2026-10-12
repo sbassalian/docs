@@ -7,14 +7,14 @@ One of SHOP_NOW, LEARN_MORE, SIGN_UP, APPLY_NOW, DOWNLOAD, GET_OFFER, WATCH_MORE
 
 ## Authentication
 
-Needs a **full-access** API key. View-only keys get `403`. A key acts as the person who created it, with their current role. See [Rate limits and authentication](/api-reference/introduction).
+Needs a **full-access** API key whose creator is an owner or admin. View-only keys, and keys whose creator has the viewer role, get `403`. See [Rate limits and authentication](/api-reference/introduction).
 
 ## Errors
 
 | Status | When |
 | ------ | ---- |
 | `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
-| `403` | View-only API key |
+| `403` | View-only API key, or the key's user is not an owner or admin |
 | `404` | organization_id is not a child brand of the key's organization |
 | `422` | Value not allowed |
 | `429` | Rate limited: 2 seconds between requests, plus the hourly cap |

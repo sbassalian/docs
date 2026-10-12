@@ -34,7 +34,7 @@ Only owners and admins can create keys. A key acts as the person who created
 it, with their current role: if their role changes, so does what the key can
 do, and if they leave the organization the key stops working.
 
-- **Full access** keys can build, launch and pause ads.
+- **Full access** keys can build, launch and pause ads, as long as the key's person is an owner or admin. If that person now has the viewer role, the key is read-only.
 - **View only** keys can call every `GET` endpoint but get `403` on anything that changes data.
 - The partnership request and Meta ad code endpoints also need the key's person to be an owner or admin.
 
@@ -414,6 +414,7 @@ inside the default hourly limit.
 Growi credits each ad to one creator enrollment when you create it:
 
 - An ad built from a creator's **social post** is credited to the enrollment that post is attributed to.
+- An ad built from a **content submission** is credited to the enrollment the submission came from.
 - Otherwise, a `link_url` that carries the creator's **Meta tag** (`a=meta_<tag>`, the link from [Get creator Meta links](/api-reference/endpoint/meta-ads/list-creator-links)) credits the creator the tag belongs to.
 
 Always use the creator's Meta link as `link_url`, whatever the source. Growi
@@ -461,7 +462,7 @@ To stay inside the limit:
 | --- | --- |
 | `207` | Bulk create accepted. Check each row's `success`. |
 | `401` | Missing or invalid key, or the key's creator is no longer an owner, admin or viewer of the organization |
-| `403` | A view-only key on a write endpoint, or an owner or admin endpoint called with another role |
+| `403` | A view-only key on a write endpoint, a write from a key whose person is not an owner or admin, or an owner or admin endpoint called with another role |
 | `404` | `organization_id` is not one of your brands, or a template, link or setting id was not found |
 | `422` | Invalid input. Usually `{ "success": false, "error": ... }`; an ad id that is not yours also returns `422`. |
 | `429` | Rate limited |
@@ -476,9 +477,20 @@ and `last_step`.
 <AccordionGroup>
   <Accordion title="PREFLIGHT_AD_SET_FULL">
     The ad set already holds Meta's maximum of 50 ads (150 with Advantage+
-    audience on a sales campaign). Rows are checked against the ad set as it
-    is when the request arrives, so split rows across ad sets yourself using
-    `ads_count` from List ad sets, or create a new ad set for each batch.
+    audience on a sales campaign). Rows run in order and ads created by earlier
+    rows in the same request count, so the rows past the limit fail. Split rows
+    across ad sets using `ads_count` from List ad sets, or create a new ad set
+    for each batch.
+  </Accordion>
+  <Accordion title="PREFLIGHT_INVALID_CTA">
+    `creative.call_to_action` must be a Meta CTA type such as `SHOP_NOW` or
+    `LEARN_MORE`. The error's `details.allowed` lists every value.
+  </Accordion>
+  <Accordion title="PREFLIGHT_NO_INSTAGRAM_ACTOR">
+    Your organization has no active Instagram account for the ad. Check
+    [List Instagram identities](/api-reference/endpoint/meta-ads/list-instagram-accounts),
+    or send `creative.require_instagram: false` to run the ad from the Facebook
+    page only.
   </Accordion>
   <Accordion title="PREFLIGHT_NO_PIXEL">
     `OFFSITE_CONVERSIONS` and `LANDING_PAGE_VIEWS` need a Meta pixel on the ad

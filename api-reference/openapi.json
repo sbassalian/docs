@@ -5739,7 +5739,7 @@
                             },
                             "content_submission_version_id": {
                               "type": "integer",
-                              "description": "From creative_source (submissions). Video or image only."
+                              "description": "From creative_source (submissions). Video or image only, and it must belong to your organization."
                             },
                             "tik_tok_shop_video_id": {
                               "type": "integer",
@@ -5756,7 +5756,7 @@
                             },
                             "call_to_action": {
                               "type": "string",
-                              "description": "A Meta CTA type, for example SHOP_NOW. An unknown value is published as LEARN_MORE.",
+                              "description": "A Meta CTA type, for example SHOP_NOW. Any other value fails the row with PREFLIGHT_INVALID_CTA.",
                               "enum": [
                                 "SHOP_NOW",
                                 "LEARN_MORE",
@@ -5811,6 +5811,10 @@
                             "name": {
                               "type": "string",
                               "description": "Creative name. Defaults to the ad name."
+                            },
+                            "require_instagram": {
+                              "type": "boolean",
+                              "description": "Defaults to true. Send false to create the ad when your organization has no active Instagram account; it then runs from the Facebook page only."
                             }
                           }
                         }
@@ -6032,7 +6036,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -6048,6 +6052,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -7696,7 +7706,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -7712,6 +7722,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -7908,7 +7924,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -7924,6 +7940,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -8144,7 +8166,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -8160,6 +8182,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -8398,7 +8426,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -8414,6 +8442,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -8801,7 +8835,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -8817,6 +8851,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -9010,7 +9050,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -9026,6 +9066,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -9174,7 +9220,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -9190,6 +9236,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -10661,7 +10713,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -10677,6 +10729,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -11916,7 +11974,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -11932,6 +11990,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -12274,7 +12338,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -12290,6 +12354,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -12699,7 +12769,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -12715,6 +12785,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -12940,7 +13016,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -12956,6 +13032,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -13114,7 +13196,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -13130,6 +13212,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -13317,7 +13405,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -13333,6 +13421,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -13682,7 +13776,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -13698,6 +13792,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -13906,7 +14006,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -13922,6 +14022,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -14080,7 +14186,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -14096,6 +14202,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -14424,7 +14536,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -14440,6 +14552,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -14644,7 +14762,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -14660,6 +14778,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -14818,7 +14942,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -14834,6 +14958,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -14911,7 +15041,7 @@
     "/meta_ads/creator_links": {
       "get": {
         "summary": "Creator Meta ad tracking links",
-        "description": "Each creator's Meta ad tracking link (it carries `a=meta_<tag>`). Use it as creative.link_url so the ad, its sales and its spend are credited to that creator. If an active enrollment has no Meta tag yet, this call creates one. Creators with no active enrollment or no link base URL are left out.",
+        "description": "Each creator's Meta ad tracking link (it carries `a=meta_<tag>`). Use it as creative.link_url so the ad, its sales and its spend are credited to that creator. If an active enrollment has no Meta tag yet and the key can write (full access, owner or admin), this call creates one. With a view-only key or a viewer-role user it does not, and creators without a tag are left out. Creators with no active enrollment or no link base URL are also left out.",
         "parameters": [
           {
             "name": "organization_id",
@@ -15672,7 +15802,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -15688,6 +15818,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -16299,7 +16435,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -16315,6 +16451,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -16491,7 +16633,7 @@
             }
           },
           "403": {
-            "description": "View-only API key",
+            "description": "View-only API key, or the key's user is not an owner or admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -16507,6 +16649,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   }
                 }
@@ -17447,6 +17595,12 @@
                       "error": "This API key is read-only and cannot modify data."
                     }
                   },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
+                    }
+                  },
                   "role": {
                     "summary": "The key's user is not an owner or admin",
                     "value": {
@@ -17652,6 +17806,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   },
                   "role": {
@@ -17865,6 +18025,12 @@
                     "summary": "View-only API key",
                     "value": {
                       "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "error": "Only an organization owner or admin can make changes with this API key."
                     }
                   },
                   "role": {

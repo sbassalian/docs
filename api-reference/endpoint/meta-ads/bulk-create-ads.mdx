@@ -31,6 +31,7 @@ Growi does not fill in your naming convention, default CTA, copy template text o
 The ad is credited to a creator, for sales and for ad spend commission, through the content and the link:
 
 - A `social_post_id` attributed to a creator credits that creator's enrollment.
+- A `content_submission_version_id` credits the enrollment the submission came from.
 - Otherwise a `link_url` with the creator's Meta tag (`a=meta_<tag>`) credits the creator it belongs to. Get it from [Get creator Meta links](/api-reference/endpoint/meta-ads/list-creator-links).
 
 Always use the creator's Meta link as `link_url` so purchases from the ad are attributed. See [How creators get credited](/essentials/meta-ads-automation#how-creators-get-credited-and-paid).
@@ -45,33 +46,34 @@ Always use the creator's Meta link as `link_url` so purchases from the ad are at
 | `PREFLIGHT_INVALID_OPTIMIZATION_GOAL` | Unknown `ad_set.optimization_goal` |
 | `PREFLIGHT_NO_PIXEL` | A conversion goal with no pixel on the account. Install one or send `allow_optimization_fallback: true`. |
 | `PREFLIGHT_NO_PAGE` | No active Facebook page on your organization |
-| `PREFLIGHT_NO_INSTAGRAM_ACTOR` | No active Instagram account on your organization |
+| `PREFLIGHT_NO_INSTAGRAM_ACTOR` | No active Instagram account on your organization. Send `creative.require_instagram: false` to run from the Facebook page only. |
 | `PREFLIGHT_INVALID_BUDGET` | Missing budget, both budgets, or not a positive integer |
 | `PREFLIGHT_LINK_URL_INVALID` | `link_url` is not an http(s) URL |
 | `PREFLIGHT_NO_VIDEO_SOURCE` | `creative` has no source key |
-| `PREFLIGHT_SUBMISSION_NOT_FOUND` | Unknown `content_submission_version_id` |
+| `PREFLIGHT_SUBMISSION_NOT_FOUND` | Unknown `content_submission_version_id`, or a submission from another organization |
 | `PREFLIGHT_UNSUPPORTED_MEDIA_TYPE` | The submission is not a video or image |
 | `PREFLIGHT_TTS_VIDEO_NOT_FOUND` | The TikTok Shop video has no sales in your shop |
 | `PREFLIGHT_PARTNERSHIP_NOT_APPROVED` | The partnership request is missing, not approved, or the creator is not eligible |
 | `PREFLIGHT_AUTO_ACTIVATE_REQUIRES_PARTNERSHIP` | `auto_activate: true` without `meta_partnership_ad_request_id` |
 | `PREFLIGHT_CAMPAIGN_ARCHIVED` | The campaign is archived or deleted on Meta |
+| `PREFLIGHT_INVALID_CTA` | `creative.call_to_action` is not a Meta CTA type. `details.allowed` lists the values. |
 | `PREFLIGHT_AD_SET_FULL` | The ad set already holds Meta's maximum (50 ads, or 150 with Advantage+ audience on a sales campaign) |
 | `BULK_ROW_EXCEPTION` | An unexpected error on this row. Other rows are not affected. |
 
-<Warning>
-Rows are checked one at a time against the ad set as it is when the request arrives. If 10 rows target an ad set that has 45 ads, all 10 can pass the check. Split rows across ad sets yourself using `ads_count` from [List ad sets](/api-reference/endpoint/meta-ads/list-ad-sets).
-</Warning>
+<Note>
+Rows run in order, and ads created by earlier rows in the same request count against the ad set. If 10 rows target an ad set that holds 45 of 50 ads, the first 5 are created and the last 5 fail with `PREFLIGHT_AD_SET_FULL`. Split rows across ad sets using `ads_count` from [List ad sets](/api-reference/endpoint/meta-ads/list-ad-sets).
+</Note>
 
 ## Authentication
 
-Needs a **full-access** API key. View-only keys get `403`. A key acts as the person who created it, with their current role. See [Rate limits and authentication](/api-reference/introduction).
+Needs a **full-access** API key whose creator is an owner or admin. View-only keys, and keys whose creator has the viewer role, get `403`. See [Rate limits and authentication](/api-reference/introduction).
 
 ## Errors
 
 | Status | When |
 | ------ | ---- |
 | `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
-| `403` | View-only API key |
+| `403` | View-only API key, or the key's user is not an owner or admin |
 | `404` | organization_id is not a child brand of the key's organization |
 | `422` | ads is empty or has more than 50 rows |
 | `429` | Rate limited: 2 seconds between requests, plus the hourly cap |

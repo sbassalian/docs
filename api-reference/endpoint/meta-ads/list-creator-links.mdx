@@ -3,7 +3,7 @@ title: "Get creator Meta links"
 openapi: "GET /meta_ads/creator_links"
 ---
 
-Each creator's Meta ad tracking link (it carries `a=meta_<tag>`). Use it as creative.link_url so the ad, its sales and its spend are credited to that creator. If an active enrollment has no Meta tag yet, this call creates one. Creators with no active enrollment or no link base URL are left out.
+Each creator's Meta ad tracking link (it carries `a=meta_<tag>`). Use it as creative.link_url so the ad, its sales and its spend are credited to that creator. If an active enrollment has no Meta tag yet and the key can write (full access, owner or admin), this call creates one. With a view-only key or a viewer-role user it does not, and creators without a tag are left out. Creators with no active enrollment or no link base URL are also left out.
 
 ## Why this matters
 

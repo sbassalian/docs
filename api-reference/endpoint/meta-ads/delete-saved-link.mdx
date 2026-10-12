@@ -1,0 +1,30 @@
+---
+title: "Delete a saved link"
+openapi: "DELETE /meta_ads/saved_links/{id}"
+---
+
+Removes the saved link.
+
+## Authentication
+
+Needs a **full-access** API key. View-only keys get `403`. A key acts as the person who created it, with their current role. See [Rate limits and authentication](/api-reference/introduction).
+
+## Errors
+
+| Status | When |
+| ------ | ---- |
+| `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
+| `403` | View-only API key |
+| `404` | Saved link not found, or organization_id is not a child brand of the key's organization |
+| `429` | Rate limited: 2 seconds between requests, plus the hourly cap |
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.growi.io/api/public/v1/meta_ads/saved_links/101" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</RequestExample>
+
+Returns `204 No Content` with an empty body.

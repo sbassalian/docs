@@ -1,0 +1,48 @@
+---
+title: "Update a saved link"
+openapi: "PATCH /meta_ads/saved_links/{id}"
+---
+
+PUT works too.
+
+## Authentication
+
+Needs a **full-access** API key. View-only keys get `403`. A key acts as the person who created it, with their current role. See [Rate limits and authentication](/api-reference/introduction).
+
+## Errors
+
+| Status | When |
+| ------ | ---- |
+| `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
+| `403` | View-only API key |
+| `404` | Saved link not found, or organization_id is not a child brand of the key's organization |
+| `422` | Invalid link |
+| `429` | Rate limited: 2 seconds between requests, plus the hourly cap |
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.growi.io/api/public/v1/meta_ads/saved_links/101" \
+     -H "Authorization: Bearer YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "url": "https://shop.example.com/products/glow-serum-2"
+     }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "data": {
+    "id": 5,
+    "label": "Glow Serum PDP",
+    "url": "https://shop.example.com/products/glow-serum-2"
+  }
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,201 @@
+---
+title: "Create ads in bulk"
+openapi: "POST /meta_ads/bulk"
+---
+
+Same payload and validation as the dashboard ad builder. Every row is checked and created on its own, so one bad row does not stop the others. Responds 207 with one result per row. Ads publish to Meta in the background: poll GET /meta_ads/publish_status.
+
+Step 3 of the [Meta ads automation flow](/essentials/meta-ads-automation).
+
+## How it works
+
+1. Every row runs the same checks as the dashboard builder before anything is written. A row that fails comes back with `success: false` and an error `code`; the other rows still go ahead.
+2. Each row that passes creates the ad (and a new campaign or ad set when you asked for one) in Growi with `state: queued`.
+3. A background job publishes each ad to Meta: campaign, video, creative, ad set, ad. Poll [Get publish status](/api-reference/endpoint/meta-ads/get-publish-status).
+4. Ads are created paused. With `launch_state: "active"` (or `auto_activate: true` on a partnership ad) the ad is turned on as soon as it publishes, and spend starts. Otherwise call [Launch an ad](/api-reference/endpoint/meta-ads/launch-ad) when you are ready.
+
+The response is always `207` once the batch is accepted. Read `summary` and each row's `success`.
+
+## Required fields
+
+| Where | Fields |
+| --- | --- |
+| Row | `name`, `meta_ad_account_id`, `creative` |
+| `creative` | `primary_text`, `headline`, `call_to_action`, `link_url`, plus the source row's `creative_source` keys |
+| New `ad_set` (no `existing_meta_ad_set_id`) | `name`, `optimization_goal`, and exactly one of `daily_budget_cents` or `lifetime_budget_cents` |
+
+Growi does not fill in your naming convention, default CTA, copy template text or UTM params for you. Read them from the [builder settings](/api-reference/endpoint/meta-ads/get-naming) endpoints and put the values in each row.
+
+## Crediting the creator
+
+The ad is credited to a creator, for sales and for ad spend commission, through the content and the link:
+
+- A `social_post_id` attributed to a creator credits that creator's enrollment.
+- Otherwise a `link_url` with the creator's Meta tag (`a=meta_<tag>`) credits the creator it belongs to. Get it from [Get creator Meta links](/api-reference/endpoint/meta-ads/list-creator-links).
+
+Always use the creator's Meta link as `link_url` so purchases from the ad are attributed. See [How creators get credited](/essentials/meta-ads-automation#how-creators-get-credited-and-paid).
+
+## Row error codes
+
+| Code | Meaning |
+| --- | --- |
+| `PREFLIGHT_MISSING_FIELD` | A required field is missing. `details.missing` and `details.scope` say which. |
+| `PREFLIGHT_NO_AD_ACCOUNT` | `meta_ad_account_id` is not one of your ad accounts |
+| `PREFLIGHT_INVALID_OBJECTIVE` | Unknown `campaign.objective` |
+| `PREFLIGHT_INVALID_OPTIMIZATION_GOAL` | Unknown `ad_set.optimization_goal` |
+| `PREFLIGHT_NO_PIXEL` | A conversion goal with no pixel on the account. Install one or send `allow_optimization_fallback: true`. |
+| `PREFLIGHT_NO_PAGE` | No active Facebook page on your organization |
+| `PREFLIGHT_NO_INSTAGRAM_ACTOR` | No active Instagram account on your organization |
+| `PREFLIGHT_INVALID_BUDGET` | Missing budget, both budgets, or not a positive integer |
+| `PREFLIGHT_LINK_URL_INVALID` | `link_url` is not an http(s) URL |
+| `PREFLIGHT_NO_VIDEO_SOURCE` | `creative` has no source key |
+| `PREFLIGHT_SUBMISSION_NOT_FOUND` | Unknown `content_submission_version_id` |
+| `PREFLIGHT_UNSUPPORTED_MEDIA_TYPE` | The submission is not a video or image |
+| `PREFLIGHT_TTS_VIDEO_NOT_FOUND` | The TikTok Shop video has no sales in your shop |
+| `PREFLIGHT_PARTNERSHIP_NOT_APPROVED` | The partnership request is missing, not approved, or the creator is not eligible |
+| `PREFLIGHT_AUTO_ACTIVATE_REQUIRES_PARTNERSHIP` | `auto_activate: true` without `meta_partnership_ad_request_id` |
+| `PREFLIGHT_CAMPAIGN_ARCHIVED` | The campaign is archived or deleted on Meta |
+| `PREFLIGHT_AD_SET_FULL` | The ad set already holds Meta's maximum (50 ads, or 150 with Advantage+ audience on a sales campaign) |
+| `BULK_ROW_EXCEPTION` | An unexpected error on this row. Other rows are not affected. |
+
+<Warning>
+Rows are checked one at a time against the ad set as it is when the request arrives. If 10 rows target an ad set that has 45 ads, all 10 can pass the check. Split rows across ad sets yourself using `ads_count` from [List ad sets](/api-reference/endpoint/meta-ads/list-ad-sets).
+</Warning>
+
+## Authentication
+
+Needs a **full-access** API key. View-only keys get `403`. A key acts as the person who created it, with their current role. See [Rate limits and authentication](/api-reference/introduction).
+
+## Errors
+
+| Status | When |
+| ------ | ---- |
+| `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
+| `403` | View-only API key |
+| `404` | organization_id is not a child brand of the key's organization |
+| `422` | ads is empty or has more than 50 rows |
+| `429` | Rate limited: 2 seconds between requests, plus the hourly cap |
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.growi.io/api/public/v1/meta_ads/bulk" \
+     -H "Authorization: Bearer YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "ads": [
+         {
+           "name": "Ava Creator | Glow Serum | 2026-10-12",
+           "meta_ad_account_id": 12,
+           "launch_state": "paused",
+           "meta_partnership_ad_request_id": 4410,
+           "copy_template_id": 3,
+           "campaign": {
+             "existing_meta_campaign_id": 41
+           },
+           "ad_set": {
+             "existing_meta_ad_set_id": 77
+           },
+           "creative": {
+             "social_post_id": "instagram:3456789012345678901",
+             "primary_text": "The serum I reach for every morning.",
+             "headline": "Glow in 7 days",
+             "description": "Free shipping over $40",
+             "call_to_action": "SHOP_NOW",
+             "link_url": "https://shop.example.com/products/glow-serum?a=meta_ava25",
+             "url_tags": "utm_source=meta&utm_medium=cpc&utm_content={{ad.id}}",
+             "page_id": "104512345678901",
+             "identity_display": "both"
+           }
+         },
+         {
+           "name": "Ben Creator | Glow Serum | 2026-10-12",
+           "meta_ad_account_id": 12,
+           "launch_state": "active",
+           "campaign": {
+             "name": "Creator Prospecting Q4",
+             "objective": "OUTCOME_SALES"
+           },
+           "ad_set": {
+             "name": "Broad US 18-45",
+             "optimization_goal": "OFFSITE_CONVERSIONS",
+             "daily_budget_cents": 5000,
+             "pixel_id": "998877665544332",
+             "targeting": {
+               "geo_locations": {
+                 "countries": [
+                   "US"
+                 ]
+               },
+               "age_min": 18,
+               "age_max": 45,
+               "interests": [
+                 {
+                   "id": "6003139266461",
+                   "name": "Skin care"
+                 }
+               ]
+             },
+             "placements": {
+               "automatic": true
+             }
+           },
+           "creative": {
+             "content_submission_version_id": 55120,
+             "primary_text": "My honest review after 30 days.",
+             "headline": "Glow in 7 days",
+             "call_to_action": "SHOP_NOW",
+             "link_url": "https://shop.example.com/products/glow-serum?a=meta_ben10",
+             "url_tags": "utm_source=meta&utm_medium=cpc&utm_content={{ad.id}}"
+           }
+         }
+       ]
+     }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 207
+{
+  "success": true,
+  "results": [
+    {
+      "index": 0,
+      "success": true,
+      "data": {
+        "meta_ad_id": 9012,
+        "state": "queued",
+        "status": "PAUSED",
+        "payload": {
+          "meta_ad_id": 9012,
+          "state": "queued"
+        }
+      }
+    },
+    {
+      "index": 1,
+      "success": false,
+      "error": {
+        "code": "PREFLIGHT_AD_SET_FULL",
+        "message": "Ad set \"Broad US 18-45\" already holds 50 ads, Meta's maximum is 50. Pick another ad set or create a new one for the remaining ads.",
+        "user_message": "Ad set \"Broad US 18-45\" already holds 50 ads, Meta's maximum is 50. Pick another ad set or create a new one for the remaining ads.",
+        "details": {
+          "ad_set_id": 77,
+          "occupied": 50,
+          "max": 50,
+          "field": "ad_set.existing_meta_ad_set_id"
+        }
+      }
+    }
+  ],
+  "summary": {
+    "total": 2,
+    "succeeded": 1,
+    "failed": 1
+  }
+}
+```
+
+</ResponseExample>

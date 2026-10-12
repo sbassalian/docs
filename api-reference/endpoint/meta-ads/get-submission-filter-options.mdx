@@ -1,0 +1,62 @@
+---
+title: "Get submission filter options"
+openapi: "GET /meta_ads/sources/submission_filter_options"
+---
+
+The campaigns, creators and products that have approved submissions you can build ads from, and the date range they span.
+
+## Authentication
+
+Any organization API key works, including view-only keys. A key acts as the person who created it, so that person needs the owner, admin or viewer role. See [Rate limits and authentication](/api-reference/introduction).
+
+## Errors
+
+| Status | When |
+| ------ | ---- |
+| `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
+| `404` | organization_id is not a child brand of the key's organization |
+| `429` | Rate limited: 2 seconds between requests, plus the hourly cap |
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/meta_ads/sources/submission_filter_options" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "data": {
+    "campaigns": [
+      {
+        "id": 123,
+        "label": "Summer Collection"
+      }
+    ],
+    "creators": [
+      {
+        "id": 3490313,
+        "label": "Ava Creator",
+        "campaign_id": 123
+      }
+    ],
+    "products": [
+      {
+        "id": 88,
+        "label": "Glow Serum"
+      }
+    ],
+    "date_range": {
+      "min": "2026-06-02T10:11:00Z",
+      "max": "2026-10-11T21:40:00Z"
+    }
+  }
+}
+```
+
+</ResponseExample>

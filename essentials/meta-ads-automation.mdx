@@ -1,0 +1,548 @@
+---
+title: "Automate Meta ad launches"
+description: "Turn creator content into Meta ads every day from your own code or from Claude: pick content, build ads in bulk, watch them publish, then launch, pause or retry."
+---
+
+<Info>
+  **Prerequisite** A Growi organization on the Growth plan or higher, a
+  connected Meta ad account, and an owner or admin who can create an API key.
+</Info>
+
+# How to automate Meta ad launches
+
+Everything the dashboard's **Meta Ads → Build ad** flow does is also available
+through the API under `/api/public/v1/meta_ads`, and through Claude with the
+Growi MCP server. A daily job usually looks like this:
+
+1. [List ad sources](#1-list-ad-sources): new creator posts, TikTok Shop videos or approved submissions.
+2. [Read the builder options](#2-read-the-builder-options): ad account, page, campaign, ad set, targeting, copy and the creator's tracking link.
+3. [Create the ads in bulk](#3-create-ads-in-bulk), up to 50 per request.
+4. [Poll the publish status](#4-poll-publish-status) while Growi publishes them to Meta.
+5. [Launch, pause or retry](#5-launch-pause-and-retry) them.
+
+Every endpoint is listed under [Meta ads](/api-reference/endpoint/meta-ads/list-ad-sources) in the API reference.
+
+## Before you start
+
+### An API key
+
+1. In the Growi dashboard, open **Settings → Developer**.
+2. Under **API keys**, choose **Full access** in the access level menu.
+3. Click **Add API key** and copy the key.
+
+Only owners and admins can create keys. A key acts as the person who created
+it, with their current role: if their role changes, so does what the key can
+do, and if they leave the organization the key stops working.
+
+- **Full access** keys can build, launch and pause ads.
+- **View only** keys can call every `GET` endpoint but get `403` on anything that changes data.
+- The partnership request and Meta ad code endpoints also need the key's person to be an owner or admin.
+
+Treat the key like a password: anyone who has it can spend on your Meta ad account.
+
+### A connected Meta ad account with sync on
+
+1. Connect Meta in **Settings → Integrations → Meta Ads**.
+2. In **Meta Ads → Settings → Ad Accounts**, turn on auto-sync for every ad
+   account you run creator ads from. The active account always syncs.
+
+Ads publish with your organization's active Facebook page and Instagram
+account, so both need to be connected. Spend and results only reach Growi,
+and count toward creator payouts, for ad accounts that sync. You can also
+turn sync on with
+[Turn ad account sync on or off](/api-reference/endpoint/meta-ads/update-ad-account).
+
+### Creators who are ready for partnership ads
+
+To run an ad as the creator (a partnership ad, with the creator's name on it),
+the creator must approve your partnership request on Instagram. Send requests
+and check who approved in **Meta Ads → Partnerships**.
+[List ad sources](/api-reference/endpoint/meta-ads/list-ad-sources) shows each
+creator's readiness in `whitelisting_status` and gives you the approved
+request in `meta_partnership_ad_request_id`.
+
+For Instagram posts, creators can also share a Meta ad code for a specific
+post. See [Get Meta ad codes](/api-reference/endpoint/meta-ads/list-ad-codes)
+and [Generate a Meta ad code](/api-reference/endpoint/meta-ads/generate-ad-code).
+
+Creators also need an active enrollment in the campaign that pays them for
+Meta ads, so they have a Meta tracking link. See
+[How creators get credited and paid](#how-creators-get-credited-and-paid).
+
+## Authentication and base URL
+
+```bash
+Base URL: https://api.growi.io/api/public/v1
+Authorization: Bearer YOUR_API_KEY
+```
+
+A parent organization's key can act on one of its brands by adding
+`organization_id=<brand id>` to any request. Any other id returns `404`.
+
+## 1. List ad sources
+
+[List ad sources](/api-reference/endpoint/meta-ads/list-ad-sources) returns the
+same content the builder offers. Pick a source:
+
+| `source` | What it lists |
+| --- | --- |
+| `social_posts` (default) | Creator posts, newest first |
+| `tik_tok_shop_videos` | TikTok Shop videos that sold in the date range, highest GMV first |
+| `submissions` | Approved content submissions |
+
+For a daily job, ask for content from the last day that is not in an ad yet:
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/meta_ads/sources?source=social_posts&platform=instagram&ad_attachment=not_attached&start_date=2026-10-11&end_date=2026-10-12&per_page=100" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```json
+{
+  "success": true,
+  "source": "social_posts",
+  "data": [
+    {
+      "source": "social_post",
+      "id": "instagram:3456789012345678901",
+      "creative_source": { "social_post_id": "instagram:3456789012345678901" },
+      "platform": "instagram",
+      "creator": { "id": 2628998, "name": "Ava Creator", "handle": "ava.creates" },
+      "campaign_id": 123,
+      "campaign_affiliate_id": 3490313,
+      "video_url": "https://cdn.growi.io/posts/3456789012345678901.mp4",
+      "share_url": "https://www.instagram.com/reel/DAbCdEf/",
+      "product": { "id": 88, "name": "Glow Serum" },
+      "existing_meta_ad": null,
+      "meta_ad_code": { "code": "AbCdEf123", "status": "active" },
+      "whitelisting_status": "whitelisted",
+      "meta_partnership_ad_request_id": 4410
+    }
+  ],
+  "meta": { "page": 1, "per_page": 100, "total_count": 1, "total_pages": 1, "has_more": false, "returned": 1 }
+}
+```
+
+Other filters: `campaign_id`, `campaign_affiliate_id`, `creator_id` (Growi
+user id), `search`, `page` and `per_page` (up to 100). Dates default to the
+last 30 days and can span up to 366 days.
+
+From each row you need:
+
+- `creative_source`: copy its keys into the ad's `creative` as they are.
+- `meta_partnership_ad_request_id`: send it to run the ad as the creator.
+- `creator.id`: to look up the creator's Meta tracking link in step 2.
+
+## 2. Read the builder options
+
+The builder's settings come from these endpoints. Read them once at the start
+of a run and reuse them for every ad.
+
+| What | Endpoint | Use it for |
+| --- | --- | --- |
+| Ad accounts | [`GET /meta_ads/ad_accounts`](/api-reference/endpoint/meta-ads/list-ad-accounts) | `meta_ad_account_id` (use `id`, not the `act_` id) |
+| Facebook pages | [`GET /meta_ads/ad_accounts/{id}/pages`](/api-reference/endpoint/meta-ads/list-ad-account-pages) | `creative.page_id` (the page's `external_id`) |
+| Instagram identities | [`GET /meta_ads/instagram_accounts`](/api-reference/endpoint/meta-ads/list-instagram-accounts) | Checking which Instagram account ads run with |
+| Pixels | [`GET /meta_ads/pixels`](/api-reference/endpoint/meta-ads/list-pixels) | `ad_set.pixel_id` for conversion goals |
+| Campaigns | [`GET /meta_ads/campaigns`](/api-reference/endpoint/meta-ads/list-campaigns) | `campaign.existing_meta_campaign_id` |
+| Ad sets | [`GET /meta_ads/ad_sets`](/api-reference/endpoint/meta-ads/list-ad-sets) | `ad_set.existing_meta_ad_set_id`, and `ads_count` to see how full each one is |
+| Audiences | [`GET /meta_ads/custom_audiences`](/api-reference/endpoint/meta-ads/list-custom-audiences) | `ad_set.targeting.excluded_custom_audiences` |
+| Interests | [`GET /meta_ads/interests?q=`](/api-reference/endpoint/meta-ads/search-interests) | `ad_set.targeting.interests` |
+| Locations | [`GET /meta_ads/locations?q=`](/api-reference/endpoint/meta-ads/search-locations) | `ad_set.targeting.geo_locations` |
+| Default CTA | [`GET /meta_ads/default_cta`](/api-reference/endpoint/meta-ads/get-default-cta) | `creative.call_to_action` |
+| Naming | [`GET /meta_ads/naming`](/api-reference/endpoint/meta-ads/get-naming) | Building `name` |
+| Copy templates | [`GET /meta_ads/copy_templates`](/api-reference/endpoint/meta-ads/list-copy-templates) | `creative.primary_text`, `headline`, `description`, and `copy_template_id` |
+| UTM params | [`GET /meta_ads/utm_params`](/api-reference/endpoint/meta-ads/list-utm-params) | `creative.url_tags` |
+| Saved links | [`GET /meta_ads/saved_links`](/api-reference/endpoint/meta-ads/list-saved-links) | Destination pages |
+| Creator links | [`GET /meta_ads/creator_links?creator_ids[]=`](/api-reference/endpoint/meta-ads/list-creator-links) | `creative.link_url`, so the ad is credited to the creator |
+
+<Warning>
+  The API does not apply your naming convention, default CTA, copy template
+  text or UTM params for you. Read them here and put the values in each ad.
+  Your saved UTM params always include `utm_source=meta` and `utm_medium=cpc`.
+</Warning>
+
+Get the creators' Meta links in one call:
+
+```bash
+curl -g -X GET "https://api.growi.io/api/public/v1/meta_ads/creator_links?creator_ids[]=2628998&creator_ids[]=2629001" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "creator_id": 2628998,
+      "campaign_affiliate_id": 3490313,
+      "campaign_id": 123,
+      "link": "https://shop.example.com/?a=meta_ava25",
+      "landing_page_links": [
+        {
+          "url": "https://shop.example.com/products/glow-serum",
+          "link": "https://shop.example.com/products/glow-serum?a=meta_ava25"
+        }
+      ]
+    }
+  ]
+}
+```
+
+Meta allows 50 ads per ad set (150 with Advantage+ audience on a sales
+campaign). To give each batch room, create an ad set first with
+[Create an ad set](/api-reference/endpoint/meta-ads/create-ad-set) and send its
+`id` as `ad_set.existing_meta_ad_set_id`. The ad set is created on Meta when
+its first ad publishes.
+
+## 3. Create ads in bulk
+
+[Create ads in bulk](/api-reference/endpoint/meta-ads/bulk-create-ads) takes up
+to 50 ads. Each row is checked and created on its own, so one bad row does not
+stop the rest.
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/meta_ads/bulk" \
+     -H "Authorization: Bearer YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "ads": [
+         {
+           "name": "Ava Creator | Glow Serum | 2026-10-12",
+           "meta_ad_account_id": 12,
+           "launch_state": "paused",
+           "meta_partnership_ad_request_id": 4410,
+           "copy_template_id": 3,
+           "campaign": { "existing_meta_campaign_id": 41 },
+           "ad_set": { "existing_meta_ad_set_id": 77 },
+           "creative": {
+             "social_post_id": "instagram:3456789012345678901",
+             "primary_text": "The serum I reach for every morning.",
+             "headline": "Glow in 7 days",
+             "call_to_action": "SHOP_NOW",
+             "link_url": "https://shop.example.com/products/glow-serum?a=meta_ava25",
+             "url_tags": "utm_source=meta&utm_medium=cpc&utm_content={{ad.id}}"
+           }
+         }
+       ]
+     }'
+```
+
+Each ad needs:
+
+- `name` and `meta_ad_account_id`.
+- `creative` with `primary_text`, `headline`, `call_to_action`, `link_url` and the row's `creative_source` keys.
+- An ad set: `ad_set.existing_meta_ad_set_id`, or a new one with `name`, `optimization_goal` and one of `daily_budget_cents` or `lifetime_budget_cents`.
+- Optionally a campaign: `campaign.existing_meta_campaign_id`, or `name` and `objective` for a new one.
+
+The response is `207` with one result per row:
+
+```json
+{
+  "success": true,
+  "results": [
+    { "index": 0, "success": true, "data": { "meta_ad_id": 9012, "state": "queued", "status": "PAUSED" } },
+    {
+      "index": 1,
+      "success": false,
+      "error": {
+        "code": "PREFLIGHT_AD_SET_FULL",
+        "message": "Ad set \"Broad US 18-45\" already holds 50 ads, Meta's maximum is 50. Pick another ad set or create a new one for the remaining ads.",
+        "details": { "ad_set_id": 77, "occupied": 50, "max": 50, "field": "ad_set.existing_meta_ad_set_id" }
+      }
+    }
+  ],
+  "summary": { "total": 2, "succeeded": 1, "failed": 1 }
+}
+```
+
+Keep the `meta_ad_id` of every successful row: it is the Growi ad id you use
+from now on.
+
+Ads are created **paused**. Send `"launch_state": "active"` to turn an ad on
+as soon as it publishes. On a partnership ad, `"auto_activate": true` does the
+same.
+
+## 4. Poll publish status
+
+Growi publishes each ad to Meta in the background. Ask for all of a run's ads
+in one call, up to 200 ids:
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/meta_ads/publish_status?ids=9012,9013" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```json
+{
+  "success": true,
+  "data": [
+    { "id": 9012, "meta_ad_id": "120215550000000001", "state": "published", "status": "PAUSED", "failed": false, "retrying": false, "error_message": null, "last_step": null },
+    { "id": 9013, "meta_ad_id": null, "state": "failed", "status": "PAUSED", "failed": true, "retrying": false, "error_message": "We could not fetch this post's video. Ask the creator for the file or use a content submission.", "last_step": "ensure_video" }
+  ]
+}
+```
+
+| `state` | What to do |
+| --- | --- |
+| `queued`, `publishing` | Wait and poll again in a few minutes |
+| `published` | On Meta and paused: launch it when you are ready |
+| `active` | Live |
+| `failed` | Read `error_message`, fix the cause, then retry |
+
+`status` is Meta's own delivery status (`ACTIVE`, `PAUSED`, `DELETED`, `ARCHIVED`).
+For stats, use [List ads](/api-reference/endpoint/meta-ads/list-ads) or
+[Get an ad](/api-reference/endpoint/meta-ads/get-ad).
+
+## 5. Launch, pause and retry
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/meta_ads/9012/launch" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+
+curl -X POST "https://api.growi.io/api/public/v1/meta_ads/9012/pause" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+
+curl -X POST "https://api.growi.io/api/public/v1/meta_ads/9013/retry" \
+     -H "Authorization: Bearer YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{ "launch_after_publish": true }'
+```
+
+- [Launch](/api-reference/endpoint/meta-ads/launch-ad) turns the ad, its ad set and its campaign on. Spend starts. An ad that has not published yet launches as soon as it does.
+- [Pause](/api-reference/endpoint/meta-ads/pause-ad) pauses the ad on Meta.
+- [Retry](/api-reference/endpoint/meta-ads/retry-ad) republishes a failed ad from the step that failed. Ads that failed while launching are launched again; send `launch_after_publish: true` to launch any retried ad.
+- [Retry all failed ads](/api-reference/endpoint/meta-ads/retry-failed-ads) queues every failed ad that matches your filters in one request.
+
+## Example: a daily job
+
+This Python sketch builds paused partnership ads from yesterday's Instagram
+posts with your default copy template, one new ad set per batch of 50, and
+waits for them to publish. It spaces requests 2 seconds apart and waits out
+`429` responses.
+
+```python
+import time
+from datetime import date, timedelta
+
+import requests
+
+API = "https://api.growi.io/api/public/v1"
+HEADERS = {"Authorization": "Bearer YOUR_API_KEY"}
+CAMPAIGN_ID = 41
+
+
+def call(method, path, **kwargs):
+    while True:
+        response = requests.request(method, API + path, headers=HEADERS, timeout=120, **kwargs)
+        if response.status_code == 429:
+            time.sleep(int(response.headers.get("Retry-After", "2")) + 1)
+            continue
+        time.sleep(2)
+        return response
+
+
+today = date.today()
+sources = call("GET", "/meta_ads/sources", params={
+    "source": "social_posts", "platform": "instagram", "ad_attachment": "not_attached",
+    "start_date": (today - timedelta(days=1)).isoformat(), "end_date": today.isoformat(), "per_page": 100,
+}).json()["data"]
+sources = [row for row in sources if row["meta_partnership_ad_request_id"]]
+
+account = next(a for a in call("GET", "/meta_ads/ad_accounts").json()["data"] if a["active"])
+template = next(t for t in call("GET", "/meta_ads/copy_templates").json()["data"] if t["default"])
+cta = call("GET", "/meta_ads/default_cta").json()["data"]["value"] or "SHOP_NOW"
+url_tags = "&".join(f"{u['key']}={u['value']}" for u in call("GET", "/meta_ads/utm_params").json()["data"])
+creator_ids = sorted({row["creator"]["id"] for row in sources if row["creator"]["id"]})
+links = {link["creator_id"]: link["link"] for link in call(
+    "GET", "/meta_ads/creator_links", params={"creator_ids[]": creator_ids}).json()["data"]}
+
+ads = []
+for row in sources:
+    link = links.get(row["creator"]["id"])
+    if not link:
+        continue
+    product = (row["product"] or {}).get("name", "Creator")
+    ads.append({
+        "name": f"{row['creator']['name']} | {product} | {today.isoformat()}",
+        "meta_ad_account_id": account["id"],
+        "launch_state": "paused",
+        "meta_partnership_ad_request_id": row["meta_partnership_ad_request_id"],
+        "copy_template_id": template["id"],
+        "campaign": {"existing_meta_campaign_id": CAMPAIGN_ID},
+        "creative": {
+            **row["creative_source"],
+            "primary_text": template["primary_text"],
+            "headline": template["headline"],
+            "call_to_action": cta,
+            "link_url": link,
+            "url_tags": url_tags,
+        },
+    })
+
+created = []
+for start in range(0, len(ads), 50):
+    ad_set = call("POST", "/meta_ads/ad_sets", json={
+        "name": f"Creators {today.isoformat()} #{start // 50 + 1}",
+        "meta_campaign_id": CAMPAIGN_ID,
+        "optimization": {"goal": "OFFSITE_CONVERSIONS"},
+        "budget": {"type": "daily", "amount_cents": 5000},
+        "targeting": {"geo_locations": {"countries": ["US"]}},
+    }).json()["data"]
+    batch = [{**ad, "ad_set": {"existing_meta_ad_set_id": ad_set["id"]}} for ad in ads[start:start + 50]]
+    result = call("POST", "/meta_ads/bulk", json={"ads": batch}).json()
+    created += [r["data"]["meta_ad_id"] for r in result["results"] if r["success"]]
+    for failure in (r for r in result["results"] if not r["success"]):
+        print(batch[failure["index"]]["name"], failure["error"]["code"], failure["error"].get("message"))
+
+pending = set(created)
+while pending:
+    time.sleep(300)
+    rows = call("GET", "/meta_ads/publish_status", params={"ids": ",".join(map(str, pending))}).json()["data"]
+    for ad in rows:
+        if ad["state"] in ("published", "active", "failed"):
+            pending.discard(ad["id"])
+            if ad["failed"]:
+                print(ad["id"], ad["last_step"], ad["error_message"])
+```
+
+This run makes 6 requests, plus 2 per batch of 50 ads and one per poll, well
+inside the default hourly limit.
+
+## How creators get credited and paid
+
+Growi credits each ad to one creator enrollment when you create it:
+
+- An ad built from a creator's **social post** is credited to the enrollment that post is attributed to.
+- Otherwise, a `link_url` that carries the creator's **Meta tag** (`a=meta_<tag>`, the link from [Get creator Meta links](/api-reference/endpoint/meta-ads/list-creator-links)) credits the creator the tag belongs to.
+
+Always use the creator's Meta link as `link_url`, whatever the source. Growi
+attributes purchases to the creator through that tag. It also attributes ads
+made outside Growi when their URL has `a=meta_<tag>`, `utm_source=meta` and
+`utm_content={{ad.id}}`.
+
+What the creator earns depends on the campaign they are enrolled in:
+
+| Commission | How it is paid |
+| --- | --- |
+| Meta ad spend commission | A percentage of the spend on the ads credited to the creator's enrollment, each payout cycle. Spend comes from synced ad accounts only. A campaign can cap how much spend counts per ad over the ad's lifetime. |
+| Meta creative commission, per sale | Commission on attributed purchases, through the creator's Meta tag |
+| Meta creative commission, flat fee per ad | A flat fee recorded once, the first time a credited ad goes active |
+
+A campaign can also require creators to deliver a number of posts before
+their Meta commissions unlock.
+
+Ad spend commission, sales and fees show up in the creator's payouts like any
+other earnings. If a creator is removed from a campaign, ads already credited
+to that enrollment stay on it: re-add the creator to the same campaign to keep
+treating those ads as active on that program.
+
+## Rate limits and batching
+
+The Meta ads endpoints share your organization's public API limits:
+
+- **2 seconds** between requests from the same key.
+- **40 requests per hour** per key by default. Some organizations have a higher limit; the `X-RateLimit-Limit`, `X-RateLimit-Remaining` and `X-RateLimit-Reset` headers on each response show yours.
+- Over a limit you get `429` with a `Retry-After` header and `retry_after` in the body. The hourly limit resets at the top of the hour.
+
+Claude and other MCP clients have their own budget and do not use these
+requests. See [Connect Claude to Growi](/essentials/connect-claude#limits).
+
+To stay inside the limit:
+
+- Send up to 50 ads per [bulk request](/api-reference/endpoint/meta-ads/bulk-create-ads) instead of one request per ad.
+- Poll [publish status](/api-reference/endpoint/meta-ads/get-publish-status) for up to 200 ads in one call, every few minutes.
+- Read the builder options once per run and reuse them.
+- Use `per_page=100` on sources and [retry all failed ads](/api-reference/endpoint/meta-ads/retry-failed-ads) instead of one retry per ad.
+
+## Errors and troubleshooting
+
+| Status | Meaning |
+| --- | --- |
+| `207` | Bulk create accepted. Check each row's `success`. |
+| `401` | Missing or invalid key, or the key's creator is no longer an owner, admin or viewer of the organization |
+| `403` | A view-only key on a write endpoint, or an owner or admin endpoint called with another role |
+| `404` | `organization_id` is not one of your brands, or a template, link or setting id was not found |
+| `422` | Invalid input. Usually `{ "success": false, "error": ... }`; an ad id that is not yours also returns `422`. |
+| `429` | Rate limited |
+| `502` | Meta returned an error to a live lookup (pixels, audiences, interests, locations) |
+
+Rows in a bulk request fail with a `PREFLIGHT_*` code before anything is
+created; the full list is on
+[Create ads in bulk](/api-reference/endpoint/meta-ads/bulk-create-ads#row-error-codes).
+Ads that fail while publishing end in `state: failed` with `error_message`
+and `last_step`.
+
+<AccordionGroup>
+  <Accordion title="PREFLIGHT_AD_SET_FULL">
+    The ad set already holds Meta's maximum of 50 ads (150 with Advantage+
+    audience on a sales campaign). Rows are checked against the ad set as it
+    is when the request arrives, so split rows across ad sets yourself using
+    `ads_count` from List ad sets, or create a new ad set for each batch.
+  </Accordion>
+  <Accordion title="PREFLIGHT_NO_PIXEL">
+    `OFFSITE_CONVERSIONS` and `LANDING_PAGE_VIEWS` need a Meta pixel on the ad
+    account. Install one, or send `allow_optimization_fallback: true` to fall
+    back to `LINK_CLICKS`.
+  </Accordion>
+  <Accordion title="PREFLIGHT_PARTNERSHIP_NOT_APPROVED">
+    The partnership request is not approved yet, or Meta says the creator's
+    Instagram account is not eligible. Check **Meta Ads → Partnerships**, or
+    build the ad without `meta_partnership_ad_request_id` to run it from your
+    page.
+  </Accordion>
+  <Accordion title="PREFLIGHT_CAMPAIGN_ARCHIVED">
+    The campaign was archived or deleted in Ads Manager. Pick another one from
+    List Meta campaigns, which hides closed campaigns by default.
+  </Accordion>
+  <Accordion title="Sources return 422">
+    A `campaign_id`, `campaign_affiliate_id` or `creator_id` that is not in
+    your organization, a bad date or range, or `tik_tok_shop_videos` when no
+    TikTok Shop is connected. The `error` field says which.
+  </Accordion>
+  <Accordion title="An ad failed with 'We could not fetch this post's video'">
+    Growi could not download the post's video. Ask the creator for the file,
+    or build the ad from a content submission instead.
+  </Accordion>
+  <Accordion title="Pixels, audiences or interests say the ad account is missing an access token">
+    The Meta connection expired. Reconnect Meta in **Settings → Integrations →
+    Meta Ads**, then try again.
+  </Accordion>
+  <Accordion title="The creator gets no spend commission for an ad">
+    Check that the ad is credited to the creator (`creator` on Get an ad), that
+    its ad account syncs, and that the creator's campaign pays Meta ad spend
+    commission. Use the creator's Meta link as `link_url` on new ads.
+  </Accordion>
+</AccordionGroup>
+
+## Do the same with Claude
+
+If you [connected Claude to Growi](/essentials/connect-claude), you can run the
+whole flow by asking, for example: "Build paused partnership ads from
+yesterday's Instagram posts in the Summer campaign, 50 per ad set, then tell
+me which ones failed."
+
+| Tool | Step | What it does |
+| --- | --- | --- |
+| `list_meta_ad_sources` | 1 | Lists social posts, TikTok Shop videos or submissions, with each row's `creative_source`, creator, readiness and partnership request |
+| `get_meta_ad_builder_options` | 2 | Ad accounts, pages, Instagram identities, open campaigns and ad sets (with `ads_count` and `max_ads`), naming, default CTA, copy templates, UTM params, saved links, the allowed objectives, goals and CTAs, and creators' Meta links |
+| `search_meta_ad_targeting` | 2 | Looks up interests, locations, custom audiences or pixels on the ad account |
+| `create_meta_ads` | 3 | Creates up to 50 ads with the same payload as the bulk endpoint |
+| `list_meta_ads` | 4 | Publish state of ads built in Growi, newest first, filtered by id, state, Meta status or ad set |
+| `manage_meta_ads` | 5 | Launches, pauses or retries up to 50 ads |
+
+`create_meta_ads` and `manage_meta_ads` need an owner or admin, connected with
+their Growi login or with a full-access key they created. Both ask before they
+change anything:
+
+1. Claude calls the tool without confirming. Nothing is created or changed:
+   `create_meta_ads` checks every ad and reports which ones would fail and
+   which would start spend, and `manage_meta_ads` lists the ads that would
+   change.
+2. Claude shows you the plan.
+3. After you approve, Claude calls the tool again with the same arguments and
+   the confirmation token from step 1. The token works once, only for those
+   exact arguments, and expires after 10 minutes.
+
+On the MCP budget, `list_meta_ad_sources` costs 5 units, `create_meta_ads`
+and `manage_meta_ads` cost 3, and the other tools cost 1.

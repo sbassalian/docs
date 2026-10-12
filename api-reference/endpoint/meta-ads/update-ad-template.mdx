@@ -1,0 +1,82 @@
+---
+title: "Update an ad template"
+openapi: "PATCH /meta_ads/templates/{id}"
+---
+
+Send only the fields to change. Creatives go in creatives_attributes (include id to update, _destroy: true to remove). PUT works too.
+
+## Authentication
+
+Needs a **full-access** API key. View-only keys get `403`. A key acts as the person who created it, with their current role. See [Rate limits and authentication](/api-reference/introduction).
+
+## Errors
+
+| Status | When |
+| ------ | ---- |
+| `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
+| `403` | View-only API key |
+| `404` | Template not found, or organization_id is not a child brand of the key's organization |
+| `422` | Invalid template |
+| `429` | Rate limited: 2 seconds between requests, plus the hourly cap |
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.growi.io/api/public/v1/meta_ads/templates/101" \
+     -H "Authorization: Bearer YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "budget_cents": 7500
+     }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "data": {
+    "id": 6,
+    "organization_id": 501,
+    "name": "Daily creator launch",
+    "description": "Sales, broad US",
+    "campaign_objective": "OUTCOME_SALES",
+    "budget_type": "daily",
+    "budget_cents": 5000,
+    "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+    "optimization_goal": "OFFSITE_CONVERSIONS",
+    "billing_event": "IMPRESSIONS",
+    "targeting": {
+      "geo_locations": {
+        "countries": [
+          "US"
+        ]
+      }
+    },
+    "placements": {
+      "automatic": true
+    },
+    "builder_config": {},
+    "copy_template_id": 3,
+    "created_at": "2026-09-30T18:00:00Z",
+    "updated_at": "2026-10-01T09:12:00Z",
+    "creatives": [
+      {
+        "id": 14,
+        "name": "Default",
+        "message": "The serum I reach for every morning.",
+        "headline": "Glow in 7 days",
+        "description": null,
+        "call_to_action": "SHOP_NOW",
+        "link_url": "https://shop.example.com/products/glow-serum",
+        "position": 0
+      }
+    ]
+  },
+  "message": "Template updated successfully"
+}
+```
+
+</ResponseExample>

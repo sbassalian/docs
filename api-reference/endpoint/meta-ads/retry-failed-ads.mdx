@@ -1,0 +1,41 @@
+---
+title: "Retry all failed ads"
+openapi: "POST /meta_ads/retry_failed"
+---
+
+Queues every failed ad that matches the same filters as GET /meta_ads (search, creator, campaign and so on), not only one page. Only failed ads are touched, whatever status filter you send. Deleted ads are skipped unless include_deleted=true.
+
+## Authentication
+
+Needs a **full-access** API key. View-only keys get `403`. A key acts as the person who created it, with their current role. See [Rate limits and authentication](/api-reference/introduction).
+
+## Errors
+
+| Status | When |
+| ------ | ---- |
+| `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
+| `403` | View-only API key |
+| `404` | organization_id is not a child brand of the key's organization |
+| `429` | Rate limited: 2 seconds between requests, plus the hourly cap |
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.growi.io/api/public/v1/meta_ads/retry_failed" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 202
+{
+  "success": true,
+  "data": {
+    "queued": 7
+  }
+}
+```
+
+</ResponseExample>

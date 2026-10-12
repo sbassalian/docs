@@ -1,0 +1,54 @@
+---
+title: "Launch an ad"
+openapi: "POST /meta_ads/{id}/launch"
+---
+
+Turns a published ad, and its ad set and campaign, on at Meta. Spend starts right away. Launching an ad that is already active does nothing. An ad that has not published yet is queued to launch as soon as it publishes (payload.deferred is true).
+
+Step 5 of the [Meta ads automation flow](/essentials/meta-ads-automation).
+
+<Warning>
+Launching starts spend on your Meta ad account.
+</Warning>
+
+## Authentication
+
+Needs a **full-access** API key. View-only keys get `403`. A key acts as the person who created it, with their current role. See [Rate limits and authentication](/api-reference/introduction).
+
+## Errors
+
+| Status | When |
+| ------ | ---- |
+| `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
+| `403` | View-only API key |
+| `404` | organization_id is not a child brand of the key's organization |
+| `422` | Meta rejected the launch, or no ad with this id in your organization |
+| `429` | Rate limited: 2 seconds between requests, plus the hourly cap |
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.growi.io/api/public/v1/meta_ads/101/launch" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "data": {
+    "meta_ad_id": 9012,
+    "meta_id": "120215550000000001",
+    "state": "active",
+    "status": "ACTIVE",
+    "payload": {
+      "state": "active"
+    }
+  }
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,45 @@
+---
+title: "Sync ad account stats"
+openapi: "POST /meta_ads/ad_accounts/{id}/sync"
+---
+
+Starts a background sync of ads and stats for the last days_back days.
+
+## Authentication
+
+Needs a **full-access** API key. View-only keys get `403`. A key acts as the person who created it, with their current role. See [Rate limits and authentication](/api-reference/introduction).
+
+## Errors
+
+| Status | When |
+| ------ | ---- |
+| `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
+| `403` | View-only API key |
+| `404` | organization_id is not a child brand of the key's organization |
+| `429` | Rate limited: 2 seconds between requests, plus the hourly cap |
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.growi.io/api/public/v1/meta_ads/ad_accounts/101/sync" \
+     -H "Authorization: Bearer YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "days_back": 7
+     }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "meta_ad_account_id": 12,
+  "batch_id": "b-4f1c2a",
+  "jid": "8f2e0c1d9a7b6e5f4d3c2b1a"
+}
+```
+
+</ResponseExample>

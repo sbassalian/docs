@@ -1,0 +1,49 @@
+---
+title: "List Instagram identities"
+openapi: "GET /meta_ads/instagram_accounts"
+---
+
+Instagram business accounts linked to your Facebook pages, read live from Meta.
+
+## Authentication
+
+Any organization API key works, including view-only keys. A key acts as the person who created it, so that person needs the owner, admin or viewer role. See [Rate limits and authentication](/api-reference/introduction).
+
+## Errors
+
+| Status | When |
+| ------ | ---- |
+| `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
+| `404` | No Facebook Ads account connected, or organization_id is not a child brand of the key's organization |
+| `429` | Rate limited: 2 seconds between requests, plus the hourly cap |
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/meta_ads/instagram_accounts" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "data": [
+    {
+      "id": "17841400000000001",
+      "page_id": "104512345678901",
+      "page_name": "Glow Co",
+      "username": "glowco",
+      "name": "Glow Co",
+      "profile_picture_url": "https://scontent.xx.fbcdn.net/v/ig.jpg"
+    }
+  ],
+  "current_page_id": "104512345678901",
+  "current_instagram_actor_id": "17841400000000001"
+}
+```
+
+</ResponseExample>

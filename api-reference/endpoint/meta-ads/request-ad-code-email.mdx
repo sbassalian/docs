@@ -1,0 +1,47 @@
+---
+title: "Email a creator for an ad code"
+openapi: "POST /meta_ads/ad_codes/request_email"
+---
+
+Owner or admin only. Emails the creator asking them to share an ad code for an Instagram post. No email goes out when a usable code already exists (email_sent is false).
+
+## Authentication
+
+Owner or admin only: the person who created the key needs the owner or admin role. View-only keys cannot call write endpoints. See [Rate limits and authentication](/api-reference/introduction).
+
+## Errors
+
+| Status | When |
+| ------ | ---- |
+| `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
+| `403` | View-only API key, or the key's user is not an owner or admin |
+| `404` | organization_id is not a child brand of the key's organization |
+| `422` | Not an Instagram post, post not found, or the creator has no email |
+| `429` | Rate limited: 2 seconds between requests, plus the hourly cap |
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.growi.io/api/public/v1/meta_ads/ad_codes/request_email" \
+     -H "Authorization: Bearer YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "social_post_id": "instagram:3456789012345678901"
+     }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "ad_code_id": 813,
+  "ad_code_status": "requested",
+  "email_sent": true,
+  "emailed_to": "ava@example.com"
+}
+```
+
+</ResponseExample>

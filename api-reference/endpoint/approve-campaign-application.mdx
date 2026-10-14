@@ -1,0 +1,120 @@
+---
+title: "Approve campaign application"
+openapi: "POST /campaign_applications/{id}/approve"
+---
+
+Approves a pending creator application. This does exactly what **Accept** does on the dashboard Applications tab:
+
+- the creator is added to the campaign as an active creator, with their discount code and link set up the same way as any other accepted creator
+- the creator gets the campaign's acceptance email (and contract, when the campaign uses one)
+- the `campaign_affiliate.activated` [webhook event](/essentials/campaign-creator-webhooks) fires, echoing any attribution you sent when the application was created
+- the decision shows in your activity log
+
+<Info>
+  Requires a full-access API key (read-only keys are rejected).
+</Info>
+
+Only **pending** applications can be approved. Use [List campaign applications](/api-reference/endpoint/list-campaign-applications) to find them. Applications to your child brands' campaigns work too.
+
+**Idempotent**: calling this on an application that is already accepted returns `200` with `"changed": false` and does nothing, so retries are safe. To decide many applications at once, use [Bulk approve](/api-reference/endpoint/bulk-approve-campaign-applications) (up to 50 per request), which also keeps you well inside your hourly request limit.
+
+## Path parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `id` | Integer | The application id: `id` from List campaign applications, or `invitation_id` from Create campaign application | Yes |
+
+No request body is needed.
+
+## Request example
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/campaign_applications/98123/approve" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+## Response example
+
+```json
+{
+  "data": {
+    "id": 98123,
+    "status": "accepted",
+    "campaign_id": 51812,
+    "user_id": 45678,
+    "campaign_affiliate_id": 3490313,
+    "changed": true
+  }
+}
+```
+
+## Response fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `data.id` | Integer | The application id |
+| `data.status` | String | `accepted` |
+| `data.campaign_id` | Integer | The campaign applied to |
+| `data.user_id` | Integer | The creator's Growi user id |
+| `data.campaign_affiliate_id` | Integer or null | The creator's campaign enrollment id, usable with the [campaign affiliates](/api-reference/endpoint/list-campaign-affiliates) endpoints |
+| `data.changed` | Boolean | `true` when this request approved the application, `false` when it was already accepted |
+
+## Error responses
+
+**401: missing or invalid API key**
+
+```json
+{ "error": "Not Authenticated" }
+```
+
+**403: read-only API key**
+
+```json
+{ "error": "This API key is read-only and cannot modify data." }
+```
+
+**404: application not found for your organization**
+
+```json
+{ "error": "Application not found." }
+```
+
+**422: application is not pending**
+
+Returned when the application was already denied, canceled, or is waiting on payment.
+
+```json
+{ "error": "Only pending applications can be approved or denied. This application is rejected." }
+```
+
+**422: campaign is completed or canceled**
+
+```json
+{ "error": "You cannot accept an invitation to a completed or cancelled campaign." }
+```
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.growi.io/api/public/v1/campaign_applications/98123/approve" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "data": {
+    "id": 98123,
+    "status": "accepted",
+    "campaign_id": 51812,
+    "user_id": 45678,
+    "campaign_affiliate_id": 3490313,
+    "changed": true
+  }
+}
+```
+
+</ResponseExample>

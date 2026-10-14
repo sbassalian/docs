@@ -4026,57 +4026,43 @@
                             "description": "false = Growi has no record or content for this id (not synced yet, another shop's id, or a typo). Only applicationId is present then."
                           },
                           "creatorId": {
-                            "type": [
-                              "string",
-                              "null"
-                            ]
+                            "type": "string",
+                            "nullable": true
                           },
                           "creatorUsername": {
-                            "type": [
-                              "string",
-                              "null"
-                            ]
+                            "type": "string",
+                            "nullable": true
                           },
                           "partnerName": {
-                            "type": [
-                              "string",
-                              "null"
-                            ],
-                            "description": "Managing agency, when one handles the sample."
+                            "type": "string",
+                            "description": "Managing agency, when one handles the sample.",
+                            "nullable": true
                           },
                           "reviewRecordedAt": {
-                            "type": [
-                              "string",
-                              "null"
-                            ],
+                            "type": "string",
                             "format": "date-time",
-                            "description": "Set when the review was made through Growi."
+                            "description": "Set when the review was made through Growi.",
+                            "nullable": true
                           },
                           "currentState": {
-                            "type": [
-                              "string",
-                              "null"
-                            ],
-                            "description": "Furthest canonical state across the application's product rows."
+                            "type": "string",
+                            "description": "Furthest canonical state across the application's product rows.",
+                            "nullable": true
                           },
                           "approvedAt": {
-                            "type": [
-                              "string",
-                              "null"
-                            ],
+                            "type": "string",
                             "format": "date-time",
-                            "description": "First time we saw awaiting_shipment (detection time)."
+                            "description": "First time we saw awaiting_shipment (detection time).",
+                            "nullable": true
                           },
                           "shipped": {
                             "type": "boolean",
                             "description": "Shipped or further (a content state implies shipped even if the ship step was never observed)."
                           },
                           "shippedAt": {
-                            "type": [
-                              "string",
-                              "null"
-                            ],
-                            "format": "date-time"
+                            "type": "string",
+                            "format": "date-time",
+                            "nullable": true
                           },
                           "contentFulfilled": {
                             "type": "boolean",
@@ -4093,46 +4079,36 @@
                                 "type": "integer"
                               },
                               "firstPostedAt": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ],
-                                "format": "date-time"
+                                "type": "string",
+                                "format": "date-time",
+                                "nullable": true
                               },
                               "views": {
-                                "type": [
-                                  "number",
-                                  "null"
-                                ],
-                                "description": "Sum of stored view counts across the sample's videos."
+                                "type": "number",
+                                "description": "Sum of stored view counts across the sample's videos.",
+                                "nullable": true
                               }
                             }
                           },
                           "gmv": {
-                            "type": [
-                              "object",
-                              "null"
-                            ],
+                            "type": "object",
                             "description": "Order lines on this sample's posted videos for the products it requested, found under the creator's handle (price x quantity, INELIGIBLE lines excluded). A line shared by several applications (one video, same product) counts once, for the latest application (highest id), whichever ids you ask about. null = nothing to join on (no stored content, or no known handle). Orders stored without a creator handle are not counted, so this can undercount.",
                             "properties": {
                               "amount": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ],
-                                "description": "Decimal string; null when the lines span more than one currency."
+                                "type": "string",
+                                "description": "Decimal string; null when the lines span more than one currency.",
+                                "nullable": true
                               },
                               "currency": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ],
-                                "description": "null when the lines span more than one currency, or there are none."
+                                "type": "string",
+                                "description": "null when the lines span more than one currency, or there are none.",
+                                "nullable": true
                               },
                               "orders": {
                                 "type": "integer"
                               }
-                            }
+                            },
+                            "nullable": true
                           },
                           "products": {
                             "type": "array",
@@ -4141,19 +4117,15 @@
                               "type": "object",
                               "properties": {
                                 "productId": {
-                                  "type": [
-                                    "string",
-                                    "null"
-                                  ]
+                                  "type": "string",
+                                  "nullable": true
                                 },
                                 "currentState": {
                                   "type": "string"
                                 },
                                 "nativeStatus": {
-                                  "type": [
-                                    "string",
-                                    "null"
-                                  ]
+                                  "type": "string",
+                                  "nullable": true
                                 },
                                 "stateTimestamps": {
                                   "type": "object",
@@ -4342,11 +4314,9 @@
                             "description": "Creator open id."
                           },
                           "creatorUsername": {
-                            "type": [
-                              "string",
-                              "null"
-                            ],
-                            "description": "Handle stored on this application."
+                            "type": "string",
+                            "description": "Handle stored on this application.",
+                            "nullable": true
                           },
                           "application": {
                             "type": "object",
@@ -4357,11 +4327,9 @@
                                 "description": "When Growi first saw the request. TikTok doesn't send a request-creation time."
                               },
                               "currentState": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ],
-                                "description": "Furthest canonical state across the application's product rows."
+                                "type": "string",
+                                "description": "Furthest canonical state across the application's product rows.",
+                                "nullable": true
                               },
                               "products": {
                                 "type": "array",
@@ -4369,25 +4337,19 @@
                                   "type": "object",
                                   "properties": {
                                     "productId": {
-                                      "type": [
-                                        "string",
-                                        "null"
-                                      ]
+                                      "type": "string",
+                                      "nullable": true
                                     },
                                     "productTitle": {
-                                      "type": [
-                                        "string",
-                                        "null"
-                                      ]
+                                      "type": "string",
+                                      "nullable": true
                                     },
                                     "currentState": {
                                       "type": "string"
                                     },
                                     "nativeStatus": {
-                                      "type": [
-                                        "string",
-                                        "null"
-                                      ]
+                                      "type": "string",
+                                      "nullable": true
                                     },
                                     "stateTimestamps": {
                                       "type": "object",
@@ -4402,80 +4364,58 @@
                             }
                           },
                           "facts": {
-                            "type": [
-                              "object",
-                              "null"
-                            ],
+                            "type": "object",
                             "description": "The same creatorFacts object the relationship.state_changed event carries, from the creator's identity row. Marketplace-wide and point in time. null when nothing is known.",
                             "properties": {
                               "followerCount": {
-                                "type": [
-                                  "number",
-                                  "null"
-                                ]
+                                "type": "number",
+                                "nullable": true
                               },
                               "pps": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ],
-                                "description": "Promotion Performance Score as TikTok sends it."
+                                "type": "string",
+                                "description": "Promotion Performance Score as TikTok sends it.",
+                                "nullable": true
                               },
                               "fulfillmentRate": {
-                                "type": [
-                                  "number",
-                                  "null"
-                                ],
-                                "description": "90-day sample fulfillment rate, percent."
+                                "type": "number",
+                                "description": "90-day sample fulfillment rate, percent.",
+                                "nullable": true
                               },
                               "medianVideoViews": {
-                                "type": [
-                                  "number",
-                                  "null"
-                                ]
+                                "type": "number",
+                                "nullable": true
                               },
                               "gmv30dAmount": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ],
-                                "description": "Platform-wide 30-day GMV, decimal string."
+                                "type": "string",
+                                "description": "Platform-wide 30-day GMV, decimal string.",
+                                "nullable": true
                               },
                               "gmv30dCurrency": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
+                                "type": "string",
+                                "nullable": true
                               },
                               "contentCount": {
-                                "type": [
-                                  "number",
-                                  "null"
-                                ]
+                                "type": "number",
+                                "nullable": true
                               },
                               "unitsSold": {
-                                "type": [
-                                  "number",
-                                  "null"
-                                ]
+                                "type": "number",
+                                "nullable": true
                               },
                               "categories": {
-                                "type": [
-                                  "array",
-                                  "null"
-                                ],
+                                "type": "array",
                                 "items": {
                                   "type": "string"
-                                }
+                                },
+                                "nullable": true
                               },
                               "enrichedAt": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ],
-                                "format": "date-time"
+                                "type": "string",
+                                "format": "date-time",
+                                "nullable": true
                               }
-                            }
+                            },
+                            "nullable": true
                           },
                           "history": {
                             "type": "object",
@@ -4501,57 +4441,45 @@
                                 "description": "Past applications TikTok counted as content_fulfilled."
                               },
                               "postedRate": {
-                                "type": [
-                                  "number",
-                                  "null"
-                                ],
-                                "description": "contentFulfilled / shipped, 0 to 1, 4 decimals. null when nothing shipped."
+                                "type": "number",
+                                "description": "contentFulfilled / shipped, 0 to 1, 4 decimals. null when nothing shipped.",
+                                "nullable": true
                               },
                               "videosPosted": {
                                 "type": "integer",
                                 "description": "Distinct videos stored against past applications."
                               },
                               "gmv": {
-                                "type": [
-                                  "object",
-                                  "null"
-                                ],
+                                "type": "object",
                                 "description": "GMV from past samples, the /samples/outcomes attribution summed over the past applications: order lines on each sample's own videos for the products it requested, under the creator's handle, INELIGIBLE excluded. A line is credited to one application shop-wide, so it counts once. null = nothing to join on (no stored content or no known handle).",
                                 "properties": {
                                   "amount": {
-                                    "type": [
-                                      "string",
-                                      "null"
-                                    ],
-                                    "description": "Decimal string; null when the lines span more than one currency."
+                                    "type": "string",
+                                    "description": "Decimal string; null when the lines span more than one currency.",
+                                    "nullable": true
                                   },
                                   "currency": {
-                                    "type": [
-                                      "string",
-                                      "null"
-                                    ],
-                                    "description": "null when the lines span more than one currency, or there are none."
+                                    "type": "string",
+                                    "description": "null when the lines span more than one currency, or there are none.",
+                                    "nullable": true
                                   },
                                   "orders": {
                                     "type": "integer"
                                   }
-                                }
+                                },
+                                "nullable": true
                               },
                               "firstRequestSeenAt": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ],
+                                "type": "string",
                                 "format": "date-time",
-                                "description": "When Growi first saw the earliest past application."
+                                "description": "When Growi first saw the earliest past application.",
+                                "nullable": true
                               },
                               "lastRequestSeenAt": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ],
+                                "type": "string",
                                 "format": "date-time",
-                                "description": "When Growi first saw the latest past application."
+                                "description": "When Growi first saw the latest past application.",
+                                "nullable": true
                               }
                             }
                           }

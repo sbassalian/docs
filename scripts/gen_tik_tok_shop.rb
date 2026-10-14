@@ -84,6 +84,21 @@ def each_description(obj, path, &block)
   end
 end
 
+# The gateway mixes 3.1-style `type: [x, "null"]` into its 3.0 spec; 3.0 wants `nullable`.
+def normalize_types(obj)
+  case obj
+  when Hash
+    if obj['type'].is_a?(Array)
+      types = obj['type'] - ['null']
+      obj['nullable'] = true if obj['type'].include?('null')
+      types.size == 1 ? obj['type'] = types.first : obj.delete('type')
+    end
+    obj.each { |k, v| normalize_types(v) unless %w[example examples].include?(k) }
+  when Array
+    obj.each { |v| normalize_types(v) }
+  end
+end
+
 def schema_refs(obj, found = [])
   case obj
   when Hash
@@ -186,6 +201,8 @@ spec = {
   'paths' => paths,
   'components' => { 'securitySchemes' => { 'bearerAuth' => { 'type' => 'http', 'scheme' => 'bearer' } }, 'schemas' => schemas }
 }
+
+normalize_types(spec)
 
 # Swap in public wording, then refuse to publish anything still internal.
 unused_texts = texts.keys

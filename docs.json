@@ -205,13 +205,95 @@
             "group": "TikTok Shop",
             "icon": "store",
             "pages": [
-              "api-reference/endpoint/get-tik-tok-shop-store-creators",
-              "api-reference/endpoint/get-tik-tok-shop-store-videos",
-              "api-reference/endpoint/get-tik-tok-shop-store-lives",
-              "api-reference/endpoint/get-tik-tok-shop-store-products",
-              "api-reference/endpoint/get-tik-tok-shop-store-product-creators",
-              "api-reference/endpoint/get-tik-tok-shop-gmv-24h",
-              "api-reference/endpoint/get-tik-tok-shop-products"
+              {
+                "group": "Store",
+                "pages": [
+                  "api-reference/endpoint/get-tik-tok-shop-store-creators",
+                  "api-reference/endpoint/get-tik-tok-shop-store-videos",
+                  "api-reference/endpoint/get-tik-tok-shop-store-lives",
+                  "api-reference/endpoint/get-tik-tok-shop-store-products",
+                  "api-reference/endpoint/get-tik-tok-shop-store-product-creators"
+                ]
+              },
+              {
+                "group": "GMV stats",
+                "pages": [
+                  "api-reference/endpoint/get-tik-tok-shop-gmv-24h",
+                  "api-reference/endpoint/get-tik-tok-shop-products"
+                ]
+              },
+              {
+                "group": "Finance",
+                "pages": [
+                  "api-reference/endpoint/tik-tok-shop/finance-statements",
+                  "api-reference/endpoint/tik-tok-shop/finance-statement-transactions",
+                  "api-reference/endpoint/tik-tok-shop/finance-order-transactions",
+                  "api-reference/endpoint/tik-tok-shop/finance-unsettled",
+                  "api-reference/endpoint/tik-tok-shop/finance-withdrawals",
+                  "api-reference/endpoint/tik-tok-shop/finance-pnl",
+                  "api-reference/endpoint/tik-tok-shop/finance-reconciliation"
+                ]
+              },
+              {
+                "group": "Shop health",
+                "pages": [
+                  "api-reference/endpoint/tik-tok-shop/shop-health",
+                  "api-reference/endpoint/tik-tok-shop/shop-health-metrics",
+                  "api-reference/endpoint/tik-tok-shop/shop-health-metric",
+                  "api-reference/endpoint/tik-tok-shop/shop-health-metric-top-items",
+                  "api-reference/endpoint/tik-tok-shop/shop-health-metric-problems",
+                  "api-reference/endpoint/tik-tok-shop/connection-health"
+                ]
+              },
+              {
+                "group": "Affiliate",
+                "pages": [
+                  "api-reference/endpoint/tik-tok-shop/affiliate-summary",
+                  "api-reference/endpoint/tik-tok-shop/affiliate-creators",
+                  "api-reference/endpoint/tik-tok-shop/affiliate-order-lines",
+                  "api-reference/endpoint/tik-tok-shop/affiliate-creator-activity",
+                  "api-reference/endpoint/tik-tok-shop/summary-weekly"
+                ]
+              },
+              {
+                "group": "Samples",
+                "pages": [
+                  "api-reference/endpoint/tik-tok-shop/samples-funnel",
+                  "api-reference/endpoint/tik-tok-shop/samples-outcomes",
+                  "api-reference/endpoint/tik-tok-shop/samples-vetting",
+                  "api-reference/endpoint/tik-tok-shop/samples-match"
+                ]
+              },
+              {
+                "group": "Products",
+                "pages": [
+                  "api-reference/endpoint/tik-tok-shop/products-catalog",
+                  "api-reference/endpoint/tik-tok-shop/product-contents",
+                  "api-reference/endpoint/tik-tok-shop/product-performance",
+                  "api-reference/endpoint/tik-tok-shop/sku-performance",
+                  "api-reference/endpoint/tik-tok-shop/sku-detail-performance",
+                  "api-reference/endpoint/tik-tok-shop/channel-mix"
+                ]
+              },
+              {
+                "group": "Creators",
+                "pages": [
+                  "api-reference/endpoint/tik-tok-shop/creators-lookup",
+                  "api-reference/endpoint/tik-tok-shop/creators-profile",
+                  "api-reference/endpoint/tik-tok-shop/creator-marketplace",
+                  "api-reference/endpoint/tik-tok-shop/creators-discover-filters",
+                  "api-reference/endpoint/tik-tok-shop/creators-discover"
+                ]
+              },
+              {
+                "group": "Collabs and outreach",
+                "pages": [
+                  "api-reference/endpoint/tik-tok-shop/target-collabs",
+                  "api-reference/endpoint/tik-tok-shop/target-collab-promotion-details",
+                  "api-reference/endpoint/tik-tok-shop/outreach-records",
+                  "api-reference/endpoint/tik-tok-shop/conversation-group-counts"
+                ]
+              }
             ]
           }
         ]

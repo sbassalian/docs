@@ -1,0 +1,339 @@
+# Public wording for scripts/gen_tik_tok_shop.rb.
+#
+# endpoints: page title and description per route-table action.
+# texts: gateway field descriptions that mention internals, mapped to the public
+#   version (null drops the description). Keys must match the gateway text exactly;
+#   the generator fails on any internal wording it finds without a match here.
+# drop_fields: request-body fields kept out of the public docs.
+
+drop_fields:
+  # Writes creator ids into Growi's own store; not for public callers.
+  creators_discover: [persist]
+
+texts:
+  # COGS isn't a public param.
+  "Invalid params: missing/malformed dates, a reversed window or one over 365 days, an unknown group_by, a bad COGS map, or statements in more than one currency in the window": >-
+    Invalid params: missing or malformed dates, a reversed window or one over 365 days, an unknown group_by, or statements in more than one currency in the window
+  "TikTok's own tier thresholds for this metric, same unit as value. Whether lower or higher is better depends on the metric (DOC-DERIVED from TikTok's SPS guide: OTDR higher; the others lower).": >-
+    TikTok's own tier thresholds for this metric, in the same unit as value. Higher is better for OTDR, lower is better for the others.
+  "Derived by the gateway from `reasons`: any broken reason makes it broken, any other reason degraded.": >-
+    Worked out from `reasons`: any broken reason makes it broken, any other reason makes it degraded.
+  "A TikTok-facing sync kind finished ok in the last 24h (segments and gmv_parity do not count). null when sync runs could not be read or Postgres is not configured.": >-
+    True when a sync with TikTok finished in the last 24 hours. null when that can't be read.
+  "The dead-shop gate's own rule applied to the directory row read now (the worker recomputes every 5 minutes).": >-
+    True when both of the shop's TikTok tokens expired over an hour ago and there's no Seller Center session, so syncing is paused until the seller reconnects. Rechecked every 5 minutes.
+  "Window end, YYYY-MM-DD INCLUSIVE (local-aggregates convention — distinct from the official Analytics proxies' exclusive end_date).": >-
+    Window end, YYYY-MM-DD, inclusive.
+  "all = every affiliate order in the window; growi = restricted to orders on collabs the gateway created.": >-
+    all = every affiliate order in the window; growi = only orders on target collabs created through Growi.
+  "false = the gateway holds no row or content for this id (not synced yet, another shop's id, or a typo). Only applicationId is present then.": >-
+    false = Growi has no record or content for this id (not synced yet, another shop's id, or a typo). Only applicationId is present then.
+  "Set when the gateway itself executed the review.": >-
+    Set when the review was made through Growi.
+  "false = the gateway holds no sample row for this id in this shop (not synced yet, another shop's id, or a typo). Only applicationId is present then.": >-
+    false = Growi has no sample record for this id in this shop (not synced yet, another shop's id, or a typo). Only applicationId is present then.
+  "When the gateway first saw the request. TikTok's samples API sends no request-creation time.": >-
+    When Growi first saw the request. TikTok doesn't send a request-creation time.
+  "When the gateway first saw the earliest past application.": >-
+    When Growi first saw the earliest past application.
+  "When the gateway first saw the latest past application.": >-
+    When Growi first saw the latest past application.
+  "Also scan pending requests the sweep can no longer confirm (frontierUnresolved). Off by default: they may already be decided on TikTok.": >-
+    Also include pending requests Growi can no longer confirm as pending (frontierUnresolved). Off by default, since they may already be decided on TikTok.
+  "When the gateway first saw the request.": >-
+    When Growi first saw the request.
+  "Newest sweep or webhook sighting of the request.": >-
+    When Growi last saw the request, from a sync or a TikTok notification.
+  "The sweep no longer sees it pending and the frontier chase could not find it, so the stored state may be stale. Only true when includeFrontierUnresolved was sent.": >-
+    Growi no longer sees it as pending and couldn't find its current state, so the stored state may be out of date. Only true when includeFrontierUnresolved was sent.
+  "Distinct applications whose approval (the awaiting_shipment stamp) the gateway recorded at or after from: from our own review call, a webhook or a sweep, whoever approved.": >-
+    Distinct applications Growi saw approved (moved to awaiting_shipment) at or after `from`, whoever approved them.
+  "Of those, the ones the gateway's own review endpoint approved.": >-
+    Of those, the ones approved through Growi.
+  "Creator oec id (Rails tik_tok_shop_id).": >-
+    TikTok creator id (oecuid).
+  "TikTok's per-region options and sorters plus the gateway's fixed semantics.": >-
+    TikTok's per-region options and sort orders, plus the fixed rules Growi applies.
+  "Lower bounds over the last 30 days. avgVideoViewsMin and avgShoppableVideoViewsMin are mutually exclusive, and so are avgLiveViewersMin and avgShoppableLiveViewersMin (TikTok fails the call; the gateway 400s first).": >-
+    Lower bounds over the last 30 days. avgVideoViewsMin and avgShoppableVideoViewsMin can't be used together, and neither can avgLiveViewersMin and avgShoppableLiveViewersMin (the call returns 400).
+  "This shop's gateway discovery budget after this call (not TikTok's own counter, which TikTok does not expose). Null when the counter is unreachable.": >-
+    This shop's remaining Growi discovery budget after this call (TikTok doesn't expose its own counter). null when it can't be read.
+  ? "Product card GMV by entry point, from Seller Center's data overview (web-only: TikTok's official API has no search channel). US shops only, and only while the shop's seller web session is live. Same window as the rest of the response, read in US Pacific days with the start day's UTC offset for the whole window (a window across a DST change uses the start day's). Unlike the official numbers, Seller Center already has intraday values for today and yesterday, so a window reaching past latestAvailableDate can show product card GMV the channels do not. Cached per shop and window for about 5 minutes. Seller Center's metric ids can change with a Seller Center release; if they do, this block goes null with productCardReason unexpected_response until the gateway is updated. Observed on one US shop over two windows: shopTab + search + other = total, shopTab + search = the seller_product_card channel, and other = the affiliate_product_card channel, to the cent. null when it could not be served; the rest of the response is unaffected."
+  : >-
+    Product card GMV by entry point, from TikTok Seller Center (TikTok's official API has no search channel). US shops only, and only while the shop's Seller Center session is active. Same window as the rest of the response, in US Pacific days. Seller Center has intraday values for today and yesterday, so a window past latestAvailableDate can show product card GMV the channels don't. Cached per shop and window for about 5 minutes. null when it can't be served (productCardReason says why); the rest of the response is unaffected.
+
+endpoints:
+  finance_statements:
+    title: "Settlement statements"
+    description: |
+      Returns the shop's daily settlement statements from TikTok. TikTok cuts one statement each day at 00:00 UTC covering the previous day's settled transactions, with data from 2023-07-01. Each row has `id`, `statementTime`, `currency`, `settlementAmount`, `revenueAmount`, `feeAmount`, `adjustmentAmount`, `netSalesAmount`, `shippingCostAmount`, `paymentStatus` (`PAID`, `FAILED` or `PROCESSING`), `paymentId` (null while processing) and `paymentTime`.
+
+      Filter with `statement_time_ge` (inclusive) and `statement_time_lt` (exclusive), both Unix seconds, and with `payment_status`. Results are newest first unless you set `sort_order=ASC`. `page_size` is 1 to 100 (TikTok's default is 20). Pass `nextPageToken` back as `page_token`; it is null on the last page. To match a bank deposit, use `settlementAmount` and `paymentId`, then open the statement's transactions. Amounts keep TikTok's signs. Read live from TikTok on every call.
+
+  finance_statement_transactions:
+    title: "Statement transactions"
+    description: |
+      Lists every transaction settled in one statement: orders (`type` `ORDER`), adjustments (with `adjustmentId`, `adjustmentOrderId` and `adjustmentAmount`) and reserves (`RESERVE`, with `reserveAmount`, `reserveStatus` `COLLECTED` or `RELEASED`, and `estimatedReleaseTime`). Take `statementId` from Settlement statements.
+
+      The response carries `payableAmount` (settlement plus reserve), `totalSettlementAmount`, `totalReserveAmount`, `totalSettlementBreakdown` and `totalCount`. Order rows include revenue, shipping, fee and tax amounts with breakdown maps; affiliate commission is `feeTaxBreakdown.fee.affiliateCommissionAmount`. Rows have no currency of their own and use the statement's `currency`. US cross-border data starts 2025-04-30. Rows are sorted by order create time, newest first unless you set `sort_order=ASC`. `page_size` is 1 to 100; pass `nextPageToken` back as `page_token`. Read live from TikTok.
+
+  finance_order_transactions:
+    title: "Order settlement"
+    description: |
+      Returns the settled revenue, fees, shipping and settlement for one order, split per SKU. Order-level fields are `revenueAmount` (net sales), `feeAndTaxAmount`, `shippingCostAmount`, `settlementAmount` and `currency`. Each `skuTransactions` row adds `skuId`, `skuName`, `productName`, `quantity`, `statementId` (the payout it landed in) and breakdown maps.
+
+      Affiliate commission is `feeTaxBreakdown.fee.affiliateCommissionAmount`, plus `affiliatePartnerCommissionAmount`, `affiliateAdsCommissionAmount` and `cofundedCreatorBonusAmount` when present. An order that hasn't settled yet has no rows here; use Unsettled transactions for estimates. Read live from TikTok.
+
+  finance_unsettled:
+    title: "Unsettled transactions"
+    description: |
+      Lists orders and adjustments that TikTok hasn't settled yet, created on or after 2025-01-01. Every amount is TikTok's estimate and can change before settlement. Final numbers only come from the statement endpoints.
+
+      The response has `totalCount`, the sums `sumEstSettlementAmount`, `sumEstRevenueAmount`, `sumEstAdjustmentAmount` and `sumEstFeeAmount`, and `currency` (set only when every row on the page shares one). Each row has `type`, `orderId`, `orderCreateTime`, `orderDeliveryTime`, `unsettledReason`, the `est*` amounts with breakdown maps, and `estimatedSettlement`: a text rule such as days after delivery before the order is delivered, then a Unix-seconds string. Filter on order create time with `search_time_ge` (inclusive) and `search_time_lt` (exclusive), in Unix seconds. Newest first by default. `page_size` is 1 to 100; pass `nextPageToken` back as `page_token`. Read live from TikTok.
+
+  finance_withdrawals:
+    title: "Withdrawal records"
+    description: |
+      Lists money moving in and out of the shop's TikTok balance. `type` is `WITHDRAW` (the seller withdrew to a bank card), `SETTLE` (TikTok settled to the seller), `TRANSFER` (a platform subsidy or deduction) or `REVERSE` (a withdrawal failed on a bad bank card). Each row has `id`, `type`, `amount`, `currency`, `status` (`PROCESSING`, `SUCCESS` or `FAILED`) and `createTime`. No bank account data is returned.
+
+      Pass `types` as a comma-separated list to filter (default: all four). `create_time_ge` (inclusive) and `create_time_lt` (exclusive) take Unix seconds. `page_size` is 1 to 100; pass `nextPageToken` back as `page_token`. Read live from TikTok.
+
+  finance_pnl:
+    title: "Profit and loss"
+    description: |
+      Returns a profit and loss for a date window, built live from TikTok's settlement statements. Each line (`groups[]` and `totals`) has `revenue`, `refunds`, `shipping`, `feesAndTaxes` with `fees` and `taxes` maps, `platformCommission`, `affiliateCommission`, `adjustments`, `adjustmentsByType`, `reserve` and `settlement`, plus row counts. Amounts are exact decimal strings in `currency`, summed with TikTok's own signs, so fees are negative. Reserves are kept out of `settlement`.
+
+      `start_date` and `end_date` are activity days, YYYY-MM-DD, UTC, both inclusive, at most 365 days apart. TikTok cuts one statement a day at 00:00 UTC covering the day before, so each activity day maps to the statement stamped the next day. `group_by` is `total` (default), `day` or `sku`. With `sku`, adjustments, reserves and orders that couldn't be read go to `unallocated`. A window whose statements are in more than one currency is rejected.
+
+      Large windows can be cut short. When `truncated` is true, `truncatedReasons` and `coverage` say what was left out, and `statements.headerTotals` still sums the header of every listed statement. Narrow the window to get full coverage.
+
+  finance_reconciliation:
+    title: "Settlement reconciliation"
+    description: |
+      Checks orders created in a window against what TikTok actually settled. The orders are the shop's affiliate orders, the same set as Affiliate order lines, so orders with no creator attribution aren't included. Each order gets a `status`: `settled`, `partially_settled` (settled rows plus a later unsettled row, such as an adjustment), `unsettled`, `not_found`, `unknown`, `unchecked` or `error`.
+
+      Per order you get `stored` (Growi's synced view: SKU lines, units, `gmv`, settlement statuses, estimated and actual commission), `settled` (TikTok's `settlementAmount`, `revenueAmount`, `feeAndTaxAmount`, `shippingCostAmount`, `affiliateCommission` and `statementIds`) and `unsettled` (TikTok's estimates). For settled orders, `mismatch` compares the affiliate commission TikTok deducted at settlement with the commission reported on the affiliate order; `against` says whether that was the actual or estimated figure, and `delta` (settled minus stored) is flagged when it exceeds `tolerance` (default `0.01`). `summary` counts the page by status. Amounts are exact decimal strings.
+
+      `start_date` and `end_date` are order-create days, YYYY-MM-DD, UTC, inclusive, at most 365 days apart. Orders are newest first. `limit` is up to 50 (default 25), and each order costs one TikTok call. Pass `nextCursor` back as `cursor` with the same window. `sweptThrough` shows how fresh the stored side is. When time runs out, `truncated` is true and some orders come back `unchecked` or `unknown`.
+
+  shop_health:
+    title: "Shop performance score"
+    description: |
+      Returns TikTok's Shop Performance Score (SPS) overview: the overall `score`, `tier`, `peerPercentile`, per-dimension scores and statuses in `dimensions`, the seller `benefits` and which ones the shop has earned, and the `topIssues` to fix with TikTok's `topIssuesSummary` (null when absent).
+
+      TikTok serves SPS for US shops only. Pass `locale` (for example `en-US`) to localize names and text; TikTok picks a default otherwise. Use Performance score metrics to drill into individual metrics.
+
+  shop_health_metrics:
+    title: "Performance score metrics"
+    description: |
+      Lists every Shop Performance Score metric for the shop. Each has `metricCode`, `metricName`, `dimension`, `value` and `valueUnit` (`PERCENT` or `HOURS`), `score` (0 to 5), `status`, TikTok's `benchmarks` (`excellentThreshold` and `poorThreshold`) and the evaluation window (`evaluateDurationDays`, `evaluationStartsAt`, `evaluationEndsAt`). `topReasonText` is set when TikTok marks the metric as a key contributor to the score.
+
+      `status` is `EXCELLENT`, `GOOD`, `POOR`, `CRITICAL` or `NIL`. `NIL` means there isn't enough data to score the metric, not a zero score. TikTok advises using `status` rather than comparing `value` to the thresholds yourself, since whether higher or lower is better depends on the metric. US shops only. `locale` localizes names and text. Read live from TikTok.
+
+  shop_health_metric:
+    title: "Metric diagnosis"
+    description: |
+      Returns TikTok's diagnosis of one Shop Performance Score metric: its value, score, status and benchmarks, a daily `trend`, the `calculation` behind it (numerator and denominator with labels), how its problem cases split in `distribution`, and TikTok's diagnostic text in `analyses` (empty when TikTok has none).
+
+      `metricCode` is case-insensitive. Current codes are `NRR` (negative review rate), `NBFR` (non-buyer-fault return and refund rate), `SFCR` (seller-fault cancellation rate), `OTDR` (on-time delivery rate), `AHT` (after-sales handling time) and `IM_DSAT` (chat dissatisfaction rate). TikTok may add more. `trend_duration_days` sets the trend length, 1 to 365, default 30. US shops only. Read live from TikTok.
+
+  shop_health_metric_top_items:
+    title: "Metric top items"
+    description: |
+      Lists the items behind one Shop Performance Score metric. `itemType` says what the rows are: `products` for `NRR` and `NBFR`, `logistics_providers` for `OTDR`, and `aftersales_types` for `AHT`. A metric TikTok adds later comes back as `unknown`. Rows use camelCase keys from TikTok's fields, for example `productId`, `productName`, `deliveredOrderCount`, `negativeOrderCount` and `topReviewReasons` for products.
+
+      The list isn't paged. TikTok has no top items for `SFCR` or `IM_DSAT`, so those codes are rejected; use Metric problem details for them. US shops only. Read live from TikTok.
+
+  shop_health_metric_problems:
+    title: "Metric problem details"
+    description: |
+      Lists the orders or chats that count against one Shop Performance Score metric, one page at a time. `itemType` is `orders` for `NRR`, `NBFR`, `SFCR` and `OTDR`, `aftersales_orders` for `AHT`, and `chats` for `IM_DSAT` (TikTok masks `customerName`). Rows use camelCase keys from TikTok's fields. Ids are strings and `*Time` fields are ISO 8601.
+
+      `page_size` is up to 50 (TikTok's default is 10). Pass `nextPageToken` back as `page_token`; it is null on the last page. `totalCount` gives the total. US shops only. Read live from TikTok.
+
+  connection_health:
+    title: "Connection health"
+    description: |
+      Reports whether the shop is connected to Growi and its data is syncing. `status` is `ok`, `degraded` or `broken`, and `reasons` lists why, each with a `code`, `severity` and a plain-language `message` that is safe to show. `isCollecting` is true when a TikTok data sync finished successfully in the last 24 hours (null when unknown).
+
+      The shop is `broken` when it has no working TikTok connection. It is `degraded` when, for example, it is connected without TikTok's official API, the seller's TikTok authorization has expired or expires within 7 days (the seller has to reconnect), the Seller Center login has expired, or a data sync keeps failing. `sync` shows the last run, last success and last failure for each data type over the past 30 days. This call doesn't contact TikTok; it reflects what Growi last saw.
+
+  affiliate_summary:
+    title: "Affiliate summary"
+    description: |
+      Returns the shop's affiliate totals over a date window: `gmvGross`, commission (`commissionBase`, `commissionEstimated`, `commissionActual`), `orders`, `skuOrders`, `itemsSold`, distinct `creators` and `fullyReturnedSkuOrders`, in `currency`.
+
+      `start_date` and `end_date` are YYYY-MM-DD UTC days, both inclusive, so pass today as `end_date` to include today. `scope` is `all` (default, every affiliate order) or `growi` (only orders on collabs created through Growi). Served from Growi's synced order data, not a live TikTok call. `sweptThrough` is the time orders are synced through (null if the shop has never synced), so the most recent hours can lag.
+
+  affiliate_creators:
+    title: "Top affiliate creators"
+    description: |
+      Lists the shop's affiliate creators ranked by GMV over a date window. Each row has `creatorKey` (the creator's open id, else username, stable across renames), `creatorUsername`, `gmvGross`, `orders`, `skuOrders`, `itemsSold`, `commissionEstimated` and `lastOrderAt`.
+
+      `start_date` and `end_date` are YYYY-MM-DD UTC days, both inclusive. `scope` is `all` (default) or `growi` (only collabs created through Growi). `limit` is 1 to 500 (default 50). When more creators exist the response has `nextCursor`; pass it back as `cursor` with the same dates and scope, and stop when it's absent. A cursor sent with a different window or scope is rejected. In a window that includes today, GMV still moves as orders sync, so a creator can shift between pages. Page through a closed window for exports. `sweptThrough` shows how fresh the data is.
+
+  affiliate_order_lines:
+    title: "Affiliate order lines"
+    description: |
+      Lists affiliate order lines, one per order and SKU, newest first by order create time. Each line carries the attributed `creatorUsername`, collab and campaign ids, `contentId` and the `content` it points at (URL, post time, views, format; null when unknown), `productTitle`, `quantity`, `gmvGross`, `settlementStatus` and commission: `estimatedPaidCommission`, `actualPaidCommission` and `commissionDelta` (actual minus estimated, null until TikTok reports an actual), plus base, partner, shop ads and co-funded bonus pairs. Rates are fractions (0.155 = 15.5%).
+
+      Settlement status and actual amounts change until a line settles, roughly 15 to 20 days after delivery. `settlementFinal` is true once a line stops changing. `refunds` is `include` (default), `only` or `exclude`; a refund line is fully returned or `INELIGIBLE`. Filter with `creator_username` or `target_collaboration_id`.
+
+      `start_date` and `end_date` are YYYY-MM-DD UTC days, inclusive, at most 365 days apart. `limit` is up to 500 (default 100); pass `nextCursor` back as `cursor` with the same filters. The first page also returns `counts` for the whole window. Narrow a wide window if the call times out.
+
+  affiliate_creator_activity:
+    title: "Creator activity over time"
+    description: |
+      Returns active, new, returning, retained and churned creators per week or month. A creator is active in a period when they have a counting affiliate sale for this shop (`INELIGIBLE` lines excluded). `new` means their first sale ever falls in the period. `returning` means active, not active in the previous period, and not new. `retained` means active in this period and the previous one. `churned` means active in the previous period but not this one, and carries the previous period's GMV and orders. Each group has `creators`, `gmvGross` and `orders`.
+
+      `granularity` is `week` (Monday to Sunday, default) or `month`, both in UTC. `start_date` and `end_date` are inclusive, at most 365 days apart. Every period touching the window is returned; a clipped first or last period has `partial: true`, so start on a Monday or the 1st to avoid that. `historyFrom` is the earliest sale Growi holds, so periods near it can count long-standing creators as new.
+
+  summary_weekly:
+    title: "Weekly summary"
+    description: |
+      Compares one week with the week before across affiliate GMV, orders, units sold, commission, creators, samples and content posted, plus top movers. Each metric is `{ value, previous, change, changePct, source }`; `changePct` is null when the previous value is 0 or unknown. Money is an exact decimal string in `currency`.
+
+      Weeks run Monday to Sunday in UTC, both ends inclusive. `week_start` is that Monday (YYYY-MM-DD), from 26 weeks back up to the current week. It defaults to the last complete week, and the current week is flagged `inProgress`. Each figure matches its source endpoint (such as Affiliate summary or Sample funnel) for the same week.
+
+      Sample counts follow a request cohort, so last week's approved and shipped numbers can still grow. Content counts stop changing two weeks after the week ends. `topMovers` lists 5 `top` and 5 `drops` for creators, products, products by samples and videos, each with a `basis` sentence. Product movers use TikTok's all-channel analytics in the shop's timezone and local currency, 1 to 2 days behind. Product movers are null when the shop isn't connected through TikTok's official API or its TikTok authorization doesn't include analytics data. A part that fails or times out is listed in `unavailable` with null metrics; the rest still returns.
+
+  samples_funnel:
+    title: "Sample funnel"
+    description: |
+      Returns the sample funnel for a cohort of sample requests: counts per stage, conversion rates and time in stage. The cohort is every sample row (one per application and product) first seen as requested between `start_date` and `end_date` (YYYY-MM-DD, UTC, inclusive, at most 365 days apart). Later stages count for that cohort whenever they happened.
+
+      Stages run `sample_requested`, `awaiting_shipment`, `sample_shipped`, `content_pending`, `content_fulfilled`. Each has `count`, `rateFromPrevious` and `rateFromRequested` (fractions, 0.6 = 60%, null when the denominator is 0) and `timeInStage` (median and p90 hours to the next stage). `exits` counts `content_warning` and `content_unfulfilled` (set by Growi's timers) and `cancelled` (set by TikTok). `byCollabType` splits open and target collabs, and `currentStates` counts rows by state. Filter with `productId` or `targetCollaborationId`.
+
+      Times are when Growi observed each change, not TikTok's event times. For a newly connected shop, its whole pending backlog lands on the day it connected.
+
+  samples_outcomes:
+    title: "Sample outcomes"
+    description: |
+      Returns where up to 100 sample applications ended up. For each id you get `currentState` (the furthest state across its products), `approvedAt`, `shipped` and `shippedAt`, `contentFulfilled`, `contentPosted`, a `content` summary (videos, first post time, views), attributed `gmv` where it can be matched, and per-product state timestamps.
+
+      Pass `applicationIds` as a comma-separated list of 1 to 100 numeric ids. Items come back in your order and duplicates collapse. `found: false` means Growi holds no data for that id (not synced yet, another shop's id, or a typo). Served from Growi's synced data. If the call times out, ask for fewer ids.
+
+  samples_vetting:
+    title: "Sample applicant vetting"
+    description: |
+      Returns facts for vetting sample applicants, for up to 50 application ids. Each item has the current `application` (products and state), the creator's marketplace `facts` (followers, `pps`, fulfillment rate, median video views, 30-day GMV, categories) and their `history` in this shop across their other sample applications: requests by state, shipped, content fulfilled, `postedRate`, videos posted and GMV.
+
+      There's no score or recommendation, so apply your own rules. History is keyed by the creator's open id, not the handle, so a reused handle doesn't pull in another creator's samples. Pass `applicationIds` as a comma-separated list (1 to 50 after duplicates collapse). Items come back in your order. `found: false` means Growi has no sample row for that id. `facts` are platform-wide and a point in time. Served from Growi's synced data.
+
+  samples_match:
+    title: "Match pending samples"
+    description: |
+      Checks the shop's pending sample requests against your criteria and reports which match. It's read-only: nothing is approved. Requests are scanned roughly oldest first. Send `criteria` in the JSON body, at least one, and all must pass: `minFollowers`, `maxFollowers`, `minGmvGlobal30d` (platform-wide), `categories`, `minFulfillmentRate`, `minPostedRate` and `minPastSampleGmv` (this shop), `maxProductsSampled`, `cooldownDays`, `excludeSampleStates` and `productIds`. Unknown criteria names are rejected.
+
+      Each item reports `matched` and, per criterion, `pass`, `fail` or `unknown` with the value used. `unknownAs` (`fail` by default) decides whether unknown blocks a match. `include: "all"` also returns requests that didn't match. Narrow the scan with `applicationIds`.
+
+      `limit` (1 to 50, default 25) caps requests scanned, not matches, so a page can hold zero matches and still have `nextCursor`. Keep passing `nextCursor` back as `cursor` until it's absent. Requests from the same creator are checked separately; `creatorPendingApplicationIds` lists the others.
+
+      `approvalsToday` counts today's approvals for the UTC day and, if you send an IANA `timezone`, your local day, so you can enforce your own daily cap. Requests Growi can no longer confirm as pending may already be decided on TikTok, so they're skipped unless `includeFrontierUnresolved` is true.
+
+  products_catalog:
+    title: "Product catalog"
+    description: |
+      Lists the shop's products from TikTok, each with its SKUs (`sellerSku`, prices, `status`), in-stock `inventory` per warehouse, and main and SKU images. Prices are decimal strings with a `currency` on each SKU.
+
+      `status` filters by product status: `ACTIVATE` (default), `ALL`, `DRAFT`, `PENDING`, `FAILED`, `SELLER_DEACTIVATED`, `PLATFORM_DEACTIVATED`, `FREEZE` or `DELETED`. `page_size` is 1 to 100 (default 50). Pass `nextPageToken` back as `page_token`. Read live from TikTok, so the shop has to be connected through TikTok's official API.
+
+  product_contents:
+    title: "Product videos and LIVEs"
+    description: |
+      Lists the videos and LIVEs that sold one product in a date window, summed per content and ranked by GMV. Each row has `contentId`, `kind`, `creatorHandle`, `title`, `startedAt`, `gmv`, `orders`, `unitsSold`, refunds, `commission` and `currency`, plus the days counted. `total` is the number of contents before `limit` applies.
+
+      `start_date` and `end_date` are YYYY-MM-DD in the shop region's local day, both inclusive, at most 31 days including both ends. `type` is `all` (default), `video` or `live`. `limit` is 1 to 200 (default 50). Served from Growi's synced sales data, and the most recent days can still change.
+
+  product_performance:
+    title: "Product performance"
+    description: |
+      Returns one product's performance over time from TikTok's analytics: all-channel GMV, orders and items sold per day or as one total, with sales and traffic split by channel (`VIDEO`, `LIVE`, `PRODUCT_CARD`), cancelled, returned and refunded units, and the star-rating breakdown. `title` and `imageUrl` come from the shop's catalog.
+
+      `start_date` is inclusive and `end_date` is exclusive, both YYYY-MM-DD in the shop's timezone, so pass the day after the last day you want. TikTok rejects windows starting more than about 180 days back. `granularity` is `1D` (default, one interval per day) or `ALL` (one total). TikTok fills the cancel and refund counts only on `ALL`. `currency` is `USD` or `LOCAL` (TikTok's default). `latestAvailableDate` shows the newest day TikTok has data for.
+
+  sku_performance:
+    title: "SKU ranking"
+    description: |
+      Lists the shop's SKUs with GMV, SKU orders and units sold for a date window, from TikTok's analytics. Ranked by GMV by default. `gmv` is `{ amount, currency }`.
+
+      `start_date` is inclusive and `end_date` is exclusive (YYYY-MM-DD, shop timezone), so pass the day after the last day you want. TikTok rejects windows starting more than about 180 days back. `sort_field` is `gmv`, `sku_orders` or `units_sold`, and `sort_order` is `DESC` (default) or `ASC`. Filter with `product_ids` (comma-separated) and `product_status` (`LIVE`, `INACTIVE` or `ALL`). `currency` is `USD` or `LOCAL` (TikTok's default). `page_size` is 1 to 100 (TikTok's default is 10); pass `nextPageToken` back as `page_token` with the same filters. Data lags 1 to 2 days, and `latestAvailableDate` shows the newest day.
+
+  sku_detail_performance:
+    title: "SKU performance"
+    description: |
+      Returns one SKU's GMV, items sold and SKU orders per day or as one total, from TikTok's analytics. Each interval is split by channel (`LIVE`, `VIDEO`, `PRODUCT_CARD`) in `gmvByChannel` and `itemsSoldByChannel`.
+
+      `start_date` is inclusive and `end_date` is exclusive (YYYY-MM-DD, shop timezone), so pass the day after the last day you want. Interval `endDate` values are exclusive too. TikTok rejects windows starting more than about 180 days back. `granularity` is `1D` (default) or `ALL`. `currency` is `USD` or `LOCAL` (TikTok's default). `latestAvailableDate` shows the newest day TikTok has data for.
+
+  channel_mix:
+    title: "Sales channel mix"
+    description: |
+      Breaks the shop's GMV down by sales channel for a date window: seller video, seller LIVE, seller product card, affiliate video, affiliate LIVE and affiliate product card. The six `channels` don't overlap and add up to `total.gmv`. Each has `gmv`, `gmvShare` (0 to 1), `impressions` and `clicks`; SKU orders and items sold exist for seller channels only. `bySource` sums seller and affiliate. `shopTab` is reported alongside because it overlaps the channels.
+
+      `start_date` is inclusive and `end_date` is exclusive (YYYY-MM-DD, shop timezone). Data lags 1 to 2 days (`latestAvailableDate`). Totals are summed over the shop's products, 100 per page in GMV order, and `max_pages` (1 to 10, default 5) caps how many pages are read. When `products.truncated` is true, the numbers cover only the top products. `currency` is `USD` or `LOCAL` (TikTok's default).
+
+      US shops with an active Seller Center login also get `productCard`: product card GMV split into shop tab, search and other. When it can't be served it's null and `productCardReason` says why.
+
+  creators_lookup:
+    title: "Bulk creator lookup"
+    description: |
+      Looks up to 200 creators at once by `openId`, `oecId` or `username`, using the ids Growi already holds. Send `refs` in the JSON body. Each ref needs at least one id, tried in that order. A leading @ and case are ignored on usernames, and old handles still match.
+
+      Each result has `found`, `matchedBy` (`openId`, `oecId`, `username` or `previousUsername`), `ambiguous` (more than one stored creator claims the handle or oec id; the pick is still consistent) and `creator`: ids, current and previous usernames, nickname, avatar and stored `facts` (followers, PPS, categories, platform 30-day GMV, fulfillment rate). Results come back in your order. An unknown creator is `found: false`, not an error. Lookup by sec_uid isn't supported. This call doesn't contact TikTok.
+
+  creators_profile:
+    title: "Creator profile"
+    description: |
+      Returns one creator's profile as this shop sees them. Look up by exactly one of `openId` or `username` (with or without @; an old handle still finds the creator).
+
+      `creator` and `marketplaceStats` are platform-wide: ids, usernames, followers and profile URL, plus TikTok's 30-day fulfillment rate, median video views, GMV and video count as last seen (null if never captured). `sales` is the creator's affiliate GMV for this shop, as `lifetime` and `last28Days` (UTC days). `content` counts the creator's posts for this shop with views, likes and comments. `samples` and `showcase` count relationships by state, and `segments` lists the segments the creator is in.
+
+      `breakdown=true` adds GMV by content type and the top 10 products. If that part takes too long, `breakdownStatus` is `timeout` and the totals still stand. A creator Growi has no data on returns `found: false`. Served from Growi's synced data, so recent days can lag (`sweptThrough`).
+
+  creator_marketplace:
+    title: "Creator marketplace detail"
+    description: |
+      Returns one creator's TikTok Creator Marketplace profile for the last 30 days: follower age, gender and location mix, GMV and GPM (overall, video and LIVE), content and category GMV mix, top collaborated brands, average engagement and commission, post rate, rating and PPS. Read live from TikTok.
+
+      Pass the creator's TikTok Shop open id as `openId`. A sec_uid is rejected, so use Bulk creator lookup to get the open id. Precise GMV, GPM and units sold appear only when the creator shares precise data; otherwise use the `*Range` fields, which are US only. `avatarUrl` is a signed TikTok URL that expires. TikTok documents a quota of 10,000 of these queries a day.
+
+  creators_discover_filters:
+    title: "Discovery filters"
+    description: |
+      Returns the filters and sort orders you can use with Discover creators. `options` and `sorters` come live from TikTok and vary by region. Pass an option's `optionType` and chosen ids back as `advanced.options`, and a sorter's `algorithmId` as `advanced.sorterAlgorithmId`. `semantics` lists Growi's fixed values: page sizes, the GMV and units-sold buckets with readable labels, and notes on how the ranges read. This call doesn't count against the creator discovery quota.
+
+  creators_discover:
+    title: "Discover creators"
+    description: |
+      Searches TikTok's Creator Marketplace by filters and returns one page of creators, in TikTok's order. Use it to find creators the shop hasn't worked with yet. Each row has `openId` (use it for invites and DMs), `username`, followers, average shoppable views, GMV (precise `gmv` only when the creator shares it, else `gmvRange`), `unitsSoldRange`, top follower demographics and a `profile` block.
+
+      Send filters in the JSON body: `keyword` (matches username and nickname only), `followers` (count, age ranges, gender share in basis points), `gmvRanges` and `unitsSoldRanges` (TikTok's four fixed buckets), `categories`, `contentPerformance`, `affiliate` (commission, post rate, agency status, fast-growing, not invited in 90 days) and `advanced` (region options and sort order from Discovery filters). All metrics cover the last 30 days. `pageSize` is 12 or 20. Unknown keys are rejected.
+
+      To page, pass `nextPageToken` back as `pageToken` along with `searchKey`. `hasMore` is false on the last page. Each call spends TikTok marketplace search quota, so Growi applies a per-shop daily cap (2,000 by default, reset at 00:00 UTC), and the `quota` block shows what's left. TikTok sometimes returns thin pages, so a short page doesn't mean the market is empty.
+
+  target_collabs:
+    title: "Target collaborations"
+    description: |
+      Lists the shop's target collaborations, one page per call, including ones created in Seller Center. Each row has `id`, `name`, the invite `message`, `startTime`, `endTime`, `createTime` and `updateTime` (Unix seconds), `type` (`STANDARD` or `TOP_CREATOR_PROGRAM`), `counts` (invited, showcase creators, content creators, products) and `freeSampleRule`.
+
+      `status` is required: `ONGOING` (more than 7 days left), `EXPIRING` (under 7 days left), `VALID` (both), `CANCELING` or `COMPLETED`. `VALID` collabs count toward TikTok's 10,000 cap. Rows don't carry their own status. Filter with `keyword` plus `keywordType` (`PRODUCT_ID`, `PRODUCT_NAME`, `TARGET_COLLABORATION_ID` or `TARGET_COLLABORATION_NAME`; the name types are fuzzy), `creatorOpenId`, `creatorAcceptStatus` and `freeSampleSetting`. `pageSize` is 20, 50 or 100 (default 100). Pass `nextCursor` back as `cursor`. For shops connected without TikTok's official API, only `ONGOING`, `EXPIRING` or `COMPLETED` with no other filter work, and fields are best effort (`source: web`). Read live from TikTok.
+
+  target_collab_promotion_details:
+    title: "Creator promotion details"
+    description: |
+      Returns one creator's results in one target collaboration, per product: commission rates (`targetRateBps`, `openRateBps` and the ads rates, in 1/10000ths, so 2200 = 22%), whether the creator added the product to their showcase, and how many promo videos and LIVEs they made for it. Rows also carry `title`, `imageUrl`, `price`, `promotionPrice` and `productStatusCode` (1 active, 2 sold out, 3 deactivated by seller, 4 deactivated by platform, 5 rejected, 6 deleted).
+
+      `creatorOpenId` is required and `invitationId` is optional. Narrow to one product with `query` plus `queryType` (`PRODUCT_ID` or `PRODUCT_NAME`), and filter by showcase status with `addedType` (`ALL`, `ADDED` or `NOT_ADDED`). Not paged. Read live from TikTok, so the shop has to be connected through TikTok's official API.
+
+  outreach_records:
+    title: "Weekly outreach records"
+    description: |
+      Lists the creators the shop has reached in TikTok's current outreach quota period, as TikTok records it, so it includes outreach sent outside Growi. Each record has `creatorOpenId`, `hasSentImMessage` (the shop DMed them), `hasSentInvitation` (the shop sent a target collab invite) and `isPaired` (the creator connected back). Missing flags are null (unknown), not false.
+
+      Use it to check who you've already contacted this period before spending outreach quota. TikTok offers no filter by creator or time. Page with `page` (1-based) and `pageSize` (2 to 50, default 50). `hasMore` and `total` tell you when to stop. Read live from TikTok.
+
+  conversation_group_counts:
+    title: "Inbox group counts"
+    description: |
+      Returns how many conversations sit in each of the shop's TikTok inbox groups, read live from TikTok. Groups come through as TikTok names them; the documented ones are `UNREAD`, `UNREPLIED`, `STARRED` and `ARCHIVED`. A group TikTok leaves out is left out here too, not reported as 0. Works for any shop connected through TikTok's official API.

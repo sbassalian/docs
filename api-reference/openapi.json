@@ -5580,6 +5580,2795 @@
           }
         }
       }
+    },
+    "/meta_ads/sources": {
+      "get": {
+        "summary": "Lists content that can become a Meta ad",
+        "description": "The content the dashboard ad builder offers: creator social posts (newest first), TikTok Shop videos that sold in the range (highest GMV first), or approved content submissions. Each row's creative_source goes into creative on POST /meta_ads/bulk.",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Act on a child brand of the API key's organization. Omit it to act on the key's own organization. Any other id returns 404."
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "social_posts",
+                "tik_tok_shop_videos",
+                "submissions"
+              ],
+              "default": "social_posts"
+            },
+            "description": "Which content to list.",
+            "example": "social_posts"
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Only content attributed to this Growi campaign. Must belong to your organization.",
+            "example": 123
+          },
+          {
+            "name": "campaign_affiliate_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Only content from this enrollment. Must belong to your organization."
+          },
+          {
+            "name": "creator_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Growi user id of a creator in your organization."
+          },
+          {
+            "name": "platform",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "instagram",
+                "tik_tok",
+                "youtube",
+                "twitter",
+                "facebook"
+              ]
+            },
+            "description": "social_posts only."
+          },
+          {
+            "name": "ad_attachment",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "attached",
+                "not_attached"
+              ],
+              "default": "all"
+            },
+            "description": "attached: content that already backs an ad. not_attached: content without an ad yet.",
+            "example": "not_attached"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "YYYY-MM-DD. Defaults to 30 days before end_date. For submissions the date filter only applies when you send it.",
+            "example": "2026-10-01"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "YYYY-MM-DD. Defaults to today. The range can be at most 366 days.",
+            "example": "2026-10-12"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Free-text search"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            },
+            "description": "Page number"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 25,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Rows per page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Content you can build ads from",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Always true on 200"
+                    },
+                    "source": {
+                      "type": "string",
+                      "description": "The source you asked for"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "source": {
+                            "type": "string",
+                            "description": "social_post, tik_tok_shop_video or content_submission_version"
+                          },
+                          "id": {
+                            "type": "string",
+                            "description": "Row id. Social posts look like `instagram:<id>`, TikTok Shop videos `tts:<id>`"
+                          },
+                          "creative_source": {
+                            "type": "object",
+                            "properties": {
+                              "social_post_id": {
+                                "type": "string"
+                              }
+                            },
+                            "description": "Copy these keys into creative on POST /meta_ads/bulk. One of social_post_id, tts_external_id + tts_username, or content_submission_version_id."
+                          },
+                          "platform": {
+                            "type": "string"
+                          },
+                          "creator": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "description": "Growi user id of the creator"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "handle": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "campaign_id": {
+                            "type": "integer"
+                          },
+                          "campaign_affiliate_id": {
+                            "type": "integer",
+                            "description": "The creator's enrollment the post is attributed to, when known"
+                          },
+                          "thumbnail_url": {
+                            "type": "string"
+                          },
+                          "video_url": {
+                            "type": "string"
+                          },
+                          "share_url": {
+                            "type": "string"
+                          },
+                          "posted_at": {
+                            "type": "string"
+                          },
+                          "product": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "gmv": {
+                            "nullable": true
+                          },
+                          "existing_meta_ad": {
+                            "nullable": true,
+                            "description": "The ad already built from this content, if any"
+                          },
+                          "meta_ad_code": {
+                            "type": "object",
+                            "properties": {
+                              "code": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string"
+                              }
+                            },
+                            "description": "Instagram ad code the creator shared for this post (social posts only)"
+                          },
+                          "whitelisting_status": {
+                            "type": "string",
+                            "description": "Partnership ads readiness: whitelisted, partial, not_whitelisted, no_instagram, or null"
+                          },
+                          "meta_partnership_ad_request_id": {
+                            "type": "integer",
+                            "description": "An approved partnership request. Pass it to run the ad as the creator."
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "page": {
+                          "type": "integer"
+                        },
+                        "per_page": {
+                          "type": "integer"
+                        },
+                        "total_count": {
+                          "type": "integer"
+                        },
+                        "total_pages": {
+                          "type": "integer"
+                        },
+                        "has_more": {
+                          "type": "boolean",
+                          "description": "true when there is another page"
+                        },
+                        "returned": {
+                          "type": "integer",
+                          "description": "Rows in this page"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "source": "social_posts",
+                  "data": [
+                    {
+                      "source": "social_post",
+                      "id": "instagram:3456789012345678901",
+                      "creative_source": {
+                        "social_post_id": "instagram:3456789012345678901"
+                      },
+                      "platform": "instagram",
+                      "creator": {
+                        "id": 2628998,
+                        "name": "Ava Creator",
+                        "handle": "ava.creates"
+                      },
+                      "campaign_id": 123,
+                      "campaign_affiliate_id": 3490313,
+                      "thumbnail_url": "https://cdn.growi.io/posts/3456789012345678901.mp4",
+                      "video_url": "https://cdn.growi.io/posts/3456789012345678901.mp4",
+                      "share_url": "https://www.instagram.com/reel/DAbCdEf/",
+                      "posted_at": "Oct 10, 2026",
+                      "product": {
+                        "id": 88,
+                        "name": "Glow Serum"
+                      },
+                      "gmv": null,
+                      "existing_meta_ad": null,
+                      "meta_ad_code": {
+                        "code": "AbCdEf123",
+                        "status": "active"
+                      },
+                      "whitelisting_status": "whitelisted",
+                      "meta_partnership_ad_request_id": 4410
+                    }
+                  ],
+                  "meta": {
+                    "page": 1,
+                    "per_page": 25,
+                    "total_count": 1,
+                    "total_pages": 1,
+                    "has_more": false,
+                    "returned": 1
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "missing_key": {
+                    "summary": "Missing or invalid key",
+                    "value": {
+                      "error": "Not Authenticated"
+                    }
+                  },
+                  "creator_left": {
+                    "summary": "Key creator no longer in the organization",
+                    "value": {
+                      "success": false,
+                      "error": "The user who created this API key no longer has access to this organization."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "organization_id is not a child brand of the key's organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "error": "Organization not found"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unknown source or filter value, a filter id from another organization, or no TikTok Shop connected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "error": "campaign_id not found for this organization"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited: 2 seconds between requests, and 40 requests per hour per key by default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "retry_after": {
+                      "type": "integer"
+                    },
+                    "reset_time": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "burst": {
+                    "summary": "Under 2 seconds since the last request",
+                    "value": {
+                      "error": "Rate limit exceeded. Please wait 2 seconds between requests.",
+                      "retry_after": 2
+                    }
+                  },
+                  "hourly": {
+                    "summary": "Hourly cap reached",
+                    "value": {
+                      "error": "Hourly rate limit of 40 requests exceeded.",
+                      "retry_after": 1520,
+                      "reset_time": "2026-10-12T15:00:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/meta_ads/options": {
+      "get": {
+        "summary": "Gets everything needed to build an ad",
+        "description": "One read-only call for the ad builder choices: your ad accounts, the Facebook pages and Instagram identities, the open campaigns and ad sets of one ad account (with how many ads each ad set holds), your saved defaults (naming, default CTA, copy templates, UTM params, saved links), the allowed values, and optionally each creator's Meta tracking link. New campaigns and ad sets are made in the dashboard.",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Act on a child brand of the API key's organization. Omit it to act on the key's own organization. Any other id returns 404."
+          },
+          {
+            "name": "meta_ad_account_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Ad account for pages, campaigns and ad sets. Defaults to the active ad account.",
+            "example": 1057
+          },
+          {
+            "name": "meta_campaign_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Only ad sets of this Meta campaign (Growi id)."
+          },
+          {
+            "name": "creator_ids",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma separated Growi user ids (up to 100). Adds creator_links with each creator's Meta tracking link.",
+            "example": "2628998,2629001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Builder options",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "ad_accounts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": true
+                          },
+                          "description": "Connected ad accounts. Use id as meta_ad_account_id."
+                        },
+                        "meta_ad_account_id": {
+                          "type": "integer",
+                          "nullable": true,
+                          "description": "The account the lists below belong to"
+                        },
+                        "pages": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": true
+                          }
+                        },
+                        "instagram_accounts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": true
+                          }
+                        },
+                        "meta_campaigns": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": true
+                          },
+                          "description": "Open campaigns (up to 100, newest first)"
+                        },
+                        "meta_ad_sets": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": true
+                          },
+                          "description": "Open ad sets (up to 100). Use id as meta_ad_set_id. ads_count and max_ads show the room left."
+                        },
+                        "settings": {
+                          "type": "object",
+                          "additionalProperties": true
+                        },
+                        "creator_links": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": true
+                          },
+                          "description": "Only when creator_ids is sent. Creators without a Meta link are left out."
+                        },
+                        "allowed": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "ad_accounts": [
+                      {
+                        "id": 1057,
+                        "external_id": "act_1234567890",
+                        "name": "Seranova US",
+                        "currency": "USD",
+                        "active": true
+                      }
+                    ],
+                    "meta_ad_account_id": 1057,
+                    "pages": [
+                      {
+                        "id": 31,
+                        "external_id": "104857600000001",
+                        "name": "Seranova",
+                        "active": true
+                      }
+                    ],
+                    "instagram_accounts": [
+                      {
+                        "id": 12,
+                        "external_id": "17841400000000001",
+                        "username": "seranova",
+                        "meta_page_id": 31,
+                        "active": true
+                      }
+                    ],
+                    "meta_campaigns": [
+                      {
+                        "id": 902,
+                        "name": "Creator ads",
+                        "status": "ACTIVE",
+                        "objective": "OUTCOME_SALES"
+                      }
+                    ],
+                    "meta_ad_sets": [
+                      {
+                        "id": 78552828,
+                        "name": "Broad US",
+                        "status": "ACTIVE",
+                        "meta_campaign_id": 902,
+                        "optimization_goal": "OFFSITE_CONVERSIONS",
+                        "ads_count": 12,
+                        "max_ads": 50
+                      }
+                    ],
+                    "settings": {
+                      "naming": {
+                        "ad_name": "{creator} | {date}",
+                        "ad_set_name": null,
+                        "campaign_name": null
+                      },
+                      "default_cta": "SHOP_NOW",
+                      "copy_templates": [
+                        {
+                          "id": 7,
+                          "label": "Hook",
+                          "primary_text": "Our best seller, in Ava's words",
+                          "headline": "Shop Seranova",
+                          "description": null,
+                          "link_description": null,
+                          "default": true,
+                          "used_count": 14
+                        }
+                      ],
+                      "utm_params": [
+                        {
+                          "id": 3,
+                          "key": "utm_source",
+                          "value": "meta",
+                          "source": "auto"
+                        }
+                      ],
+                      "saved_links": [
+                        {
+                          "id": 2,
+                          "label": "Home",
+                          "url": "https://seranova.com"
+                        }
+                      ]
+                    },
+                    "creator_links": [
+                      {
+                        "creator_id": 2628998,
+                        "campaign_affiliate_id": 3490313,
+                        "campaign_id": 123,
+                        "link": "https://seranova.com/?a=meta_ava",
+                        "landing_page_links": []
+                      }
+                    ],
+                    "allowed": {
+                      "launch_states": [
+                        "paused",
+                        "active"
+                      ],
+                      "call_to_actions": [
+                        "SHOP_NOW",
+                        "LEARN_MORE",
+                        "..."
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "missing_key": {
+                    "summary": "Missing or invalid key",
+                    "value": {
+                      "error": "Not Authenticated"
+                    }
+                  },
+                  "creator_left": {
+                    "summary": "Key creator no longer in the organization",
+                    "value": {
+                      "success": false,
+                      "error": "The user who created this API key no longer has access to this organization."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "meta_ad_account_id is not one of your ad accounts, or organization_id is not a child brand",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "ad_account": {
+                    "summary": "Unknown ad account",
+                    "value": {
+                      "success": false,
+                      "error": "Meta ad account with id 99 was not found"
+                    }
+                  },
+                  "organization": {
+                    "summary": "organization_id is not a child brand",
+                    "value": {
+                      "success": false,
+                      "error": "Organization not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited: 2 seconds between requests, and 40 requests per hour per key by default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "retry_after": {
+                      "type": "integer"
+                    },
+                    "reset_time": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "burst": {
+                    "summary": "Under 2 seconds since the last request",
+                    "value": {
+                      "error": "Rate limit exceeded. Please wait 2 seconds between requests.",
+                      "retry_after": 2
+                    }
+                  },
+                  "hourly": {
+                    "summary": "Hourly cap reached",
+                    "value": {
+                      "error": "Hourly rate limit of 40 requests exceeded.",
+                      "retry_after": 1520,
+                      "reset_time": "2026-10-12T15:00:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/meta_ads/bulk": {
+      "post": {
+        "summary": "Creates up to 50 Meta ads",
+        "description": "Creates ads from creator content into existing ad sets. Every row runs the same checks as the dashboard ad builder and is created on its own, so one bad row does not stop the others. Responds 207 with one result per row. Ads publish to Meta in the background: poll GET /meta_ads?ids=. Needs an owner or admin key.",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Act on a child brand of the API key's organization. Omit it to act on the key's own organization. Any other id returns 404."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "ads"
+                ],
+                "properties": {
+                  "ads": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "name",
+                        "meta_ad_account_id",
+                        "meta_ad_set_id",
+                        "creative"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "meta_ad_account_id": {
+                          "type": "integer",
+                          "description": "From options ad_accounts"
+                        },
+                        "meta_ad_set_id": {
+                          "type": "integer",
+                          "description": "An existing ad set of that ad account, from options meta_ad_sets"
+                        },
+                        "launch_state": {
+                          "type": "string",
+                          "enum": [
+                            "paused",
+                            "active"
+                          ],
+                          "default": "paused",
+                          "description": "active turns the ad on (and starts spend) as soon as it publishes"
+                        },
+                        "meta_partnership_ad_request_id": {
+                          "type": "integer",
+                          "description": "From a sources row: run the ad as the creator (partnership ad)"
+                        },
+                        "copy_template_id": {
+                          "type": "integer",
+                          "description": "Records which copy template the text came from. Send the text itself in creative."
+                        },
+                        "creative": {
+                          "type": "object",
+                          "required": [
+                            "primary_text",
+                            "headline",
+                            "call_to_action",
+                            "link_url"
+                          ],
+                          "properties": {
+                            "primary_text": {
+                              "type": "string"
+                            },
+                            "headline": {
+                              "type": "string"
+                            },
+                            "description": {
+                              "type": "string"
+                            },
+                            "call_to_action": {
+                              "type": "string",
+                              "description": "A Meta CTA type, for example SHOP_NOW. See allowed.call_to_actions in options."
+                            },
+                            "link_url": {
+                              "type": "string",
+                              "description": "http(s) destination. Use the creator link from options so purchases and spend credit the creator."
+                            },
+                            "url_tags": {
+                              "type": "string",
+                              "description": "Meta URL parameters, for example utm_source=meta&utm_medium=paid"
+                            },
+                            "page_id": {
+                              "type": "string",
+                              "description": "Facebook page external id. Defaults to the active page."
+                            },
+                            "identity_display": {
+                              "type": "string"
+                            },
+                            "require_instagram": {
+                              "type": "boolean",
+                              "description": "Send false to run from the Facebook page when no Instagram identity is active"
+                            },
+                            "social_post_id": {
+                              "type": "string",
+                              "description": "From a sources row's creative_source"
+                            },
+                            "tts_external_id": {
+                              "type": "string",
+                              "description": "From a TikTok Shop video row's creative_source (with tts_username)"
+                            },
+                            "tts_username": {
+                              "type": "string"
+                            },
+                            "content_submission_version_id": {
+                              "type": "integer",
+                              "description": "From a submission row's creative_source"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "ads": [
+                  {
+                    "name": "Ava | 2026-10-14",
+                    "meta_ad_account_id": 1057,
+                    "meta_ad_set_id": 78552828,
+                    "launch_state": "active",
+                    "meta_partnership_ad_request_id": 4410,
+                    "creative": {
+                      "primary_text": "Our best seller, in Ava's words",
+                      "headline": "Shop Seranova",
+                      "call_to_action": "SHOP_NOW",
+                      "link_url": "https://seranova.com/?a=meta_ava",
+                      "url_tags": "utm_source=meta&utm_medium=paid",
+                      "social_post_id": "instagram:3456789012345678901"
+                    }
+                  },
+                  {
+                    "name": "Mia | 2026-10-14",
+                    "meta_ad_account_id": 1057,
+                    "meta_ad_set_id": 78552828,
+                    "launch_state": "active",
+                    "creative": {
+                      "primary_text": "Mia tried it for 30 days",
+                      "headline": "Shop Seranova",
+                      "call_to_action": "SHOP_NOW",
+                      "link_url": "https://seranova.com/?a=meta_mia",
+                      "tts_external_id": "7421234567890123456",
+                      "tts_username": "mia.tries"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "207": {
+            "description": "One result per row, in request order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "index": {
+                            "type": "integer"
+                          },
+                          "success": {
+                            "type": "boolean"
+                          },
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "meta_ad_id": {
+                                "type": "integer",
+                                "description": "Growi ad id. Use it with GET /meta_ads/{id}, launch and pause."
+                              },
+                              "state": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "error": {
+                            "type": "object",
+                            "properties": {
+                              "code": {
+                                "type": "string"
+                              },
+                              "message": {
+                                "type": "string"
+                              },
+                              "user_message": {
+                                "type": "string"
+                              },
+                              "details": {
+                                "type": "object",
+                                "additionalProperties": true
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "summary": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        },
+                        "succeeded": {
+                          "type": "integer"
+                        },
+                        "failed": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "results": [
+                    {
+                      "index": 0,
+                      "success": true,
+                      "data": {
+                        "meta_ad_id": 5012,
+                        "state": "queued",
+                        "status": "PAUSED",
+                        "payload": {
+                          "meta_ad_id": 5012,
+                          "state": "queued"
+                        }
+                      }
+                    },
+                    {
+                      "index": 1,
+                      "success": false,
+                      "error": {
+                        "code": "PREFLIGHT_TTS_VIDEO_NOT_FOUND",
+                        "message": "TikTok Shop video 7421234567890123456 has no sales in this organization's shop",
+                        "user_message": "TikTok Shop video 7421234567890123456 has no sales in this organization's shop",
+                        "details": {
+                          "field": "creative.tts_external_id"
+                        }
+                      }
+                    }
+                  ],
+                  "summary": {
+                    "total": 2,
+                    "succeeded": 1,
+                    "failed": 1
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "missing_key": {
+                    "summary": "Missing or invalid key",
+                    "value": {
+                      "error": "Not Authenticated"
+                    }
+                  },
+                  "creator_left": {
+                    "summary": "Key creator no longer in the organization",
+                    "value": {
+                      "success": false,
+                      "error": "The user who created this API key no longer has access to this organization."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "View-only API key, or the key's user is not an owner or admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "viewer_key": {
+                    "summary": "View-only API key",
+                    "value": {
+                      "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "success": false,
+                      "error": "Only an organization owner or admin can make changes with this API key."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "organization_id is not a child brand of the key's organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "error": "Organization not found"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ads is empty or has more than 50 rows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "empty": {
+                    "summary": "No rows",
+                    "value": {
+                      "success": false,
+                      "error": {
+                        "code": "BULK_EMPTY",
+                        "message": "`ads` must be a non-empty array"
+                      }
+                    }
+                  },
+                  "too_large": {
+                    "summary": "More than 50 rows",
+                    "value": {
+                      "success": false,
+                      "error": {
+                        "code": "BULK_TOO_LARGE",
+                        "message": "Batch size 51 exceeds maximum of 50",
+                        "details": {
+                          "received": 51,
+                          "max": 50
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited: 2 seconds between requests, and 40 requests per hour per key by default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "retry_after": {
+                      "type": "integer"
+                    },
+                    "reset_time": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "burst": {
+                    "summary": "Under 2 seconds since the last request",
+                    "value": {
+                      "error": "Rate limit exceeded. Please wait 2 seconds between requests.",
+                      "retry_after": 2
+                    }
+                  },
+                  "hourly": {
+                    "summary": "Hourly cap reached",
+                    "value": {
+                      "error": "Hourly rate limit of 40 requests exceeded.",
+                      "retry_after": 1520,
+                      "reset_time": "2026-10-12T15:00:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/meta_ads": {
+      "get": {
+        "summary": "Lists Meta ads with publish status",
+        "description": "Newest first. Pass ids to poll the ads you created with POST /meta_ads/bulk. Only ads built in Growi are listed unless include_external=true.",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Act on a child brand of the API key's organization. Omit it to act on the key's own organization. Any other id returns 404."
+          },
+          {
+            "name": "ids",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma separated Growi ad ids (up to 200)",
+            "example": "5012,5013"
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "publishing",
+                "published",
+                "active",
+                "failed"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Meta delivery status, such as ACTIVE or PAUSED (case insensitive)"
+          },
+          {
+            "name": "meta_ad_set_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "include_external",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Also list ads imported from Ads Manager"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 25,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ads",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "Growi ad id"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "meta_ad_id": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Meta's ad id, once published"
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "queued",
+                              "publishing",
+                              "published",
+                              "active",
+                              "failed"
+                            ],
+                            "description": "Growi publish state"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Meta delivery status: PAUSED, ACTIVE, DELETED, ..."
+                          },
+                          "published": {
+                            "type": "boolean",
+                            "description": "true once the ad exists on Meta"
+                          },
+                          "failed": {
+                            "type": "boolean"
+                          },
+                          "error_message": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Why publishing or launching failed"
+                          },
+                          "last_step": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "The publish step that ran last (for example launch)"
+                          },
+                          "meta_ad_set_id": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "meta_ad_set_name": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "campaign_affiliate_id": {
+                            "type": "integer",
+                            "nullable": true,
+                            "description": "The creator enrollment credited for this ad's spend"
+                          },
+                          "external": {
+                            "type": "boolean",
+                            "description": "true for ads imported from Ads Manager"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "page": {
+                          "type": "integer"
+                        },
+                        "per_page": {
+                          "type": "integer"
+                        },
+                        "total_count": {
+                          "type": "integer"
+                        },
+                        "total_pages": {
+                          "type": "integer"
+                        },
+                        "has_more": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "by_state": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "integer"
+                      },
+                      "description": "Count per state for the whole filtered list"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "id": 5012,
+                      "name": "Ava ad",
+                      "meta_ad_id": "120214567890123456",
+                      "state": "published",
+                      "status": "PAUSED",
+                      "published": true,
+                      "failed": false,
+                      "error_message": null,
+                      "last_step": "ad",
+                      "meta_ad_set_id": 78552828,
+                      "meta_ad_set_name": "Broad US",
+                      "campaign_affiliate_id": 3490313,
+                      "external": false,
+                      "created_at": "2026-10-14T13:05:11Z"
+                    },
+                    {
+                      "id": 5013,
+                      "name": "Mia ad",
+                      "meta_ad_id": null,
+                      "state": "failed",
+                      "status": "PAUSED",
+                      "published": false,
+                      "failed": true,
+                      "error_message": "The video is too short for this placement",
+                      "last_step": "ensure_video",
+                      "meta_ad_set_id": 78552828,
+                      "meta_ad_set_name": "Broad US",
+                      "campaign_affiliate_id": 3490320,
+                      "external": false,
+                      "created_at": "2026-10-14T13:05:11Z"
+                    }
+                  ],
+                  "meta": {
+                    "page": 1,
+                    "per_page": 25,
+                    "total_count": 2,
+                    "total_pages": 1,
+                    "has_more": false
+                  },
+                  "by_state": {
+                    "published": 1,
+                    "failed": 1
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "missing_key": {
+                    "summary": "Missing or invalid key",
+                    "value": {
+                      "error": "Not Authenticated"
+                    }
+                  },
+                  "creator_left": {
+                    "summary": "Key creator no longer in the organization",
+                    "value": {
+                      "success": false,
+                      "error": "The user who created this API key no longer has access to this organization."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "organization_id is not a child brand of the key's organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "error": "Organization not found"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unknown state, or more than 200 ids",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "error": "state must be one of: queued, publishing, published, active, failed"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited: 2 seconds between requests, and 40 requests per hour per key by default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "retry_after": {
+                      "type": "integer"
+                    },
+                    "reset_time": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "burst": {
+                    "summary": "Under 2 seconds since the last request",
+                    "value": {
+                      "error": "Rate limit exceeded. Please wait 2 seconds between requests.",
+                      "retry_after": 2
+                    }
+                  },
+                  "hourly": {
+                    "summary": "Hourly cap reached",
+                    "value": {
+                      "error": "Hourly rate limit of 40 requests exceeded.",
+                      "retry_after": 1520,
+                      "reset_time": "2026-10-12T15:00:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/meta_ads/{id}": {
+      "get": {
+        "summary": "Gets one Meta ad and its publish status",
+        "description": "The same fields as a row of GET /meta_ads.",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Act on a child brand of the API key's organization. Omit it to act on the key's own organization. Any other id returns 404."
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Growi ad id",
+            "example": 5012
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ad",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "Growi ad id"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "meta_ad_id": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Meta's ad id, once published"
+                        },
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "queued",
+                            "publishing",
+                            "published",
+                            "active",
+                            "failed"
+                          ],
+                          "description": "Growi publish state"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "Meta delivery status: PAUSED, ACTIVE, DELETED, ..."
+                        },
+                        "published": {
+                          "type": "boolean",
+                          "description": "true once the ad exists on Meta"
+                        },
+                        "failed": {
+                          "type": "boolean"
+                        },
+                        "error_message": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Why publishing or launching failed"
+                        },
+                        "last_step": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "The publish step that ran last (for example launch)"
+                        },
+                        "meta_ad_set_id": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "meta_ad_set_name": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "campaign_affiliate_id": {
+                          "type": "integer",
+                          "nullable": true,
+                          "description": "The creator enrollment credited for this ad's spend"
+                        },
+                        "external": {
+                          "type": "boolean",
+                          "description": "true for ads imported from Ads Manager"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 5012,
+                    "name": "Ava ad",
+                    "meta_ad_id": "120214567890123456",
+                    "state": "published",
+                    "status": "PAUSED",
+                    "published": true,
+                    "failed": false,
+                    "error_message": null,
+                    "last_step": "ad",
+                    "meta_ad_set_id": 78552828,
+                    "meta_ad_set_name": "Broad US",
+                    "campaign_affiliate_id": 3490313,
+                    "external": false,
+                    "created_at": "2026-10-14T13:05:11Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "missing_key": {
+                    "summary": "Missing or invalid key",
+                    "value": {
+                      "error": "Not Authenticated"
+                    }
+                  },
+                  "creator_left": {
+                    "summary": "Key creator no longer in the organization",
+                    "value": {
+                      "success": false,
+                      "error": "The user who created this API key no longer has access to this organization."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No ad with this id in your organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "ad": {
+                    "summary": "No ad with this id in your organization",
+                    "value": {
+                      "success": false,
+                      "error": "Meta ad not found"
+                    }
+                  },
+                  "organization": {
+                    "summary": "organization_id is not a child brand",
+                    "value": {
+                      "success": false,
+                      "error": "Organization not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited: 2 seconds between requests, and 40 requests per hour per key by default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "retry_after": {
+                      "type": "integer"
+                    },
+                    "reset_time": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "burst": {
+                    "summary": "Under 2 seconds since the last request",
+                    "value": {
+                      "error": "Rate limit exceeded. Please wait 2 seconds between requests.",
+                      "retry_after": 2
+                    }
+                  },
+                  "hourly": {
+                    "summary": "Hourly cap reached",
+                    "value": {
+                      "error": "Hourly rate limit of 40 requests exceeded.",
+                      "retry_after": 1520,
+                      "reset_time": "2026-10-12T15:00:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/meta_ads/{id}/launch": {
+      "post": {
+        "summary": "Launches a Meta ad (starts spend)",
+        "description": "Turns a published ad on, with its ad set and campaign. An ad that is still publishing launches as soon as it publishes (deferred: true). Already active ads are left as they are. Needs an owner or admin key.",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Act on a child brand of the API key's organization. Omit it to act on the key's own organization. Any other id returns 404."
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Growi ad id",
+            "example": 5012
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Launched, or queued to launch after publish",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "Growi ad id"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "meta_ad_id": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "Meta's ad id, once published"
+                            },
+                            "state": {
+                              "type": "string",
+                              "enum": [
+                                "queued",
+                                "publishing",
+                                "published",
+                                "active",
+                                "failed"
+                              ],
+                              "description": "Growi publish state"
+                            },
+                            "status": {
+                              "type": "string",
+                              "description": "Meta delivery status: PAUSED, ACTIVE, DELETED, ..."
+                            },
+                            "published": {
+                              "type": "boolean",
+                              "description": "true once the ad exists on Meta"
+                            },
+                            "failed": {
+                              "type": "boolean"
+                            },
+                            "error_message": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "Why publishing or launching failed"
+                            },
+                            "last_step": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "The publish step that ran last (for example launch)"
+                            },
+                            "meta_ad_set_id": {
+                              "type": "integer",
+                              "nullable": true
+                            },
+                            "meta_ad_set_name": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "campaign_affiliate_id": {
+                              "type": "integer",
+                              "nullable": true,
+                              "description": "The creator enrollment credited for this ad's spend"
+                            },
+                            "external": {
+                              "type": "boolean",
+                              "description": "true for ads imported from Ads Manager"
+                            },
+                            "created_at": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "deferred": {
+                              "type": "boolean",
+                              "description": "launch only: true when the ad is still publishing and will launch once it publishes"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "launched": {
+                    "summary": "Published ad turned on",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 5012,
+                        "name": "Ava ad",
+                        "meta_ad_id": "120214567890123456",
+                        "state": "active",
+                        "status": "ACTIVE",
+                        "published": true,
+                        "failed": false,
+                        "error_message": null,
+                        "last_step": "ad",
+                        "meta_ad_set_id": 78552828,
+                        "meta_ad_set_name": "Broad US",
+                        "campaign_affiliate_id": 3490313,
+                        "external": false,
+                        "created_at": "2026-10-14T13:05:11Z",
+                        "deferred": false
+                      }
+                    }
+                  },
+                  "deferred": {
+                    "summary": "Still publishing",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 5012,
+                        "name": "Ava ad",
+                        "meta_ad_id": null,
+                        "state": "queued",
+                        "status": "PAUSED",
+                        "published": false,
+                        "failed": false,
+                        "error_message": null,
+                        "last_step": null,
+                        "meta_ad_set_id": 78552828,
+                        "meta_ad_set_name": "Broad US",
+                        "campaign_affiliate_id": 3490313,
+                        "external": false,
+                        "created_at": "2026-10-14T13:05:11Z",
+                        "deferred": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "missing_key": {
+                    "summary": "Missing or invalid key",
+                    "value": {
+                      "error": "Not Authenticated"
+                    }
+                  },
+                  "creator_left": {
+                    "summary": "Key creator no longer in the organization",
+                    "value": {
+                      "success": false,
+                      "error": "The user who created this API key no longer has access to this organization."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "View-only API key, or the key's user is not an owner or admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "viewer_key": {
+                    "summary": "View-only API key",
+                    "value": {
+                      "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "success": false,
+                      "error": "Only an organization owner or admin can make changes with this API key."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No ad with this id in your organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "ad": {
+                    "summary": "No ad with this id in your organization",
+                    "value": {
+                      "success": false,
+                      "error": "Meta ad not found"
+                    }
+                  },
+                  "organization": {
+                    "summary": "organization_id is not a child brand",
+                    "value": {
+                      "success": false,
+                      "error": "Organization not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Meta refused the launch, or the ad was deleted. data carries the ad as it is now.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "Growi ad id"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "meta_ad_id": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "Meta's ad id, once published"
+                            },
+                            "state": {
+                              "type": "string",
+                              "enum": [
+                                "queued",
+                                "publishing",
+                                "published",
+                                "active",
+                                "failed"
+                              ],
+                              "description": "Growi publish state"
+                            },
+                            "status": {
+                              "type": "string",
+                              "description": "Meta delivery status: PAUSED, ACTIVE, DELETED, ..."
+                            },
+                            "published": {
+                              "type": "boolean",
+                              "description": "true once the ad exists on Meta"
+                            },
+                            "failed": {
+                              "type": "boolean"
+                            },
+                            "error_message": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "Why publishing or launching failed"
+                            },
+                            "last_step": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "The publish step that ran last (for example launch)"
+                            },
+                            "meta_ad_set_id": {
+                              "type": "integer",
+                              "nullable": true
+                            },
+                            "meta_ad_set_name": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "campaign_affiliate_id": {
+                              "type": "integer",
+                              "nullable": true,
+                              "description": "The creator enrollment credited for this ad's spend"
+                            },
+                            "external": {
+                              "type": "boolean",
+                              "description": "true for ads imported from Ads Manager"
+                            },
+                            "created_at": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "deferred": {
+                              "type": "boolean",
+                              "description": "launch only: true when the ad is still publishing and will launch once it publishes"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "meta_error": {
+                    "summary": "Meta refused the launch",
+                    "value": {
+                      "success": false,
+                      "data": {
+                        "id": 5012,
+                        "name": "Ava ad",
+                        "meta_ad_id": "120214567890123456",
+                        "state": "failed",
+                        "status": "PAUSED",
+                        "published": true,
+                        "failed": true,
+                        "error_message": "Ad account has no payment method",
+                        "last_step": "launch",
+                        "meta_ad_set_id": 78552828,
+                        "meta_ad_set_name": "Broad US",
+                        "campaign_affiliate_id": 3490313,
+                        "external": false,
+                        "created_at": "2026-10-14T13:05:11Z"
+                      },
+                      "error": {
+                        "code": "META_API_ERROR",
+                        "message": "Ad account has no payment method",
+                        "step": "launch"
+                      }
+                    }
+                  },
+                  "deleted": {
+                    "summary": "Deleted ad",
+                    "value": {
+                      "success": false,
+                      "data": {
+                        "id": 5012,
+                        "name": "Ava ad",
+                        "meta_ad_id": "120214567890123456",
+                        "state": "published",
+                        "status": "DELETED",
+                        "published": true,
+                        "failed": false,
+                        "error_message": null,
+                        "last_step": "ad",
+                        "meta_ad_set_id": 78552828,
+                        "meta_ad_set_name": "Broad US",
+                        "campaign_affiliate_id": 3490313,
+                        "external": false,
+                        "created_at": "2026-10-14T13:05:11Z"
+                      },
+                      "error": {
+                        "code": "AD_DELETED",
+                        "message": "This ad was deleted."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited: 2 seconds between requests, and 40 requests per hour per key by default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "retry_after": {
+                      "type": "integer"
+                    },
+                    "reset_time": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "burst": {
+                    "summary": "Under 2 seconds since the last request",
+                    "value": {
+                      "error": "Rate limit exceeded. Please wait 2 seconds between requests.",
+                      "retry_after": 2
+                    }
+                  },
+                  "hourly": {
+                    "summary": "Hourly cap reached",
+                    "value": {
+                      "error": "Hourly rate limit of 40 requests exceeded.",
+                      "retry_after": 1520,
+                      "reset_time": "2026-10-12T15:00:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/meta_ads/{id}/pause": {
+      "post": {
+        "summary": "Pauses a Meta ad",
+        "description": "Sets the ad to PAUSED on Meta. If the ad has not reached Meta yet, only the Growi record changes and the publish keeps it paused. Needs an owner or admin key.",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Act on a child brand of the API key's organization. Omit it to act on the key's own organization. Any other id returns 404."
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Growi ad id",
+            "example": 5012
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "Growi ad id"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "meta_ad_id": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "Meta's ad id, once published"
+                            },
+                            "state": {
+                              "type": "string",
+                              "enum": [
+                                "queued",
+                                "publishing",
+                                "published",
+                                "active",
+                                "failed"
+                              ],
+                              "description": "Growi publish state"
+                            },
+                            "status": {
+                              "type": "string",
+                              "description": "Meta delivery status: PAUSED, ACTIVE, DELETED, ..."
+                            },
+                            "published": {
+                              "type": "boolean",
+                              "description": "true once the ad exists on Meta"
+                            },
+                            "failed": {
+                              "type": "boolean"
+                            },
+                            "error_message": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "Why publishing or launching failed"
+                            },
+                            "last_step": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "The publish step that ran last (for example launch)"
+                            },
+                            "meta_ad_set_id": {
+                              "type": "integer",
+                              "nullable": true
+                            },
+                            "meta_ad_set_name": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "campaign_affiliate_id": {
+                              "type": "integer",
+                              "nullable": true,
+                              "description": "The creator enrollment credited for this ad's spend"
+                            },
+                            "external": {
+                              "type": "boolean",
+                              "description": "true for ads imported from Ads Manager"
+                            },
+                            "created_at": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "deferred": {
+                              "type": "boolean",
+                              "description": "launch only: true when the ad is still publishing and will launch once it publishes"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 5012,
+                    "name": "Ava ad",
+                    "meta_ad_id": "120214567890123456",
+                    "state": "published",
+                    "status": "PAUSED",
+                    "published": true,
+                    "failed": false,
+                    "error_message": null,
+                    "last_step": "ad",
+                    "meta_ad_set_id": 78552828,
+                    "meta_ad_set_name": "Broad US",
+                    "campaign_affiliate_id": 3490313,
+                    "external": false,
+                    "created_at": "2026-10-14T13:05:11Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "missing_key": {
+                    "summary": "Missing or invalid key",
+                    "value": {
+                      "error": "Not Authenticated"
+                    }
+                  },
+                  "creator_left": {
+                    "summary": "Key creator no longer in the organization",
+                    "value": {
+                      "success": false,
+                      "error": "The user who created this API key no longer has access to this organization."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "View-only API key, or the key's user is not an owner or admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "viewer_key": {
+                    "summary": "View-only API key",
+                    "value": {
+                      "error": "This API key is read-only and cannot modify data."
+                    }
+                  },
+                  "viewer_role": {
+                    "summary": "The key's user is not an owner or admin",
+                    "value": {
+                      "success": false,
+                      "error": "Only an organization owner or admin can make changes with this API key."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No ad with this id in your organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "ad": {
+                    "summary": "No ad with this id in your organization",
+                    "value": {
+                      "success": false,
+                      "error": "Meta ad not found"
+                    }
+                  },
+                  "organization": {
+                    "summary": "organization_id is not a child brand",
+                    "value": {
+                      "success": false,
+                      "error": "Organization not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Meta rejected the pause, or the ad was deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "Growi ad id"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "meta_ad_id": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "Meta's ad id, once published"
+                            },
+                            "state": {
+                              "type": "string",
+                              "enum": [
+                                "queued",
+                                "publishing",
+                                "published",
+                                "active",
+                                "failed"
+                              ],
+                              "description": "Growi publish state"
+                            },
+                            "status": {
+                              "type": "string",
+                              "description": "Meta delivery status: PAUSED, ACTIVE, DELETED, ..."
+                            },
+                            "published": {
+                              "type": "boolean",
+                              "description": "true once the ad exists on Meta"
+                            },
+                            "failed": {
+                              "type": "boolean"
+                            },
+                            "error_message": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "Why publishing or launching failed"
+                            },
+                            "last_step": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "The publish step that ran last (for example launch)"
+                            },
+                            "meta_ad_set_id": {
+                              "type": "integer",
+                              "nullable": true
+                            },
+                            "meta_ad_set_name": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "campaign_affiliate_id": {
+                              "type": "integer",
+                              "nullable": true,
+                              "description": "The creator enrollment credited for this ad's spend"
+                            },
+                            "external": {
+                              "type": "boolean",
+                              "description": "true for ads imported from Ads Manager"
+                            },
+                            "created_at": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "deferred": {
+                              "type": "boolean",
+                              "description": "launch only: true when the ad is still publishing and will launch once it publishes"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "data": {
+                    "id": 5012,
+                    "name": "Ava ad",
+                    "meta_ad_id": "120214567890123456",
+                    "state": "active",
+                    "status": "ACTIVE",
+                    "published": true,
+                    "failed": false,
+                    "error_message": null,
+                    "last_step": "ad",
+                    "meta_ad_set_id": 78552828,
+                    "meta_ad_set_name": "Broad US",
+                    "campaign_affiliate_id": 3490313,
+                    "external": false,
+                    "created_at": "2026-10-14T13:05:11Z"
+                  },
+                  "error": {
+                    "code": "PAUSE_FAILED",
+                    "message": "Pause request rejected by Meta"
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited: 2 seconds between requests, and 40 requests per hour per key by default",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "retry_after": {
+                      "type": "integer"
+                    },
+                    "reset_time": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "burst": {
+                    "summary": "Under 2 seconds since the last request",
+                    "value": {
+                      "error": "Rate limit exceeded. Please wait 2 seconds between requests.",
+                      "retry_after": 2
+                    }
+                  },
+                  "hourly": {
+                    "summary": "Hourly cap reached",
+                    "value": {
+                      "error": "Hourly rate limit of 40 requests exceeded.",
+                      "retry_after": 1520,
+                      "reset_time": "2026-10-12T15:00:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

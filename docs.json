@@ -94,6 +94,13 @@
             ]
           },
           {
+            "group": "Meta ads",
+            "icon": "megaphone",
+            "pages": [
+              "essentials/meta-ads-automation"
+            ]
+          },
+          {
             "group": "AI assistants",
             "icon": "sparkles",
             "pages": [
@@ -299,6 +306,19 @@
                   "api-reference/endpoint/tik-tok-shop/conversation-group-counts"
                 ]
               }
+            ]
+          },
+          {
+            "group": "Meta ads",
+            "icon": "megaphone",
+            "pages": [
+              "api-reference/endpoint/meta-ads/list-ad-sources",
+              "api-reference/endpoint/meta-ads/get-builder-options",
+              "api-reference/endpoint/meta-ads/bulk-create-ads",
+              "api-reference/endpoint/meta-ads/list-ads",
+              "api-reference/endpoint/meta-ads/get-ad",
+              "api-reference/endpoint/meta-ads/launch-ad",
+              "api-reference/endpoint/meta-ads/pause-ad"
             ]
           }
         ]

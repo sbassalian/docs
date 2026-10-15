@@ -1,0 +1,111 @@
+---
+title: "Get builder options"
+openapi: "GET /meta_ads/options"
+---
+
+One read-only call for everything the ad builder needs: your ad accounts, Facebook pages and Instagram identities, the open campaigns and ad sets of one ad account, your saved defaults, the allowed values, and optionally each creator's Meta tracking link.
+
+Step 2 of the [Meta ads automation flow](/essentials/meta-ads-automation).
+
+## What to use from the response
+
+| Field | Use it for |
+| --- | --- |
+| `ad_accounts[].id` | `meta_ad_account_id` on each bulk row |
+| `meta_ad_sets[].id` | `meta_ad_set_id` on each bulk row. `ads_count` and `max_ads` tell you how much room the ad set has left. |
+| `settings.naming` | Your naming convention, to build each ad `name` |
+| `settings.default_cta` | `creative.call_to_action` |
+| `settings.copy_templates` | `creative.primary_text`, `headline` and `description` (send the text itself; `copy_template_id` only records the template) |
+| `settings.utm_params` | `creative.url_tags` |
+| `settings.saved_links` | Destination URLs your team saved |
+| `creator_links[].link` | `creative.link_url`, so purchases and spend credit the creator |
+| `allowed.call_to_actions` | Valid `creative.call_to_action` values |
+
+Pages, campaigns and ad sets are for the ad account in `meta_ad_account_id`: the one you asked for, or the active account. Lists hold up to 100 rows, newest first, and leave out archived and deleted campaigns and ad sets.
+
+<Note>
+Growi does not fill in your naming convention, default CTA, copy template text or UTM params on its own. Read them here and put the values in each bulk row. New campaigns and ad sets are made in the dashboard ad builder.
+</Note>
+
+## Authentication
+
+Any organization API key works, including view-only keys. A key acts as the person who created it, so that person needs the owner, admin or viewer role. See [Rate limits and authentication](/api-reference/introduction).
+
+## Errors
+
+| Status | When |
+| ------ | ---- |
+| `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
+| `404` | `meta_ad_account_id` is not one of your connected ad accounts, or organization_id is not a child brand of the key's organization |
+| `429` | Rate limited: 2 seconds between requests, and 40 requests per hour per key by default |
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/meta_ads/options?meta_ad_account_id=1057&creator_ids=2628998" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "data": {
+    "ad_accounts": [
+      { "id": 1057, "external_id": "act_1234567890", "name": "Seranova US", "currency": "USD", "active": true }
+    ],
+    "meta_ad_account_id": 1057,
+    "pages": [
+      { "id": 31, "external_id": "104857600000001", "name": "Seranova", "active": true }
+    ],
+    "instagram_accounts": [
+      { "id": 12, "external_id": "17841400000000001", "username": "seranova", "meta_page_id": 31, "active": true }
+    ],
+    "meta_campaigns": [
+      { "id": 902, "name": "Creator ads", "status": "ACTIVE", "objective": "OUTCOME_SALES" }
+    ],
+    "meta_ad_sets": [
+      {
+        "id": 78552828,
+        "name": "Broad US",
+        "status": "ACTIVE",
+        "meta_campaign_id": 902,
+        "optimization_goal": "OFFSITE_CONVERSIONS",
+        "ads_count": 12,
+        "max_ads": 50
+      }
+    ],
+    "settings": {
+      "naming": { "ad_name": "{creator} | {date}", "ad_set_name": null, "campaign_name": null },
+      "default_cta": "SHOP_NOW",
+      "copy_templates": [
+        { "id": 7, "label": "Hook", "primary_text": "Our best seller, in Ava's words", "headline": "Shop Seranova", "description": null, "link_description": null, "default": true, "used_count": 14 }
+      ],
+      "utm_params": [
+        { "id": 3, "key": "utm_source", "value": "meta", "source": "auto" }
+      ],
+      "saved_links": [
+        { "id": 2, "label": "Home", "url": "https://seranova.com" }
+      ]
+    },
+    "creator_links": [
+      {
+        "creator_id": 2628998,
+        "campaign_affiliate_id": 3490313,
+        "campaign_id": 123,
+        "link": "https://seranova.com/?a=meta_ava",
+        "landing_page_links": []
+      }
+    ],
+    "allowed": {
+      "launch_states": ["paused", "active"],
+      "call_to_actions": ["SHOP_NOW", "LEARN_MORE", "SIGN_UP", "..."]
+    }
+  }
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,73 @@
+---
+title: "Get an ad"
+openapi: "GET /meta_ads/{id}"
+---
+
+Returns one Meta ad and its publish status. The fields match a row of [List ads](/api-reference/endpoint/meta-ads/list-ads).
+
+## Ad fields
+
+| Field | Meaning |
+| --- | --- |
+| `id` | Growi ad id. Use it with get, launch and pause. |
+| `meta_ad_id` | Meta's ad id, once the ad is on Meta |
+| `state` | Growi publish state: `queued`, `publishing`, `published`, `active` or `failed` |
+| `status` | Meta delivery status, such as `PAUSED`, `ACTIVE` or `DELETED` |
+| `published` | `true` once the ad exists on Meta |
+| `failed`, `error_message`, `last_step` | Why and where publishing or launching failed |
+| `campaign_affiliate_id` | The creator enrollment credited for this ad's spend |
+| `external` | `true` for ads imported from Ads Manager |
+
+## Authentication
+
+Any organization API key works, including view-only keys. A key acts as the person who created it, so that person needs the owner, admin or viewer role. See [Rate limits and authentication](/api-reference/introduction).
+
+## Errors
+
+| Status | When |
+| ------ | ---- |
+| `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
+| `404` | No ad with this id in your organization, or organization_id is not a child brand of the key's organization |
+| `429` | Rate limited: 2 seconds between requests, and 40 requests per hour per key by default |
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/meta_ads/5012" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "data": {
+    "id": 5012,
+    "name": "Ava ad",
+    "meta_ad_id": "120214567890123456",
+    "state": "published",
+    "status": "PAUSED",
+    "published": true,
+    "failed": false,
+    "error_message": null,
+    "last_step": "ad",
+    "meta_ad_set_id": 78552828,
+    "meta_ad_set_name": "Broad US",
+    "campaign_affiliate_id": 3490313,
+    "external": false,
+    "created_at": "2026-10-14T13:05:11Z"
+  }
+}
+```
+
+```json 404
+{
+  "success": false,
+  "error": "Meta ad not found"
+}
+```
+
+</ResponseExample>

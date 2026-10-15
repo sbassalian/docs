@@ -26,8 +26,8 @@ What Claude can do depends on your role in the organization you connect.
 
 | Your role | What Claude can do |
 | --- | --- |
-| **Viewer** | Read your organization's data: campaigns, creators, orders, sales, posts, products, payouts, invoices and sample applications. |
-| **Owner or admin** | Everything a viewer can do. Claude can also make changes you approve, such as campaign settings, commission and tier rates, discount codes and adding or removing creators. It can also see masked customer details and creator verification info. |
+| **Viewer** | Read your organization's data: campaigns, creators, orders, sales, posts, products, payouts, invoices, sample applications and Meta ads. |
+| **Owner or admin** | Everything a viewer can do. Claude can also make changes you approve, such as campaign settings, commission and tier rates, discount codes, adding or removing creators, and building, launching or pausing Meta ads. It can also see masked customer details and creator verification info. |
 
 - Every change Claude makes is logged, with who asked for it.
 - Claude only ever sees the organization you connected. A parent organization
@@ -129,11 +129,30 @@ Claude asks before it changes anything.
 3. Confirm, and Claude applies it.
 
 For changes that affect money or remove data, such as commission and tier
-rates, view payouts, removing creators or refunding your balance, Growi itself
-requires the confirmation. It works once and expires after 10 minutes. If any
+rates, view payouts, removing creators, refunding your balance, or creating,
+launching and pausing Meta ads, Growi itself requires the confirmation. It works once and expires after 10 minutes. If any
 detail changes after the preview, Claude has to preview again.
 
-## 4. Getting data out
+## 4. Building Meta ads
+
+Claude can turn creator content into Meta ads in the ad sets you already
+have, using these tools:
+
+| Tool | What it does | Who can use it |
+| --- | --- | --- |
+| `list_meta_ad_sources` | Lists creator social posts, TikTok Shop videos or approved submissions you can turn into ads | Any role |
+| `get_meta_ad_builder_options` | Reads ad accounts, pages, Instagram identities, campaigns, ad sets, naming, default CTA, copy templates, UTM params, saved links and creators' Meta links | Any role |
+| `list_meta_ads` | Shows whether ads are queued, publishing, published, active or failed | Any role |
+| `create_meta_ads` | Creates up to 50 ads at a time in existing ad sets | Owner or admin |
+| `manage_meta_ads` | Launches or pauses up to 50 ads | Owner or admin |
+
+`create_meta_ads` first checks every ad and tells you which would fail and
+which would start spending. Nothing is created until you confirm. New
+campaigns and ad sets are made in the dashboard. See
+[Automate Meta ad launches](/essentials/meta-ads-automation) for the full flow,
+including the same steps over the REST API.
+
+## 5. Getting data out
 
 Reports such as view bonus counts and payout breakdowns come with a download
 link.
@@ -149,7 +168,7 @@ link.
 A link stops working if the key is deleted or the person leaves the
 organization.
 
-## 5. Example prompts
+## 6. Example prompts
 
 - "How many 10K and 100K view bonuses did Jane Doe and John Smith earn in
   September?"
@@ -158,6 +177,8 @@ organization.
 - "What were my top posts last month?"
 - "Which creators drove the most revenue in the Spring campaign?"
 - "Show me the sample applications still waiting for approval."
+- "Build Meta ads from this week's Instagram posts in the Spring campaign
+  into the Broad US ad set, launch them, then tell me which ones failed."
 
 Claude can also look up how Growi works, for example how payout cycles and
 view bonuses are counted, so you can ask "how" and "why" questions as well.
@@ -171,7 +192,7 @@ These limits are separate from the REST API's limits.
 | --- | --- |
 | A normal read | 1 |
 | A change | 3 |
-| A heavy report, such as view bonus counts, payout explanations or sales attribution | 5 |
+| A heavy report, such as view bonus counts, payout explanations, sales attribution or listing Meta ad sources | 5 |
 
 If you go over a limit, Claude is told how long to wait before trying again.
 

@@ -83,7 +83,8 @@
             "icon": "plug",
             "pages": [
               "essentials/stripe-integration",
-              "essentials/shopify-headless-integration"
+              "essentials/shopify-headless-integration",
+              "essentials/klaviyo-integration"
             ]
           },
           {

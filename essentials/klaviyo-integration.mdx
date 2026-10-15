@@ -1,0 +1,229 @@
+---
+title: "Klaviyo integration"
+description: "Send ambassador program events to Klaviyo and use them to trigger flows, stop reminders and put each ambassador's code in your emails"
+---
+
+<Info>
+  **Prerequisite** You need a Klaviyo account and an admin or owner role in your Growi organization.
+</Info>
+
+## Overview
+
+Growi sends two events to your Klaviyo account:
+
+1. **Applied to Ambassador Program**, when a customer submits an application to your program.
+2. **Joined Ambassador Program**, when they become an active ambassador.
+
+You can use these events in Klaviyo to:
+
+- **Trigger flows**, such as a welcome email when someone joins.
+- **Filter flows**, so post-purchase invite reminders stop when someone applies or joins.
+- **Build segments**, such as customers who applied but haven't been accepted yet.
+- **Personalize emails** with each ambassador's discount code and referral link.
+
+<Note>
+  The integration only sends these events. It doesn't sync your creator list, sales, commissions or payouts into Klaviyo. To get those in other systems, use [webhooks](/essentials/campaign-creator-webhooks) or the [API](/api-reference/introduction).
+</Note>
+
+## What Growi sends
+
+### Metrics
+
+| Metric | Sent when | Delay |
+| --- | --- | --- |
+| `Applied to Ambassador Program` | A creator submits an application to one of your programs. Invitations your team sends don't trigger it. | Immediately |
+| `Joined Ambassador Program` | A creator becomes an active member of a program, whether accepted automatically, approved by your team or reactivated. | About 2 minutes, so the creator's discount code and link exist first |
+
+Growi finds the Klaviyo profile by **email address** and creates it if it doesn't exist yet. It also fills in first and last name when Growi has them.
+
+### Event properties
+
+You can use these in a flow triggered by the metric as `{{ event.<property> }}`, and in trigger filters.
+
+**Applied to Ambassador Program**
+
+| Property | Description |
+| --- | --- |
+| `campaign_id` | Growi ID of the program they applied to |
+| `campaign_name` | Name of the program |
+| `organization_slug` | Your Growi organization slug |
+| `application_status` | Status of the application when it was sent, usually `pending`. Programs that accept everyone automatically may send `accepted`. |
+
+**Joined Ambassador Program**
+
+| Property | Description |
+| --- | --- |
+| `campaign_id` | Growi ID of the program they joined |
+| `campaign_name` | Name of the program |
+| `organization_slug` | Your Growi organization slug |
+| `discount_code` | The ambassador's personal discount code |
+| `affiliate_link` | The ambassador's personal referral link |
+
+A property with no value isn't sent. For example, a program set to hide creator links and codes sends no `discount_code` or `affiliate_link`.
+
+### Profile properties
+
+Growi also saves these on the person's Klaviyo profile, so you can use them in **any** email or segment, not only flows triggered by the metric:
+
+| Profile property | Set by | Value |
+| --- | --- | --- |
+| `growi_ambassador_applicant` | Applied | `true` |
+| `growi_ambassador` | Joined | `true` |
+| `growi_discount_code` | Joined | The ambassador's discount code |
+| `growi_affiliate_link` | Joined | The ambassador's referral link |
+| `growi_campaign_name` | Joined | The program they joined most recently |
+
+## Setup
+
+### 1. Create a private API key in Klaviyo
+
+1. In Klaviyo, go to **Settings → API keys**.
+2. Click **Create Private API Key** and name it, for example `Growi`.
+3. Choose **Custom key** and grant these scopes:
+   - **Events:** Full access (write)
+   - **Accounts:** Read access
+4. Create the key and copy it. It starts with `pk_`.
+
+<Warning>
+  Use a **private** key. A public key (site ID, six characters) or a key without the scopes above is rejected when you connect.
+</Warning>
+
+### 2. Connect the key in Growi
+
+1. In Growi, open **Settings → Integrations**.
+2. Open the **Klaviyo** tile.
+3. Paste the key into **Private API key** and click **Connect**.
+
+Growi checks the key with Klaviyo before saving it. If it's accepted, you'll see **Klaviyo connected**. To swap keys later, paste a new one and click **Replace key**.
+
+### 3. Send one event of each type
+
+A metric shows up in Klaviyo's flow trigger list only after Klaviyo has received at least one event for it. Before you build flows:
+
+1. Apply to your ambassador program with a test email address. **Applied to Ambassador Program** appears right away.
+2. Accept that application, or use a program that accepts everyone automatically. **Joined Ambassador Program** appears about 2 minutes later.
+
+You can check both in Klaviyo under **Analytics → Metrics**, or on the test person's profile activity.
+
+## Build your flows
+
+Most brands use three flows that together cover the whole journey:
+
+| Customer's status | Flow they're in |
+| --- | --- |
+| Bought, never applied | **Invite** flow: invite plus reminders |
+| Applied, not accepted yet | **In review** flow |
+| Joined | **Welcome** flow. Everything else stops. |
+
+### Invite flow (post-purchase)
+
+1. **Trigger:** `Placed Order` (or any trigger you use for post-purchase email).
+2. **Email 1:** Invite them to your ambassador program and link to your Growi signup page.
+3. **Time delay**, then **Email 2:** a reminder.
+4. Optionally another delay and a final reminder.
+
+Add these **flow filters**:
+
+- `Applied to Ambassador Program` **zero times since starting this flow**
+- **AND** `Joined Ambassador Program` **zero times since starting this flow**
+
+Klaviyo checks flow filters before every email, so people leave the flow as soon as they apply or join and don't get another reminder.
+
+<Tip>
+  To skip customers who were already ambassadors before this purchase, add `Properties about someone` → `growi_ambassador` **is not set** to the flow filters.
+</Tip>
+
+### In review flow
+
+Use this flow if your team reviews applications by hand.
+
+1. **Trigger:** metric `Applied to Ambassador Program`.
+2. **Email:** "Thanks for applying, we're reviewing your application."
+3. Optionally a delay, then a follow-up.
+
+Add a **flow filter**: `Joined Ambassador Program` **zero times since starting this flow**, so it stops as soon as they're accepted.
+
+If your program accepts everyone automatically, both events arrive about 2 minutes apart. Add a short time delay (for example 10 minutes) before the first email so the filter can remove them before anything is sent.
+
+### Welcome flow
+
+1. **Trigger:** metric `Joined Ambassador Program`.
+2. **Email:** welcome them and give them everything they need to start sharing.
+
+```liquid
+Welcome to the program!
+
+Your personal code: {{ event.discount_code }}
+Your referral link: {{ event.affiliate_link }}
+```
+
+If you run more than one program, add a **trigger filter** on `campaign_name` (or `campaign_id`) so each program gets its own welcome email.
+
+## Use the code in any email
+
+Growi saves the code and link on the profile, so your other emails can show them too: order confirmations, campaigns and newsletters.
+
+```liquid
+{{ person|lookup:'growi_discount_code' }}
+{{ person|lookup:'growi_affiliate_link' }}
+```
+
+Wrap them in a condition so people who aren't ambassadors don't see a blank:
+
+```liquid
+{% if person|lookup:'growi_discount_code' %}
+  Share your code {{ person|lookup:'growi_discount_code' }} and earn on every sale.
+{% endif %}
+```
+
+## Segments
+
+| Segment | Definition |
+| --- | --- |
+| Ambassadors | `growi_ambassador` equals `true` |
+| Applied, not in yet | `growi_ambassador_applicant` equals `true` **AND** `growi_ambassador` is not set |
+| Applied in the last 30 days | `Applied to Ambassador Program` at least once in the last 30 days |
+| Customers who never applied | `Placed Order` at least once **AND** `Applied to Ambassador Program` zero times over all time **AND** `Joined Ambassador Program` zero times over all time |
+
+## How it behaves
+
+- **Matching is by email.** Reminders only stop if the customer applies with the **same email** they used to buy. If they use another address, Klaviyo sees two different people.
+- **One event per person and program.** Each application and each membership is sent once. If an ambassador leaves and is reactivated in the same program, Klaviyo drops the repeat `Joined Ambassador Program`, so the welcome flow doesn't trigger again.
+- **Status is checked at send time.** If a creator is removed during the 2-minute delay, no `Joined Ambassador Program` event is sent.
+- **Profile properties are updated, not removed.** If someone joins a second program, `growi_discount_code`, `growi_affiliate_link` and `growi_campaign_name` change to that program's values. Leaving a program doesn't clear them.
+- **Events start when you connect.** Applications and members from before you connected aren't sent to Klaviyo.
+- **Imported creators are skipped.** Creators who came in through a bulk import don't trigger events.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Klaviyo rejected this API key">
+    The key is wrong or doesn't have the right scopes. Create a **private** key (`pk_...`) with **Events: Full access** and **Accounts: Read access**, then connect again.
+  </Accordion>
+  <Accordion title="The tile says Klaviyo rejected the saved key">
+    The key was revoked, deleted or changed in Klaviyo after you connected it. Growi stops sending events until you paste a new key and click **Replace key**. Events from while the key was invalid aren't sent again.
+  </Accordion>
+  <Accordion title="I can't find the metric when creating a flow">
+    Klaviyo lists a metric only after it has received at least one event for it. Do the test in [step 3](#3-send-one-event-of-each-type), then refresh Klaviyo.
+  </Accordion>
+  <Accordion title="Someone joined but got no welcome email">
+    Check that:
+
+    - Their Klaviyo profile shows the `Joined Ambassador Program` event. It arrives about 2 minutes after they join.
+    - The welcome flow is **Live**, not in draft or manual mode.
+    - They aren't suppressed or unsubscribed in Klaviyo.
+    - They weren't already a member of that program. A reactivation doesn't trigger the flow again.
+  </Accordion>
+  <Accordion title="Reminders kept going after someone joined">
+    They most likely applied with a different email from the one on their order. Check whether their Klaviyo profile has the Growi events. If they're on a different profile, merge the two profiles in Klaviyo.
+  </Accordion>
+  <Accordion title="discount_code or affiliate_link is empty">
+    The program may be set to hide creator links and codes, or the code wasn't ready in time. Check that the creator has a code in Growi. In emails, use the `{% if %}` pattern above so a missing value doesn't show a blank.
+  </Accordion>
+</AccordionGroup>
+
+## Disconnect
+
+In **Settings → Integrations → Klaviyo**, click **Disconnect**. Growi stops sending events right away and deletes the stored key. Events and profile properties already in Klaviyo stay there.
+
+Need help? Email [info@growi.io](mailto:info@growi.io).

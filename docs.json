@@ -225,94 +225,13 @@
             "group": "Meta ads",
             "icon": "megaphone",
             "pages": [
-              {
-                "group": "Build and launch",
-                "pages": [
-                  "api-reference/endpoint/meta-ads/list-ad-sources",
-                  "api-reference/endpoint/meta-ads/get-submission-filter-options",
-                  "api-reference/endpoint/meta-ads/bulk-create-ads",
-                  "api-reference/endpoint/meta-ads/get-publish-status",
-                  "api-reference/endpoint/meta-ads/list-ads",
-                  "api-reference/endpoint/meta-ads/get-ad",
-                  "api-reference/endpoint/meta-ads/launch-ad",
-                  "api-reference/endpoint/meta-ads/pause-ad",
-                  "api-reference/endpoint/meta-ads/retry-ad",
-                  "api-reference/endpoint/meta-ads/retry-failed-ads"
-                ]
-              },
-              {
-                "group": "Ad accounts and pages",
-                "pages": [
-                  "api-reference/endpoint/meta-ads/list-ad-accounts",
-                  "api-reference/endpoint/meta-ads/update-ad-account",
-                  "api-reference/endpoint/meta-ads/sync-ad-account",
-                  "api-reference/endpoint/meta-ads/refresh-ad-account-campaigns",
-                  "api-reference/endpoint/meta-ads/list-ad-account-pages",
-                  "api-reference/endpoint/meta-ads/list-instagram-accounts",
-                  "api-reference/endpoint/meta-ads/get-store-info"
-                ]
-              },
-              {
-                "group": "Campaigns and ad sets",
-                "pages": [
-                  "api-reference/endpoint/meta-ads/list-campaigns",
-                  "api-reference/endpoint/meta-ads/list-ad-sets",
-                  "api-reference/endpoint/meta-ads/create-ad-set"
-                ]
-              },
-              {
-                "group": "Targeting",
-                "pages": [
-                  "api-reference/endpoint/meta-ads/list-pixels",
-                  "api-reference/endpoint/meta-ads/list-custom-audiences",
-                  "api-reference/endpoint/meta-ads/search-interests",
-                  "api-reference/endpoint/meta-ads/search-locations"
-                ]
-              },
-              {
-                "group": "Builder settings",
-                "pages": [
-                  "api-reference/endpoint/meta-ads/get-default-cta",
-                  "api-reference/endpoint/meta-ads/update-default-cta",
-                  "api-reference/endpoint/meta-ads/get-naming",
-                  "api-reference/endpoint/meta-ads/update-naming",
-                  "api-reference/endpoint/meta-ads/list-copy-templates",
-                  "api-reference/endpoint/meta-ads/create-copy-template",
-                  "api-reference/endpoint/meta-ads/update-copy-template",
-                  "api-reference/endpoint/meta-ads/delete-copy-template",
-                  "api-reference/endpoint/meta-ads/set-default-copy-template",
-                  "api-reference/endpoint/meta-ads/list-utm-params",
-                  "api-reference/endpoint/meta-ads/create-utm-param",
-                  "api-reference/endpoint/meta-ads/update-utm-param",
-                  "api-reference/endpoint/meta-ads/delete-utm-param",
-                  "api-reference/endpoint/meta-ads/list-saved-links",
-                  "api-reference/endpoint/meta-ads/create-saved-link",
-                  "api-reference/endpoint/meta-ads/update-saved-link",
-                  "api-reference/endpoint/meta-ads/delete-saved-link",
-                  "api-reference/endpoint/meta-ads/list-creator-links"
-                ]
-              },
-              {
-                "group": "Ad templates",
-                "pages": [
-                  "api-reference/endpoint/meta-ads/list-ad-templates",
-                  "api-reference/endpoint/meta-ads/get-ad-template",
-                  "api-reference/endpoint/meta-ads/create-ad-template",
-                  "api-reference/endpoint/meta-ads/update-ad-template",
-                  "api-reference/endpoint/meta-ads/delete-ad-template"
-                ]
-              },
-              {
-                "group": "Partnership ads",
-                "pages": [
-                  "api-reference/endpoint/meta-ads/get-creator-whitelisting",
-                  "api-reference/endpoint/meta-ads/list-partnership-requests",
-                  "api-reference/endpoint/meta-ads/list-ad-codes",
-                  "api-reference/endpoint/meta-ads/generate-ad-code",
-                  "api-reference/endpoint/meta-ads/bulk-generate-ad-codes",
-                  "api-reference/endpoint/meta-ads/request-ad-code-email"
-                ]
-              }
+              "api-reference/endpoint/meta-ads/list-ad-sources",
+              "api-reference/endpoint/meta-ads/get-builder-options",
+              "api-reference/endpoint/meta-ads/bulk-create-ads",
+              "api-reference/endpoint/meta-ads/list-ads",
+              "api-reference/endpoint/meta-ads/get-ad",
+              "api-reference/endpoint/meta-ads/launch-ad",
+              "api-reference/endpoint/meta-ads/pause-ad"
             ]
           }
         ]

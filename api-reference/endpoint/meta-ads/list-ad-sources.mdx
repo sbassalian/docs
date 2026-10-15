@@ -3,7 +3,7 @@ title: "List ad sources"
 openapi: "GET /meta_ads/sources"
 ---
 
-The content the dashboard ad builder offers: creator social posts (newest first), TikTok Shop videos that sold in the range (highest GMV first), or approved content submissions. Each row's creative_source goes into creative on POST /meta_ads/bulk.
+Lists creator content you can turn into Meta ads: social posts (newest first), TikTok Shop videos that sold in the date range (highest GMV first), or approved content submissions.
 
 Step 1 of the [Meta ads automation flow](/essentials/meta-ads-automation).
 
@@ -15,14 +15,15 @@ Step 1 of the [Meta ads automation flow](/essentials/meta-ads-automation).
 | `tik_tok_shop_videos` | TikTok Shop videos that sold in your shop in the date range | Highest GMV first | `tts_external_id`, `tts_username` |
 | `submissions` | Approved video and image content submissions | Newest first | `content_submission_version_id` |
 
-Pass `ad_attachment=not_attached` to skip content that already backs an ad. That is the usual filter for a daily job.
+Pass `ad_attachment=not_attached` to skip content that already backs an ad. That is the usual filter for a daily job. Dates default to the last 30 days, and a range can be up to 366 days.
 
 ## Fields to carry into the ad
 
 - `creative_source`: copy its keys into `creative` on [Create ads in bulk](/api-reference/endpoint/meta-ads/bulk-create-ads).
 - `meta_partnership_ad_request_id`: when set, send it to run the ad as the creator (a partnership ad).
 - `whitelisting_status`: `whitelisted` means every Instagram account of the creator approved partnership ads; `partial`, `not_whitelisted` and `no_instagram` mean some, none, or no Instagram account.
-- `creator.id`: pass it to [Get creator Meta links](/api-reference/endpoint/meta-ads/list-creator-links) for the creator's tracking link.
+- `creator.id`: pass it as `creator_ids` to [Get builder options](/api-reference/endpoint/meta-ads/get-builder-options) for the creator's tracking link.
+- `campaign_affiliate_id`: the creator enrollment the content is attributed to, when known.
 
 <Note>
 Filters are checked against your organization. A `campaign_id`, `campaign_affiliate_id` or `creator_id` from another organization returns `422`, and so does `source=tik_tok_shop_videos` when no TikTok Shop is connected.
@@ -39,12 +40,12 @@ Any organization API key works, including view-only keys. A key acts as the pers
 | `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
 | `404` | organization_id is not a child brand of the key's organization |
 | `422` | Invalid filter, a filter that points at another organization, or no TikTok Shop connected |
-| `429` | Rate limited: 2 seconds between requests, plus the hourly cap |
+| `429` | Rate limited: 2 seconds between requests, and 40 requests per hour per key by default |
 
 <RequestExample>
 
 ```bash cURL
-curl -X GET "https://api.growi.io/api/public/v1/meta_ads/sources?source=social_posts&campaign_id=123&ad_attachment=not_attached&start_date=2026-10-01&end_date=2026-10-12" \
+curl -X GET "https://api.growi.io/api/public/v1/meta_ads/sources?source=social_posts&ad_attachment=not_attached&start_date=2026-10-01&end_date=2026-10-14" \
      -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -97,6 +98,13 @@ curl -X GET "https://api.growi.io/api/public/v1/meta_ads/sources?source=social_p
     "has_more": false,
     "returned": 1
   }
+}
+```
+
+```json 422
+{
+  "success": false,
+  "error": "campaign_id not found for this organization"
 }
 ```
 

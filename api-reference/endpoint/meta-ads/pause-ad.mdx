@@ -3,11 +3,11 @@ title: "Pause an ad"
 openapi: "POST /meta_ads/{id}/pause"
 ---
 
-Sets the ad to PAUSED on Meta. If the ad has not reached Meta yet, only the Growi record changes and the publish keeps it paused.
+Sets the ad to `PAUSED` on Meta. If the ad has not reached Meta yet, only the Growi record changes and the publish keeps it paused.
 
 ## Authentication
 
-Needs a **full-access** API key whose creator is an owner or admin. View-only keys, and keys whose creator has the viewer role, get `403`. See [Rate limits and authentication](/api-reference/introduction).
+Needs a **full-access** API key whose creator is an owner or admin. Legacy keys that are not tied to a person also work. View-only keys, and keys whose creator has the viewer role, get `403`. See [Rate limits and authentication](/api-reference/introduction).
 
 ## Errors
 
@@ -15,14 +15,14 @@ Needs a **full-access** API key whose creator is an owner or admin. View-only ke
 | ------ | ---- |
 | `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
 | `403` | View-only API key, or the key's user is not an owner or admin |
-| `404` | organization_id is not a child brand of the key's organization |
-| `422` | Meta rejected the pause, or no ad with this id in your organization |
-| `429` | Rate limited: 2 seconds between requests, plus the hourly cap |
+| `404` | No ad with this id in your organization, or organization_id is not a child brand of the key's organization |
+| `422` | Meta rejected the pause (`PAUSE_FAILED`), or the ad was deleted (`AD_DELETED`) |
+| `429` | Rate limited: 2 seconds between requests, and 40 requests per hour per key by default |
 
 <RequestExample>
 
 ```bash cURL
-curl -X POST "https://api.growi.io/api/public/v1/meta_ads/101/pause" \
+curl -X POST "https://api.growi.io/api/public/v1/meta_ads/5012/pause" \
      -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -34,9 +34,46 @@ curl -X POST "https://api.growi.io/api/public/v1/meta_ads/101/pause" \
 {
   "success": true,
   "data": {
-    "meta_ad_id": 9012,
+    "id": 5012,
+    "name": "Ava ad",
+    "meta_ad_id": "120214567890123456",
     "state": "published",
-    "status": "PAUSED"
+    "status": "PAUSED",
+    "published": true,
+    "failed": false,
+    "error_message": null,
+    "last_step": "ad",
+    "meta_ad_set_id": 78552828,
+    "meta_ad_set_name": "Broad US",
+    "campaign_affiliate_id": 3490313,
+    "external": false,
+    "created_at": "2026-10-14T13:05:11Z"
+  }
+}
+```
+
+```json 422
+{
+  "success": false,
+  "data": {
+    "id": 5012,
+    "name": "Ava ad",
+    "meta_ad_id": "120214567890123456",
+    "state": "active",
+    "status": "ACTIVE",
+    "published": true,
+    "failed": false,
+    "error_message": null,
+    "last_step": "ad",
+    "meta_ad_set_id": 78552828,
+    "meta_ad_set_name": "Broad US",
+    "campaign_affiliate_id": 3490313,
+    "external": false,
+    "created_at": "2026-10-14T13:05:11Z"
+  },
+  "error": {
+    "code": "PAUSE_FAILED",
+    "message": "Pause request rejected by Meta"
   }
 }
 ```

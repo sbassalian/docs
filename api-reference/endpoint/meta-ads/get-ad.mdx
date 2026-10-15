@@ -3,7 +3,20 @@ title: "Get an ad"
 openapi: "GET /meta_ads/{id}"
 ---
 
-One ad with its ad set, campaign, creative, creator and stats for the date range.
+Returns one Meta ad and its publish status. The fields match a row of [List ads](/api-reference/endpoint/meta-ads/list-ads).
+
+## Ad fields
+
+| Field | Meaning |
+| --- | --- |
+| `id` | Growi ad id. Use it with get, launch and pause. |
+| `meta_ad_id` | Meta's ad id, once the ad is on Meta |
+| `state` | Growi publish state: `queued`, `publishing`, `published`, `active` or `failed` |
+| `status` | Meta delivery status, such as `PAUSED`, `ACTIVE` or `DELETED` |
+| `published` | `true` once the ad exists on Meta |
+| `failed`, `error_message`, `last_step` | Why and where publishing or launching failed |
+| `campaign_affiliate_id` | The creator enrollment credited for this ad's spend |
+| `external` | `true` for ads imported from Ads Manager |
 
 ## Authentication
 
@@ -14,14 +27,13 @@ Any organization API key works, including view-only keys. A key acts as the pers
 | Status | When |
 | ------ | ---- |
 | `401` | Missing or invalid API key, or the person who created the key is no longer an owner, admin or viewer of the organization |
-| `404` | organization_id is not a child brand of the key's organization |
-| `422` | No ad with this id in your organization |
-| `429` | Rate limited: 2 seconds between requests, plus the hourly cap |
+| `404` | No ad with this id in your organization, or organization_id is not a child brand of the key's organization |
+| `429` | Rate limited: 2 seconds between requests, and 40 requests per hour per key by default |
 
 <RequestExample>
 
 ```bash cURL
-curl -X GET "https://api.growi.io/api/public/v1/meta_ads/101" \
+curl -X GET "https://api.growi.io/api/public/v1/meta_ads/5012" \
      -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -33,82 +45,28 @@ curl -X GET "https://api.growi.io/api/public/v1/meta_ads/101" \
 {
   "success": true,
   "data": {
-    "id": 9012,
-    "meta_ad_id": "120215550000000001",
-    "ad_account_id": "act_1234567890",
-    "name": "Ava Creator | Glow Serum | 2026-10-12",
-    "status": "PAUSED",
-    "creation_status": "ready",
+    "id": 5012,
+    "name": "Ava ad",
+    "meta_ad_id": "120214567890123456",
     "state": "published",
+    "status": "PAUSED",
+    "published": true,
     "failed": false,
-    "retrying": false,
     "error_message": null,
-    "last_step": null,
+    "last_step": "ad",
+    "meta_ad_set_id": 78552828,
+    "meta_ad_set_name": "Broad US",
+    "campaign_affiliate_id": 3490313,
     "external": false,
-    "thumbnail_url": "https://scontent.xx.fbcdn.net/v/t15.5256-10/thumb.jpg",
-    "permalink_url": "https://www.instagram.com/p/DAbCdEf/",
-    "created_at": "2026-10-12T14:02:11Z",
-    "updated_at": "2026-10-12T14:05:40Z",
-    "meta_ad_set": {
-      "id": 77,
-      "meta_ad_set_id": "120215540000000002",
-      "name": "Broad US 18-45",
-      "status": "ACTIVE",
-      "meta_campaign_id": 41
-    },
-    "meta_campaign": {
-      "id": 41,
-      "meta_campaign_id": "120215530000000003",
-      "ad_account_id": "act_1234567890",
-      "name": "Creator Prospecting",
-      "objective": "OUTCOME_SALES",
-      "status": "ACTIVE"
-    },
-    "meta_creative": {
-      "id": 5521,
-      "meta_creative_id": "120215560000000004",
-      "name": "Ava Creator | Glow Serum",
-      "thumbnail_url": "https://scontent.xx.fbcdn.net/v/t15.5256-10/thumb.jpg",
-      "permalink_url": "https://www.instagram.com/p/DAbCdEf/",
-      "source_type": "content_submission_version"
-    },
-    "creator": {
-      "id": 2628998,
-      "full_name": "Ava Creator",
-      "username": "ava.creates",
-      "avatar_url": "https://imagedelivery.net/abc/avatar.png",
-      "campaign_affiliate_id": 3490313
-    },
-    "stats": {
-      "spend_cents": 4250,
-      "impressions": 18230,
-      "reach": 15102,
-      "clicks": 512,
-      "link_clicks": 388,
-      "purchases": 9,
-      "purchase_value_cents": 61200,
-      "add_to_cart": 31,
-      "initiate_checkout": 17,
-      "last_click_revenue_cents": 22400,
-      "last_click_commission_cents": 2240,
-      "last_click_orders": 3,
-      "video_thru_plays": 2210,
-      "video_p25_watched": 6120,
-      "video_p50_watched": 3410,
-      "video_p75_watched": 2290,
-      "video_p100_watched": 1650,
-      "ctr": 2.13,
-      "frequency": 1.21,
-      "thumbstop": 31.4,
-      "cpm_cents": 233,
-      "cpc_cents": 11,
-      "cpa_cents": 472,
-      "roas": 14.4,
-      "last_click_roas": 5.27,
-      "aov_cents": 6800
-    }
-  },
-  "retention_curve": null
+    "created_at": "2026-10-14T13:05:11Z"
+  }
+}
+```
+
+```json 404
+{
+  "success": false,
+  "error": "Meta ad not found"
 }
 ```
 

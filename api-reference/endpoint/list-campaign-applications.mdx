@@ -39,6 +39,14 @@ curl -X GET "https://api.growi.io/api/public/v1/campaign_applications?campaign_i
       "creator_name": "Maria Ambriz",
       "email": "maria.92.ambriz@gmail.com",
       "signup_source": "brand_api",
+      "connected_accounts": [
+        {
+          "id": 3673423,
+          "provider": "tik_tok",
+          "username": "maria.creates",
+          "monthly_post_count": 38
+        }
+      ],
       "applied_at": "2026-10-14T13:13:16Z"
     }
   ],
@@ -63,6 +71,11 @@ curl -X GET "https://api.growi.io/api/public/v1/campaign_applications?campaign_i
 | `data[].creator_name` | String | The creator's name. Creators who applied through the Growi marketplace show their first name only. |
 | `data[].email` | String or null | The creator's email. `null` for creators who applied through the Growi marketplace. |
 | `data[].signup_source` | String | Where the application came from, for example `brand_api`, `whitelabel` or `marketplace` |
+| `data[].connected_accounts` | Array | The creator's connected TikTok accounts. When the creator picked accounts while applying, only those are listed. Shown for pending applicants too, including marketplace creators. |
+| `data[].connected_accounts[].id` | Integer | The connected account id |
+| `data[].connected_accounts[].provider` | String | `tik_tok` |
+| `data[].connected_accounts[].username` | String or null | The account's handle |
+| `data[].connected_accounts[].monthly_post_count` | Integer | Posts on this account in the last 30 days. The same number shown on the Applications tab in the dashboard. |
 | `data[].applied_at` | String | When the creator applied (ISO 8601) |
 | `meta.row_count` | Integer | Total matching applications |
 | `meta.page_count` | Integer | Total pages |
@@ -106,6 +119,14 @@ curl -X GET "https://api.growi.io/api/public/v1/campaign_applications?campaign_i
       "creator_name": "Maria Ambriz",
       "email": "maria.92.ambriz@gmail.com",
       "signup_source": "brand_api",
+      "connected_accounts": [
+        {
+          "id": 3673423,
+          "provider": "tik_tok",
+          "username": "maria.creates",
+          "monthly_post_count": 38
+        }
+      ],
       "applied_at": "2026-10-14T13:13:16Z"
     }
   ],

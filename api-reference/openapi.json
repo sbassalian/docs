@@ -4860,6 +4860,30 @@
                           "signup_source": {
                             "type": "string"
                           },
+                          "connected_accounts": {
+                            "type": "array",
+                            "description": "The applicant's active TikTok accounts, limited to the ones they applied with",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "integer"
+                                },
+                                "provider": {
+                                  "type": "string",
+                                  "description": "tik_tok"
+                                },
+                                "username": {
+                                  "type": "string",
+                                  "nullable": true
+                                },
+                                "monthly_post_count": {
+                                  "type": "integer",
+                                  "description": "Posts in the last 30 days"
+                                }
+                              }
+                            }
+                          },
                           "applied_at": {
                             "type": "string",
                             "format": "date-time"

@@ -1,0 +1,92 @@
+---
+title: "Bulk approve campaign applications"
+openapi: "POST /campaign_applications/bulk_approve"
+---
+
+Approves up to **50** pending applications in one request. Each application goes through exactly the same steps as [Approve campaign application](/api-reference/endpoint/approve-campaign-application), including the emails to creators.
+
+<Info>
+  Requires a full-access API key (read-only keys are rejected).
+</Info>
+
+Each id is processed on its own: valid ids are still approved when another id fails, and failures are listed in `errors`. Ids that are already accepted count as successes with `"changed": false`, so you can safely resend a batch.
+
+## Request body
+
+| Field | Type | Description | Required |
+| --- | --- | --- | --- |
+| `ids` | Array of integers | Application ids, at most 50 | Yes |
+
+## Request example
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/campaign_applications/bulk_approve" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "ids": [98123, 98124, 98125] }'
+```
+
+## Response example
+
+```json
+{
+  "success": false,
+  "updated": [
+    { "id": 98123, "status": "accepted", "campaign_id": 51812, "user_id": 45678, "campaign_affiliate_id": 3490313, "changed": true },
+    { "id": 98124, "status": "accepted", "campaign_id": 51812, "user_id": 45679, "campaign_affiliate_id": 3490314, "changed": true }
+  ],
+  "errors": [
+    { "id": 98125, "error": "Application not found." }
+  ]
+}
+```
+
+The response is `200` when every id succeeded and `422` when at least one failed. Both use this shape.
+
+## Response fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `success` | Boolean | `true` when every id succeeded |
+| `updated` | Array | One entry per approved application, same fields as `data` in [Approve campaign application](/api-reference/endpoint/approve-campaign-application) |
+| `errors` | Array | One entry per failed id, with `id` and `error` |
+
+## Error responses
+
+**403: read-only API key**
+
+```json
+{ "error": "This API key is read-only and cannot modify data." }
+```
+
+**422: missing or too many ids**
+
+```json
+{ "error": "Maximum 50 applications per request." }
+```
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.growi.io/api/public/v1/campaign_applications/bulk_approve" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "ids": [98123, 98124] }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "success": true,
+  "updated": [
+    { "id": 98123, "status": "accepted", "campaign_id": 51812, "user_id": 45678, "campaign_affiliate_id": 3490313, "changed": true },
+    { "id": 98124, "status": "accepted", "campaign_id": 51812, "user_id": 45679, "campaign_affiliate_id": 3490314, "changed": true }
+  ],
+  "errors": []
+}
+```
+
+</ResponseExample>

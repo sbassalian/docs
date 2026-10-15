@@ -1,0 +1,115 @@
+---
+title: "Deny campaign application"
+openapi: "POST /campaign_applications/{id}/deny"
+---
+
+Denies a pending creator application. This does exactly what **Reject** does on the dashboard Applications tab:
+
+- the creator gets the campaign's rejection email
+- any pending free sample requests tied to the application are cancelled
+- the decision shows in your activity log
+
+A denied application can be reinstated from the dashboard if needed.
+
+<Info>
+  Requires a full-access API key (read-only keys are rejected).
+</Info>
+
+Only **pending** applications can be denied. Use [List campaign applications](/api-reference/endpoint/list-campaign-applications) to find them. Applications to your child brands' campaigns work too.
+
+**Idempotent**: calling this on an application that is already rejected returns `200` with `"changed": false` and does nothing, so retries are safe. To decide many applications at once, use [Bulk deny](/api-reference/endpoint/bulk-deny-campaign-applications) (up to 50 per request), which also keeps you well inside your hourly request limit.
+
+## Path parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `id` | Integer | The application id: `id` from List campaign applications, or `invitation_id` from Create campaign application | Yes |
+
+No request body is needed.
+
+## Request example
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/campaign_applications/98123/deny" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+## Response example
+
+```json
+{
+  "data": {
+    "id": 98123,
+    "status": "rejected",
+    "campaign_id": 51812,
+    "user_id": 45678,
+    "campaign_affiliate_id": null,
+    "changed": true
+  }
+}
+```
+
+## Response fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `data.id` | Integer | The application id |
+| `data.status` | String | `rejected` |
+| `data.campaign_id` | Integer | The campaign applied to |
+| `data.user_id` | Integer | The creator's Growi user id |
+| `data.campaign_affiliate_id` | Integer or null | Always `null` for a denied application |
+| `data.changed` | Boolean | `true` when this request denied the application, `false` when it was already rejected |
+
+## Error responses
+
+**401: missing or invalid API key**
+
+```json
+{ "error": "Not Authenticated" }
+```
+
+**403: read-only API key**
+
+```json
+{ "error": "This API key is read-only and cannot modify data." }
+```
+
+**404: application not found for your organization**
+
+```json
+{ "error": "Application not found." }
+```
+
+**422: application is not pending**
+
+Returned when the application was already approved, canceled, or is waiting on payment.
+
+```json
+{ "error": "Only pending applications can be approved or denied. This application is accepted." }
+```
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.growi.io/api/public/v1/campaign_applications/98123/deny" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "data": {
+    "id": 98123,
+    "status": "rejected",
+    "campaign_id": 51812,
+    "user_id": 45678,
+    "campaign_affiliate_id": null,
+    "changed": true
+  }
+}
+```
+
+</ResponseExample>

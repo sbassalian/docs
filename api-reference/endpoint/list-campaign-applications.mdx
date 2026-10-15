@@ -1,0 +1,142 @@
+---
+title: "List campaign applications"
+openapi: "GET /campaign_applications"
+---
+
+Lists creator applications to your organization's campaigns, newest first. Applications to your child brands' campaigns are included. By default only **pending** applications are returned, so this is the queue to work through with [Approve](/api-reference/endpoint/approve-campaign-application) and [Deny](/api-reference/endpoint/deny-campaign-application).
+
+<Info>
+  Works with full-access and read-only API keys.
+</Info>
+
+## Query parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `status` | String | `pending` (default), `accepted`, `rejected`, `canceled`, `pending_contract` or `pending_payment` | No |
+| `campaign_id` | Integer | Only applications to this campaign | No |
+| `page` | Integer | Page number, starting at `1` (default `1`) | No |
+| `per_page` | Integer | Results per page, `1` to `100` (default `25`) | No |
+
+## Request example
+
+```bash
+curl -X GET "https://api.growi.io/api/public/v1/campaign_applications?campaign_id=51812&per_page=50" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+## Response example
+
+```json
+{
+  "data": [
+    {
+      "id": 98123,
+      "status": "pending",
+      "campaign_id": 51812,
+      "campaign_name": "TikTok Partners",
+      "user_id": 45678,
+      "creator_name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "signup_source": "brand_api",
+      "connected_accounts": [
+        {
+          "id": 3673423,
+          "provider": "tik_tok",
+          "username": "jane.creates",
+          "monthly_post_count": 38
+        }
+      ],
+      "applied_at": "2026-10-14T13:13:16Z"
+    }
+  ],
+  "meta": {
+    "row_count": 1,
+    "page_count": 1,
+    "current_page": 1,
+    "per_page": 50
+  }
+}
+```
+
+## Response fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `data[].id` | Integer | The application id. Pass it to the approve and deny endpoints. Same value as `invitation_id` from [Create campaign application](/api-reference/endpoint/create-campaign-application). |
+| `data[].status` | String | Application status |
+| `data[].campaign_id` | Integer | The campaign applied to |
+| `data[].campaign_name` | String | The campaign's name |
+| `data[].user_id` | Integer | The creator's Growi user id |
+| `data[].creator_name` | String | The creator's name. Creators who applied through the Growi marketplace show their first name only. |
+| `data[].email` | String or null | The creator's email. `null` for creators who applied through the Growi marketplace. |
+| `data[].signup_source` | String | Where the application came from, for example `brand_api`, `whitelabel` or `marketplace` |
+| `data[].connected_accounts` | Array | The creator's connected TikTok accounts. When the creator picked accounts while applying, only those are listed. Shown for pending applicants too, including marketplace creators. |
+| `data[].connected_accounts[].id` | Integer | The connected account id |
+| `data[].connected_accounts[].provider` | String | `tik_tok` |
+| `data[].connected_accounts[].username` | String or null | The account's handle |
+| `data[].connected_accounts[].monthly_post_count` | Integer | Posts on this account in the last 30 days. The same number shown on the Applications tab in the dashboard. |
+| `data[].applied_at` | String | When the creator applied (ISO 8601) |
+| `meta.row_count` | Integer | Total matching applications |
+| `meta.page_count` | Integer | Total pages |
+| `meta.current_page` | Integer | This page |
+| `meta.per_page` | Integer | Page size used |
+
+## Error responses
+
+**401: missing or invalid API key**
+
+```json
+{ "error": "Not Authenticated" }
+```
+
+**422: unknown status**
+
+```json
+{ "error": "status must be one of pending, accepted, rejected, canceled, pending_contract, pending_payment" }
+```
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.growi.io/api/public/v1/campaign_applications?campaign_id=51812&per_page=50" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200
+{
+  "data": [
+    {
+      "id": 98123,
+      "status": "pending",
+      "campaign_id": 51812,
+      "campaign_name": "TikTok Partners",
+      "user_id": 45678,
+      "creator_name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "signup_source": "brand_api",
+      "connected_accounts": [
+        {
+          "id": 3673423,
+          "provider": "tik_tok",
+          "username": "jane.creates",
+          "monthly_post_count": 38
+        }
+      ],
+      "applied_at": "2026-10-14T13:13:16Z"
+    }
+  ],
+  "meta": {
+    "row_count": 1,
+    "page_count": 1,
+    "current_page": 1,
+    "per_page": 50
+  }
+}
+```
+
+</ResponseExample>

@@ -157,7 +157,12 @@
             "group": "Applications",
             "icon": "inbox",
             "pages": [
-              "api-reference/endpoint/create-campaign-application"
+              "api-reference/endpoint/list-campaign-applications",
+              "api-reference/endpoint/create-campaign-application",
+              "api-reference/endpoint/approve-campaign-application",
+              "api-reference/endpoint/deny-campaign-application",
+              "api-reference/endpoint/bulk-approve-campaign-applications",
+              "api-reference/endpoint/bulk-deny-campaign-applications"
             ]
           },
           {

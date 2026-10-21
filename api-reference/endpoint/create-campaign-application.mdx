@@ -11,6 +11,10 @@ The endpoint creates the creator account if it doesn't exist yet, files a **pend
   Requires a full-access API key (read-only keys are rejected).
 </Info>
 
+<Note>
+  If the campaign has auto-decline rules (for example, a minimum 30-day TikTok Shop GMV), a **pending** application can be declined automatically about a minute after it's created. The response still returns `pending`. The creator then gets the campaign's rejection email, the same as a manual decline.
+</Note>
+
 **Idempotent**: repeat submissions for the same `email` + `campaign_id` return the existing application with `created: false` instead of creating a duplicate. Attribution keys not seen before are merged in; existing values are never overwritten. This endpoint is also exempt from the 2-second request-interval limit, so bursts of near-simultaneous form submissions are safe.
 
 ## Request body

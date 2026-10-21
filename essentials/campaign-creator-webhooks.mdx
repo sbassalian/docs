@@ -28,6 +28,7 @@ The webhook payload includes an `event` field to differentiate between actions:
 | `campaign_affiliate.left` | Creator **left** the campaign |
 | `campaign_affiliate.code_updated` | Creator's **affiliate code** (tag) was changed |
 | `affiliate_sale.created` | A **sale was attributed** to one of your creators |
+| `sample_request.*` | A creator requested a **free sample** you fulfill yourself, or its status changed. See [Free samples for custom stores](/essentials/custom-store-samples) |
 
 <Note>
   If the system encounters an unknown status, it will fall back to `campaign_affiliate.<status>`.

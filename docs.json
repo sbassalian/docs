@@ -84,7 +84,8 @@
             "pages": [
               "essentials/stripe-integration",
               "essentials/shopify-headless-integration",
-              "essentials/klaviyo-integration"
+              "essentials/klaviyo-integration",
+              "essentials/custom-store-samples"
             ]
           },
           {
@@ -164,6 +165,17 @@
               "api-reference/endpoint/deny-campaign-application",
               "api-reference/endpoint/bulk-approve-campaign-applications",
               "api-reference/endpoint/bulk-deny-campaign-applications"
+            ]
+          },
+          {
+            "group": "Sample requests",
+            "icon": "package",
+            "pages": [
+              "api-reference/endpoint/list-sample-requests",
+              "api-reference/endpoint/get-sample-request",
+              "api-reference/endpoint/approve-sample-request",
+              "api-reference/endpoint/reject-sample-request",
+              "api-reference/endpoint/update-sample-request"
             ]
           },
           {

@@ -1,0 +1,103 @@
+---
+title: "List sample requests"
+openapi: "GET /sample_requests"
+---
+
+Lists free sample requests that you fulfill yourself, newest first. These are requests from creators on campaigns whose store isn't on Shopify. See [Free samples for custom stores](/essentials/custom-store-samples) for the full flow.
+
+Requests on your child brands' campaigns are included.
+
+## Query parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `status` | String | Comma-separated: `pending`, `approved`, `shipped`, `delivered`, `rejected`, `cancelled` | No |
+| `campaign_id` | Integer | Only requests on this campaign | No |
+| `updated_since` | String | ISO-8601 timestamp. Only requests updated at or after this time, for incremental syncs | No |
+| `page` | Integer | Page number (default `1`) | No |
+| `per_page` | Integer | 1 to 100 (default `25`) | No |
+
+## Request example
+
+```bash
+curl "https://api.growi.io/api/public/v1/sample_requests?status=approved" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+## Response example
+
+```json
+{
+  "data": [
+    {
+      "id": 812345,
+      "status": "approved",
+      "campaign_id": 51812,
+      "campaign_name": "Summer Creators",
+      "campaign_affiliate_id": 4512345,
+      "source": "creator_request",
+      "creator": {
+        "user_id": 45678,
+        "name": "Jamie Rivera",
+        "first_name": "Jamie",
+        "last_name": "Rivera",
+        "email": "jamie@example.com",
+        "phone": "+15555550100"
+      },
+      "product": {
+        "id": 501234,
+        "title": "Pleated Air Filter 20x25x1 (4-Pack)",
+        "url": "https://example.com/products/20x25x1",
+        "image_url": "https://cdn.example.com/20x25x1.jpg",
+        "shopify_id": null,
+        "tik_tok_id": "1729400000000000001",
+        "amazon_product_id": null
+      },
+      "variant": {
+        "id": 2801234,
+        "title": "MERV 8",
+        "display_name": "Pleated Air Filter 20x25x1 (4-Pack) - MERV 8",
+        "sku": "AF-20251-M8",
+        "external_id": "1729400000000000002",
+        "price": 109
+      },
+      "quantity": 1,
+      "shipping_address": {
+        "first_name": "Jamie",
+        "last_name": "Rivera",
+        "address_line_1": "100 Main St",
+        "address_line_2": "Apt 4",
+        "city": "Miami",
+        "state": "FL",
+        "postal_code": "33101",
+        "country": "UNITED STATES",
+        "phone": "+15555550100"
+      },
+      "order_id": null,
+      "order_name": null,
+      "tracking_url": null,
+      "created_at": "2026-10-21T18:04:09Z",
+      "updated_at": "2026-10-21T18:04:11Z"
+    }
+  ],
+  "meta": { "row_count": 1, "page_count": 1, "current_page": 1, "per_page": 25 }
+}
+```
+
+<Note>
+  For creators who joined through the Growi marketplace, `email`, `phone`, `last_name` and `shipping_address` are `null` until the request is approved.
+</Note>
+
+## Error responses
+
+**401: missing or invalid API key**
+
+```json
+{ "error": "Not Authenticated" }
+```
+
+**422: invalid filter**
+
+```json
+{ "error": "updated_since must be an ISO-8601 timestamp" }
+```

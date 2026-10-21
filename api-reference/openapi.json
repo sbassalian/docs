@@ -3237,7 +3237,7 @@
     },
     "/organizations/campaigns": {
       "get": {
-        "description": "Retrieves a list of all available campaigns for your organization",
+        "description": "Retrieves all campaigns and contracts for your organization with their deal details: image, brand, signup link, payment details and tiers (including retainer pay per GMV level)",
         "responses": {
           "200": {
             "description": "Get your campaigns information",
@@ -3287,6 +3287,211 @@
                               "Void"
                             ],
                             "description": "Current status of the campaign"
+                          },
+                          "description": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": "<p>Post 5 videos about the product.</p>",
+                            "description": "Campaign description (HTML)"
+                          },
+                          "image_url": {
+                            "type": "string",
+                            "example": "https://imagedelivery.net/example/public",
+                            "description": "Campaign share image, else the brand logo"
+                          },
+                          "brand": {
+                            "type": "object",
+                            "description": "Brand that owns the campaign",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 18430
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Glow Labs"
+                              },
+                              "logo_url": {
+                                "type": "string",
+                                "example": "https://imagedelivery.net/example/public"
+                              }
+                            }
+                          },
+                          "signup_url": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": "https://growi.io/o/glow-labs/c/16425",
+                            "description": "Page where creators apply. Null for contracts"
+                          },
+                          "start_date": {
+                            "type": "string",
+                            "format": "date",
+                            "nullable": true,
+                            "example": "2026-09-17"
+                          },
+                          "end_date": {
+                            "type": "string",
+                            "format": "date",
+                            "nullable": true,
+                            "example": "2026-10-31"
+                          },
+                          "platforms": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "example": [
+                              "tik_tok_shop"
+                            ],
+                            "description": "Sales platforms the campaign tracks, e.g. tik_tok_shop, shopify, amazon"
+                          },
+                          "currency": {
+                            "type": "string",
+                            "example": "usd",
+                            "description": "Currency of every amount in payment_details and tiers"
+                          },
+                          "videos_per_cycle": {
+                            "type": "integer",
+                            "example": 5,
+                            "description": "Videos a creator must post per cycle"
+                          },
+                          "cycle_duration_days": {
+                            "type": "integer",
+                            "example": 0,
+                            "description": "Cycle length in days. 0 means the deal does not repeat"
+                          },
+                          "hide_payout_on_signup": {
+                            "type": "boolean",
+                            "example": false,
+                            "description": "True when the brand hides pay on its own signup page"
+                          },
+                          "payment_details": {
+                            "type": "array",
+                            "description": "Pay as creators see it on the Growi signup page, one group per section",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "title": {
+                                  "type": "string",
+                                  "example": "Retainer Tiers"
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "standard",
+                                    "entry",
+                                    "gmv",
+                                    "posts"
+                                  ],
+                                  "example": "entry",
+                                  "description": "standard = base pay, entry = retainer paid by GMV level, gmv / posts = leaderboard prizes"
+                                },
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "amount": {
+                                        "type": "string",
+                                        "example": "$250.00"
+                                      },
+                                      "description": {
+                                        "type": "string",
+                                        "example": "If you have $10,000.00 GMV in the last 30 days"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "tiers": {
+                            "type": "array",
+                            "description": "Active tiers, lowest level first. Money values are in currency units, not cents",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "standard",
+                                    "entry"
+                                  ],
+                                  "example": "entry",
+                                  "description": "entry tiers are retainer levels unlocked by the creator's GMV"
+                                },
+                                "level": {
+                                  "type": "string",
+                                  "example": "silver",
+                                  "description": "bronze, silver, gold, platinum, diamond, elite, ..."
+                                },
+                                "qualification_criteria": {
+                                  "type": "string",
+                                  "example": "gmv",
+                                  "description": "Metric that unlocks the level"
+                                },
+                                "threshold": {
+                                  "type": "number",
+                                  "example": 10000.0,
+                                  "description": "Amount of the metric needed to reach the level (GMV in currency units, posts as a count)"
+                                },
+                                "base_payment": {
+                                  "type": "number",
+                                  "example": 250.0,
+                                  "description": "Fixed pay at this level"
+                                },
+                                "commissions": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "platform": {
+                                        "type": "string",
+                                        "example": "tik_tok_shop"
+                                      },
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "percentage",
+                                          "fixed"
+                                        ],
+                                        "example": "percentage"
+                                      },
+                                      "value": {
+                                        "type": "number",
+                                        "example": 25.0,
+                                        "description": "Percent of each sale, or fixed amount per sale"
+                                      }
+                                    }
+                                  }
+                                },
+                                "performance_payment": {
+                                  "type": "object",
+                                  "nullable": true,
+                                  "description": "Pay per views or likes, when set",
+                                  "properties": {
+                                    "amount": {
+                                      "type": "number",
+                                      "example": 5.0,
+                                      "description": "Amount paid per block"
+                                    },
+                                    "per": {
+                                      "type": "integer",
+                                      "example": 1000,
+                                      "description": "Size of the block"
+                                    },
+                                    "metric": {
+                                      "type": "string",
+                                      "enum": [
+                                        "views",
+                                        "likes"
+                                      ],
+                                      "example": "views"
+                                    }
+                                  }
+                                }
+                              }
+                            }
                           }
                         }
                       }

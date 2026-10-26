@@ -8669,6 +8669,11 @@
             "type": "string",
             "example": "instagram",
             "description": "Custom source/sub-ID tag (e.g., instagram, youtube) for platform-level tracking within a single campaign"
+          },
+          "meta_ad_id": {
+            "type": "string",
+            "example": "120250335006820451",
+            "description": "Meta ad id ({{ad.id}} on your Meta ad landing URL). Used only when campaign_affiliate_id is the creator's Meta ad tag (starts with meta_). If omitted and the creator has exactly one Meta ad, that ad is used."
           }
         }
       },

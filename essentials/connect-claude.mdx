@@ -168,12 +168,29 @@ link.
 A link stops working if the key is deleted or the person leaves the
 organization.
 
+### Payouts and invoices by date
+
+`list_creator_payouts` and `list_invoices` return the newest records first and
+accept an optional `start_date` and `end_date` (`YYYY-MM-DD`, up to 366 days
+apart). With only `start_date`, the range runs to today. With only `end_date`,
+it covers the 30 days before it.
+
+- `list_creator_payouts` filters on when the payout was created by default. Set
+  `date_field` to `paid_at` to filter on when it was paid instead. Each payout
+  in the results also shows its due date, but due dates can't be used as the
+  filter: to find payouts that are due, filter by `status: due`.
+- `list_invoices` filters on when the invoice was created.
+
+Both return 25 records per page by default and up to 100 with `per_page`. Check
+`has_more` in the results and ask for the next `page` until it is `false`.
+
 ## 6. Example prompts
 
 - "How many 10K and 100K view bonuses did Jane Doe and John Smith earn in
   September?"
 - "Why was this creator paid $1,240 last cycle?"
 - "Which creator payouts are due this week?"
+- "List the creator payouts we paid in the last 7 days."
 - "What were my top posts last month?"
 - "Which creators drove the most revenue in the Spring campaign?"
 - "Show me the sample applications still waiting for approval."

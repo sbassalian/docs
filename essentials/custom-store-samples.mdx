@@ -41,7 +41,7 @@ Most brands use both: webhooks to react right away and the API to approve reques
     Open **Settings → Webhooks** and add an HTTPS URL. Every active URL receives every event, including the [campaign creator events](/essentials/campaign-creator-webhooks).
   </Step>
   <Step title="Choose sample products">
-    Open your campaign, go to **Advanced options → Offer free samples**, and select the products and variants creators can request. Your Growi catalog includes the products synced from your connected channels, such as TikTok Shop or Amazon. Turn on **Auto approve** if every request should be approved right away.
+    Open your Custom website campaign and go to **Advanced options → Offer free samples**. Under **Sample products**, add the products you ship from your own store: a name, your SKU, an image (paste a URL or upload one) and, optionally, variants such as sizes or ratings, each with its own SKU. Then check the products, and the variants, creators can request in this campaign. Sample products are saved on your organization, so you can reuse them in other campaigns. Products synced from TikTok Shop or Amazon aren't offered here, because their ids and SKUs wouldn't match your orders. Turn on **Auto approve** if every request should be approved right away.
   </Step>
 </Steps>
 
@@ -59,6 +59,19 @@ Most brands use both: webhooks to react right away and the API to approve reques
 Delivery works like the other Growi webhooks: an HTTPS `POST` with a JSON body, signed with `Authorization: Bearer <your newest growi-sk API key>`, retried up to 3 times on a non-2xx response. Delivery is at-least-once, so deduplicate on `idempotency_key`.
 
 `quantity` is the number of units to ship for the variant.
+
+The product and variant are the sample products you added in Growi, so you can map them to your own catalog:
+
+| Field | Meaning |
+| --- | --- |
+| `product.title` | The product name you entered |
+| `product.sku` | Your product SKU |
+| `product.image_url` | The image you added, or `null` |
+| `variant.title` | The variant name you entered. `Default Title` when the product has no variants |
+| `variant.sku` | Your variant SKU. For a product without variants, this is the product SKU |
+| `variant.external_id` | Always `null` for your sample products |
+
+`shopify_id`, `tik_tok_id` and `amazon_product_id` are `null` for your sample products.
 
 `sample_request` always reflects the request as it is when the event is delivered, so a `sample_request.created` event can already show `"status": "approved"` when the campaign auto-approves.
 
@@ -89,10 +102,11 @@ Delivery works like the other Growi webhooks: an HTTPS `POST` with a JSON body, 
     "product": {
       "id": 501234,
       "title": "Pleated Air Filter 20x25x1 (4-Pack)",
-      "url": "https://example.com/products/20x25x1",
+      "sku": "AF-20251",
+      "url": null,
       "image_url": "https://cdn.example.com/20x25x1.jpg",
       "shopify_id": null,
-      "tik_tok_id": "1729400000000000001",
+      "tik_tok_id": null,
       "amazon_product_id": null
     },
     "variant": {
@@ -100,7 +114,7 @@ Delivery works like the other Growi webhooks: an HTTPS `POST` with a JSON body, 
       "title": "MERV 8",
       "display_name": "Pleated Air Filter 20x25x1 (4-Pack) - MERV 8",
       "sku": "AF-20251-M8",
-      "external_id": "1729400000000000002",
+      "external_id": null,
       "price": 109
     },
     "quantity": 1,

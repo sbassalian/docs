@@ -10071,7 +10071,13 @@
                 "type": "integer"
               },
               "title": {
-                "type": "string"
+                "type": "string",
+                "description": "The product name the brand entered"
+              },
+              "sku": {
+                "type": "string",
+                "nullable": true,
+                "description": "The brand's product SKU"
               },
               "url": {
                 "type": "string",
@@ -10112,11 +10118,13 @@
               },
               "sku": {
                 "type": "string",
-                "nullable": true
+                "nullable": true,
+                "description": "The brand's variant SKU. For a product without variants, the product SKU"
               },
               "external_id": {
                 "type": "string",
-                "nullable": true
+                "nullable": true,
+                "description": "Null for brand sample products"
               },
               "price": {
                 "type": "number",

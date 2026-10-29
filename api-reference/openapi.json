@@ -10125,7 +10125,8 @@
             }
           },
           "quantity": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Units to ship: the quantity approved for the request, or the quantity the creator asked for"
           },
           "shipping_address": {
             "type": "object",

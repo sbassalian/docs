@@ -58,6 +58,8 @@ Most brands use both: webhooks to react right away and the API to approve reques
 
 Delivery works like the other Growi webhooks: an HTTPS `POST` with a JSON body, signed with `Authorization: Bearer <your newest growi-sk API key>`, retried up to 3 times on a non-2xx response. Delivery is at-least-once, so deduplicate on `idempotency_key`.
 
+`quantity` is the number of units to ship for the variant.
+
 `sample_request` always reflects the request as it is when the event is delivered, so a `sample_request.created` event can already show `"status": "approved"` when the campaign auto-approves.
 
 ### Example payload
@@ -134,6 +136,7 @@ Delivery works like the other Growi webhooks: an HTTPS `POST` with a JSON body, 
 | `approved` | Approved, ready to ship |
 | `shipped` | You reported a shipment |
 | `delivered` | You reported a delivery |
+| `completed` | The creator posted their content, or Growi closed the request |
 | `rejected` | You rejected the request |
 | `cancelled` | Cancelled for another reason |
 

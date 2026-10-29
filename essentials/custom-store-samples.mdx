@@ -1,0 +1,213 @@
+---
+title: "Free samples for custom stores"
+description: "Let creators request free samples in Growi and fulfill them from your own website, checkout or warehouse"
+---
+
+<Info>
+  **Prerequisite** You need an admin or owner role in your Growi organization and a full-access API key.
+</Info>
+
+## Overview
+
+If your store doesn't run on Shopify, creators can still request free samples in Growi. Instead of Growi placing a Shopify order, Growi sends each request to you with the creator, the product and the shipping address, and you create the order in your own system.
+
+You can receive requests in two ways:
+
+- **Webhooks**: Growi POSTs a `sample_request.*` event to your webhook URL as soon as something happens.
+- **API**: you list sample requests, approve or reject them, and report shipments.
+
+Most brands use both: webhooks to react right away and the API to approve requests and send tracking back.
+
+## How it works
+
+1. You choose which products creators can request in your campaign.
+2. A creator in the campaign opens the **Sample Request** tab, picks a product and confirms their shipping address.
+3. Growi sends `sample_request.created`.
+4. The request is approved, either automatically (when the campaign auto-approves samples) or by you through the API. Growi sends `sample_request.approved`.
+5. You create the order on your side and ship it.
+6. You report the shipment (order number and tracking link) through the API. Growi sends `sample_request.shipped`.
+
+<Tip>
+  Create the order when you receive `sample_request.approved`, not `sample_request.created`. A created request may still be rejected.
+</Tip>
+
+## Set up
+
+<Steps>
+  <Step title="Get an API key">
+    In the Growi dashboard, open **Settings → Developer → API keys** and create a full-access key. Read-only keys can list requests but can't approve or update them.
+  </Step>
+  <Step title="Add your webhook URL">
+    Open **Settings → Webhooks** and add an HTTPS URL. Every active URL receives every event, including the [campaign creator events](/essentials/campaign-creator-webhooks).
+  </Step>
+  <Step title="Choose sample products">
+    Open your Custom website campaign and go to **Advanced options → Offer free samples**. Under **Sample products**, add the products you ship from your own store: a name, your SKU, an image (paste a URL or upload one) and, optionally, variants such as sizes or ratings, each with its own SKU. Then check the products, and the variants, creators can request in this campaign. Sample products are saved on your organization, so you can reuse them in other campaigns. Products synced from TikTok Shop or Amazon aren't offered here, because their ids and SKUs wouldn't match your orders. Turn on **Auto approve** if every request should be approved right away.
+  </Step>
+</Steps>
+
+## Webhook events
+
+| Event | Sent when |
+| --- | --- |
+| `sample_request.created` | A creator requested a sample |
+| `sample_request.approved` | The request was approved and is ready to ship |
+| `sample_request.rejected` | The request was rejected |
+| `sample_request.shipped` | The request was marked as shipped |
+| `sample_request.delivered` | The request was marked as delivered |
+| `sample_request.cancelled` | The request was cancelled |
+
+Delivery works like the other Growi webhooks: an HTTPS `POST` with a JSON body, signed with `Authorization: Bearer <your newest growi-sk API key>`, retried up to 3 times on a non-2xx response. Delivery is at-least-once, so deduplicate on `idempotency_key`.
+
+`quantity` is the number of units to ship for the variant.
+
+The product and variant are the sample products you added in Growi, so you can map them to your own catalog:
+
+| Field | Meaning |
+| --- | --- |
+| `product.title` | The product name you entered |
+| `product.sku` | Your product SKU |
+| `product.image_url` | The image you added, or `null` |
+| `variant.title` | The variant name you entered. `Default Title` when the product has no variants |
+| `variant.sku` | Your variant SKU. For a product without variants, this is the product SKU |
+| `variant.external_id` | Always `null` for your sample products |
+
+`shopify_id`, `tik_tok_id` and `amazon_product_id` are `null` for your sample products.
+
+`sample_request` always reflects the request as it is when the event is delivered, so a `sample_request.created` event can already show `"status": "approved"` when the campaign auto-approves.
+
+### Example payload
+
+```json
+{
+  "event": "sample_request.approved",
+  "idempotency_key": "sample_request.approved:812345",
+  "occurred_at": "2026-10-21T18:04:11Z",
+  "organization_id": 12345,
+  "organization_slug": "your-brand",
+  "sample_request": {
+    "id": 812345,
+    "status": "approved",
+    "campaign_id": 51812,
+    "campaign_name": "Summer Creators",
+    "campaign_affiliate_id": 4512345,
+    "source": "creator_request",
+    "creator": {
+      "user_id": 45678,
+      "name": "Jamie Rivera",
+      "first_name": "Jamie",
+      "last_name": "Rivera",
+      "email": "jamie@example.com",
+      "phone": "+15555550100"
+    },
+    "product": {
+      "id": 501234,
+      "title": "Pleated Air Filter 20x25x1 (4-Pack)",
+      "sku": "AF-20251",
+      "url": null,
+      "image_url": "https://cdn.example.com/20x25x1.jpg",
+      "shopify_id": null,
+      "tik_tok_id": null,
+      "amazon_product_id": null
+    },
+    "variant": {
+      "id": 2801234,
+      "title": "MERV 8",
+      "display_name": "Pleated Air Filter 20x25x1 (4-Pack) - MERV 8",
+      "sku": "AF-20251-M8",
+      "external_id": null,
+      "price": 109
+    },
+    "quantity": 1,
+    "shipping_address": {
+      "first_name": "Jamie",
+      "last_name": "Rivera",
+      "address_line_1": "100 Main St",
+      "address_line_2": "Apt 4",
+      "city": "Miami",
+      "state": "FL",
+      "postal_code": "33101",
+      "country": "UNITED STATES",
+      "phone": "+15555550100"
+    },
+    "order_id": null,
+    "order_name": null,
+    "tracking_url": null,
+    "created_at": "2026-10-21T18:04:09Z",
+    "updated_at": "2026-10-21T18:04:11Z"
+  }
+}
+```
+
+<Note>
+  Creators who joined through the Growi marketplace keep their contact details private until you approve their request. For those creators, `email`, `phone`, `last_name` and `shipping_address` are `null` while the request is pending, and are filled in once it's approved.
+</Note>
+
+## Statuses
+
+| Status | Meaning |
+| --- | --- |
+| `pending` | Waiting for your approval |
+| `approved` | Approved, ready to ship |
+| `shipped` | You reported a shipment |
+| `delivered` | You reported a delivery |
+| `completed` | The creator posted their content, or Growi closed the request |
+| `rejected` | You rejected the request |
+| `cancelled` | Cancelled for another reason |
+
+## Use the API
+
+All examples use the base URL `https://api.growi.io/api/public/v1`.
+
+### List pending requests
+
+```bash
+curl "https://api.growi.io/api/public/v1/sample_requests?status=pending" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+To poll for changes, pass `updated_since` with the time of your last sync:
+
+```bash
+curl "https://api.growi.io/api/public/v1/sample_requests?updated_since=2026-10-21T00:00:00Z" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+### Approve or reject
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/sample_requests/812345/approve" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+
+curl -X POST "https://api.growi.io/api/public/v1/sample_requests/812345/reject" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+When the sample was picked as part of the creator's campaign application, approving the sample also accepts the application, and rejecting it also rejects the application. This matches what happens on Shopify stores.
+
+### Report the shipment
+
+```bash
+curl -X PATCH "https://api.growi.io/api/public/v1/sample_requests/812345" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "status": "shipped",
+    "order_id": "FB-100231",
+    "order_name": "#100231",
+    "tracking_url": "https://www.ups.com/track?tracknum=1Z999AA10123456784"
+  }'
+```
+
+Send `"status": "delivered"` once the package arrives. You can also send `order_id`, `order_name` or `tracking_url` without a `status` to update them on their own.
+
+## Limits
+
+- API requests count toward your hourly limit, with at least 2 seconds between requests. Use webhooks to avoid polling often.
+- Requests are listed for your organization's campaigns and your child brands' campaigns.
+- Only samples fulfilled by you appear here. Samples on Shopify stores are still sent as Shopify orders, and TikTok Shop samples stay in TikTok Shop.
+
+## Related
+
+- [List sample requests](/api-reference/endpoint/list-sample-requests)
+- [Update sample request](/api-reference/endpoint/update-sample-request)
+- [Campaign creator webhooks](/essentials/campaign-creator-webhooks)

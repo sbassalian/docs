@@ -1,0 +1,73 @@
+---
+title: "Update sample request"
+openapi: "PATCH /sample_requests/{id}"
+---
+
+Reports what happened to a sample request after you fulfill it: mark it shipped or delivered and save your order details. Each status change sends the matching [webhook event](/essentials/custom-store-samples#webhook-events).
+
+<Info>
+  Requires a full-access API key (read-only keys are rejected).
+</Info>
+
+## Path parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `id` | Integer | Sample request id | Yes |
+
+## Body parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `status` | String | `approved`, `rejected`, `shipped` or `delivered` | No |
+| `order_id` | String | Your order id | No |
+| `order_name` | String | Your order number | No |
+| `tracking_url` | String | Tracking link for the package | No |
+
+Allowed status changes:
+
+| From | To |
+| --- | --- |
+| `pending` | `approved`, `rejected` |
+| `approved` | `shipped`, `delivered` |
+| `shipped` | `shipped`, `delivered` |
+
+Send only `order_id`, `order_name` or `tracking_url` to update them without changing the status.
+
+## Request example
+
+```bash
+curl -X PATCH "https://api.growi.io/api/public/v1/sample_requests/812345" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "status": "shipped",
+    "order_id": "FB-100231",
+    "order_name": "#100231",
+    "tracking_url": "https://www.ups.com/track?tracknum=1Z999AA10123456784"
+  }'
+```
+
+## Response
+
+Returns the updated sample request in `data`. See [List sample requests](/api-reference/endpoint/list-sample-requests) for the fields.
+
+## Error responses
+
+**403: read-only API key**
+
+```json
+{ "error": "This API key is read-only and cannot modify data." }
+```
+
+**404: not found for your organization**
+
+```json
+{ "error": "Sample request not found" }
+```
+
+**422: invalid status or transition**
+
+```json
+{ "error": "Cannot mark a pending sample request as shipped" }
+```

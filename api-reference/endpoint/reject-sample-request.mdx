@@ -1,0 +1,51 @@
+---
+title: "Reject sample request"
+openapi: "POST /sample_requests/{id}/reject"
+---
+
+Rejects a **pending** sample request and sends the `sample_request.rejected` [webhook event](/essentials/custom-store-samples#webhook-events). The creator can request a different product if the campaign allows more requests.
+
+When the creator picked the sample while applying to the campaign, their application is rejected too, the same as on Shopify stores.
+
+<Info>
+  Requires a full-access API key (read-only keys are rejected).
+</Info>
+
+## Path parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `id` | Integer | Sample request id | Yes |
+
+No request body is needed.
+
+## Request example
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/sample_requests/812345/reject" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+## Response
+
+Returns the updated sample request in `data`, with `"status": "rejected"`. See [List sample requests](/api-reference/endpoint/list-sample-requests) for the fields.
+
+## Error responses
+
+**403: read-only API key**
+
+```json
+{ "error": "This API key is read-only and cannot modify data." }
+```
+
+**404: not found for your organization**
+
+```json
+{ "error": "Sample request not found" }
+```
+
+**422: the request is not pending**
+
+```json
+{ "error": "Cannot mark a shipped sample request as rejected" }
+```

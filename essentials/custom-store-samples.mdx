@@ -34,14 +34,17 @@ Most brands use both: webhooks to react right away and the API to approve reques
 ## Set up
 
 <Steps>
-  <Step title="Get an API key">
-    In the Growi dashboard, open **Settings → Developer → API keys** and create a full-access key. Read-only keys can list requests but can't approve or update them.
+  <Step title="Create a campaign with Custom website">
+    In the Growi dashboard, open **Campaigns**, click **Add campaign** and choose **General**. On the **Store and duration** step, tick **Custom website**.
+  </Step>
+  <Step title="Choose sample products">
+    On the **Details and advanced** step, open the **Free Samples & Store** section, the one with **Offer free samples**, and click **Configure**. Under **Sample products**, click **Add sample product** and add the products you ship from your own store: a name, your SKU, an image (paste a URL or upload one) and, optionally, variants such as sizes or ratings, each with its own SKU. Then check the products, and the variants, creators can request in this campaign. Turn on **Offer free samples**, pick **Auto Approve Requests** if every request should be approved right away, and click **Save**. Sample products are saved on your organization, so you can reuse them in other campaigns. Products synced from TikTok Shop or Amazon aren't offered here, because their ids and SKUs wouldn't match your orders.
   </Step>
   <Step title="Add your webhook URL">
     Open **Settings → Webhooks** and add an HTTPS URL. Every active URL receives every event, including the [campaign creator events](/essentials/campaign-creator-webhooks).
   </Step>
-  <Step title="Choose sample products">
-    Open your Custom website campaign and go to **Advanced options → Offer free samples**. Under **Sample products**, add the products you ship from your own store: a name, your SKU, an image (paste a URL or upload one) and, optionally, variants such as sizes or ratings, each with its own SKU. Then check the products, and the variants, creators can request in this campaign. Sample products are saved on your organization, so you can reuse them in other campaigns. Products synced from TikTok Shop or Amazon aren't offered here, because their ids and SKUs wouldn't match your orders. Turn on **Auto approve** if every request should be approved right away.
+  <Step title="Get an API key">
+    Open **Settings → Developer → API keys** and create a full-access key. Read-only keys can list requests but can't approve or update them.
   </Step>
 </Steps>
 

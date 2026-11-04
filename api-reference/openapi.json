@@ -50,7 +50,7 @@
             }
           },
           "404": {
-            "description": "Campaign Affiliate does not exist",
+            "description": "Campaign creator does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -2036,7 +2036,7 @@
                           "campaign_affiliate_id": {
                             "type": "integer",
                             "example": 3490313,
-                            "description": "Unique identifier for the campaign affiliate"
+                            "description": "Unique identifier for the campaign creator"
                           },
                           "user_id": {
                             "type": "integer",
@@ -2723,7 +2723,7 @@
                           "campaign_affiliate_id": {
                             "type": "integer",
                             "example": 456,
-                            "description": "Unique identifier for the campaign affiliate relationship"
+                            "description": "Unique identifier for the campaign creator relationship"
                           },
                           "user_id": {
                             "type": "integer",
@@ -2868,7 +2868,7 @@
     },
     "/campaign_affiliates": {
       "get": {
-        "description": "Retrieves the organization's enrolled creators (campaign affiliates). Pass campaign_id to restrict the list to the creators enrolled in a single campaign. Results are always scoped to the API key's organization.",
+        "description": "Retrieves the organization's enrolled creators. Pass campaign_id to restrict the list to the creators enrolled in a single campaign. Results are always scoped to the API key's organization.",
         "parameters": [
           {
             "name": "campaign_id",
@@ -2925,7 +2925,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Campaign affiliates retrieved successfully",
+            "description": "Campaign creators retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -2993,7 +2993,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "Campaign-affiliate (enrollment) ID from GET /campaign_affiliates"
+            "description": "Campaign creator (enrollment) ID from GET /campaign_affiliates"
           }
         ],
         "requestBody": {
@@ -3118,7 +3118,7 @@
                         "id": {
                           "type": "integer",
                           "example": 3490313,
-                          "description": "Campaign-affiliate (enrollment) ID"
+                          "description": "Campaign creator (enrollment) ID"
                         },
                         "tag": {
                           "type": "string",
@@ -3649,7 +3649,7 @@
         }
       },
       "post": {
-        "description": "Creates a conversion and attributes it to a campaign affiliate. Defaults to platform=website; pass platform=ios or android for mobile app sales. Idempotent: sending the same order_id for the same platform returns the existing sale.",
+        "description": "Creates a conversion and attributes it to a campaign creator. Defaults to platform=website; pass platform=ios or android for mobile app sales. Idempotent: sending the same order_id for the same platform returns the existing sale.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3687,7 +3687,7 @@
             }
           },
           "422": {
-            "description": "Validation error or campaign affiliate not found",
+            "description": "Validation error or campaign creator not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -17290,7 +17290,7 @@
           "id": {
             "type": "integer",
             "example": 3490313,
-            "description": "Campaign-affiliate (enrollment) ID"
+            "description": "Campaign creator (enrollment) ID"
           },
           "user_id": {
             "type": "integer",
@@ -17740,7 +17740,7 @@
           },
           "campaign_affiliate_id": {
             "type": "string",
-            "description": "Tag of the campaign affiliate associated with the event. Not required when `order_id` is present and the order is a recurring subscription."
+            "description": "Tag of the campaign creator associated with the event. Not required when `order_id` is present and the order is a recurring subscription."
           },
           "subscription_start_date": {
             "type": "integer",

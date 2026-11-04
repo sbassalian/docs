@@ -1,7 +1,16 @@
 ---
 title: "Get content 24h data"
 openapi: 'GET /stats/content_24h_data'
+deprecated: true
 ---
+
+<Warning>
+  **Deprecated.** This is one of the old Home stats endpoints. It still works, but new
+  integrations should use the faster endpoints. Use [Content summary](/api-reference/endpoint/content/summary) (`GET /content/summary`).
+  Responses carry `Deprecation` and `Link` headers.
+  It takes `MM/DD/YYYY` dates; the new endpoints take ISO 8601 (`YYYY-MM-DD`). See [deprecations](/api-reference/changelog#deprecations).
+</Warning>
+
 
 Retrieves 24-hour views and engagement metrics with comparison to previous period. For each date, you get that day's metrics along with the corresponding data from a period before for comparison.
 

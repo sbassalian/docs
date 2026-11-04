@@ -1,23 +1,59 @@
 ---
 title: "Introduction"
-description: 'Growi API documentation for showcasing endpoints and authentication methods'
+description: "Record sales, manage creators and pull the same numbers your Growi dashboard shows, over one REST API."
 ---
 
-<Note>
- If you're looking to integrate with Growi's powerful affiliate management platform, this documentation is for you. Here you'll find all the details you need to authenticate and interact with our API endpoints.
-</Note>
+The Growi API lets your systems do what the dashboard does: record sales from your
+own checkout, manage the creators in your campaigns, and read content, sales and
+payout numbers for reporting.
 
-## Welcome
-
-Welcome to the Growi API documentation. Here you will find all the information you need to interact with the Growi platform through our API. You can build comprehensive affiliate management solutions and integrate seamlessly with our services.
-
-## Authentication
-
-All API endpoints are authenticated using Bearer tokens. To authenticate your requests, you need to include the Authorization header with your API key.
-
-To authenticate, pass up an Authorization header with the value:<br/>`Bearer <api-key>`:
-
-```json
-Base Url https://api.growi.io/api/public/v1
-Authorization: Bearer YOUR_API_KEY
+```bash Base URL
+https://api.growi.io/api/public/v1
 ```
+
+## Your first request
+
+Create a key under **Settings → Developer → API keys**, then list your brands:
+
+```bash
+curl https://api.growi.io/api/public/v1/organizations/brands \
+  -H "Authorization: Bearer growi-sk-YOUR-API-KEY"
+```
+
+## The basics
+
+| Topic | In short |
+| --- | --- |
+| [Authentication and keys](/api-reference/authentication) | Send `Authorization: Bearer <key>`. A **full** key reads and writes. A **viewer** key is read-only (`GET` only), so it's safe to share with a BI tool or agency. |
+| [Rate limits](/api-reference/rate-limits) | 40 requests per hour per key, and at least **2 seconds** between calls. `X-RateLimit-*` headers show where you are; a `429` comes with `Retry-After`. |
+| [Child brands](/api-reference/child-brands) | A key belongs to your top-level organization. Pass `organization_id` to read one of its child brands. |
+| [Dates, money and errors](/api-reference/conventions) | New endpoints take and return ISO 8601 dates (`YYYY-MM-DD`, UTC days). Errors are JSON with an `error` message. |
+| [Changelog and deprecations](/api-reference/changelog) | What changed, and which endpoints are deprecated. Deprecated endpoints keep working and send a `Deprecation` header and a `Link` header that names the replacement. |
+
+## What's in the API
+
+<CardGroup cols={2}>
+  <Card title="Content analytics" icon="chart-line" href="/api-reference/endpoint/content/summary">
+    Views, engagement, posts and top creators: the numbers on your Home page.
+  </Card>
+  <Card title="Sales and stores" icon="shopping-bag" href="/api-reference/endpoint/create-affiliate-sale">
+    Record sales, send tracking events, and read store, Shopify and app stats.
+  </Card>
+  <Card title="Creators and campaigns" icon="users" href="/api-reference/endpoint/list-campaign-affiliates">
+    Campaign affiliates and their codes, applications and sample requests.
+  </Card>
+  <Card title="Payouts" icon="wallet" href="/api-reference/endpoint/payouts/list-payouts">
+    Creator payouts, credit payouts and transactions.
+  </Card>
+  <Card title="TikTok Shop" icon="store" href="/api-reference/endpoint/get-tik-tok-shop-store-creators">
+    Store creators, videos, LIVEs and products, plus finance, shop health and samples.
+  </Card>
+  <Card title="Meta ads" icon="megaphone" href="/api-reference/endpoint/meta-ads/list-ad-sources">
+    Ad performance by creator and creative, and building and launching ads from creator content.
+  </Card>
+</CardGroup>
+
+<Tip>
+  Want Claude or another AI assistant to read your Growi data instead of writing
+  code? See [AI & MCP](/essentials/connect-claude).
+</Tip>

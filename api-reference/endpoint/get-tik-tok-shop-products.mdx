@@ -1,7 +1,16 @@
 ---
 title: "Top TikTok Shop products by GMV"
 openapi: 'GET /stats/tik_tok_shop_products'
+deprecated: true
 ---
+
+<Warning>
+  **Deprecated.** This is one of the old Home stats endpoints. It still works, but new
+  integrations should use the faster endpoints. Use [TikTok Shop products](/api-reference/endpoint/get-tik-tok-shop-store-products) (`GET /tik_tok_shop/products`).
+  Responses carry `Deprecation` and `Link` headers.
+  It takes `MM/DD/YYYY` dates; the new endpoints take ISO 8601 (`YYYY-MM-DD`). See [deprecations](/api-reference/changelog#deprecations).
+</Warning>
+
 
 Retrieves TikTok Shop product-level Gross Merchandise Value (GMV) data. Returns aggregated statistics for each product including total GMV, order counts, and the number of unique videos that promoted each product within the specified date range.
 

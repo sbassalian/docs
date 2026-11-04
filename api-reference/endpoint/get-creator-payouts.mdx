@@ -1,7 +1,18 @@
 ---
 title: "Get creator payouts"
 openapi: "GET /stats/creator_payouts"
+deprecated: true
 ---
+
+<Warning>
+  **Deprecated.** This is one of the old payout stats endpoints. It still works, but new
+  integrations should use [List payouts](/api-reference/endpoint/payouts/list-payouts)
+  (`GET /payouts`), the same list as Finance → Payouts.
+  Responses carry `Deprecation` and `Link` headers.
+  It takes `MM/DD/YYYY` dates; the new endpoints take ISO 8601 (`YYYY-MM-DD`).
+  See [deprecations](/api-reference/changelog#deprecations).
+</Warning>
+
 
 Returns a paginated list of creator payouts for the authenticated organization. Includes credit fields and a `credits_only` filter for organizations that use creator credits.
 
@@ -13,9 +24,9 @@ Returns a paginated list of creator payouts for the authenticated organization. 
 
 | Parameter        | Type                | Description                                                                               | Required |
 | ---------------- | ------------------- | ----------------------------------------------------------------------------------------- | -------- |
-| `start_date`     | String (YYYY-MM-DD) | Filters by payout cycle start                                                             | Yes      |
-| `end_date`       | String (YYYY-MM-DD) | Filters by payout cycle end                                                               | Yes      |
-| `status`         | String              | One of `paid`, `pending`, `open`, `failed`, `void`, `canceled`, `completed`               | No       |
+| `start_date`     | String (MM/DD/YYYY) | Earliest paid date. Only applied with `invoice_status=paid`                               | No       |
+| `end_date`       | String (MM/DD/YYYY) | Latest paid date. Only applied with `invoice_status=paid`                                 | No       |
+| `invoice_status` | String              | One of `all`, `due`, `in_progress`, `paid`, `open`, `canceled`, `completed`               | No       |
 | `credits_only`   | Boolean             | When `true`, only returns credit-based payouts                                            | No       |
 | `campaign_id`    | Integer / CSV / Array | Filter by campaign (single ID, comma-separated list, or array)                          | No       |
 | `creator_id`     | Integer             | Filter by creator                                                                         | No       |
@@ -27,7 +38,7 @@ Returns a paginated list of creator payouts for the authenticated organization. 
 ## Request example
 
 ```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?start_date=2026-03-01&end_date=2026-05-31&credits_only=true&per_page=20" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?invoice_status=paid&start_date=03/01/2026&end_date=05/31/2026&credits_only=true&per_page=20" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
@@ -102,14 +113,14 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?start_date
 
 ## Typical workflow
 
-1. `GET /stats/creator_payouts?start_date=…&end_date=…&credits_only=true` — fetch the list of credit payouts due to your creators.
+1. `GET /stats/creator_payouts?invoice_status=due&credits_only=true` — fetch the list of credit payouts due to your creators.
 2. Pay each creator their credits in your own system.
 3. For each paid creator, `POST /stats/mark_credit_payout` with their `creator_payout_uuid` to record the payout in Growi.
 
 <RequestExample>
 
 ```bash cURL
-curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?start_date=2026-03-01&end_date=2026-05-31&credits_only=true&per_page=20" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?invoice_status=paid&start_date=03/01/2026&end_date=05/31/2026&credits_only=true&per_page=20" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```

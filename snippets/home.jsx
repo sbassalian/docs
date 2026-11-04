@@ -56,10 +56,10 @@ export const GrowiHome = () => {
       <section className="g-hero">
         <div className="g-hero-copy">
           <h1 className="g-h1">Build on Growi</h1>
-          <p className="g-lead">Record sales, sync creator codes and pull campaign stats from one REST API.</p>
+          <p className="g-lead">Record sales, sync creator codes and pull content, sales and payout numbers from one REST API.</p>
           <div className="g-btns">
             <a className="g-btn" href="/api-reference/introduction">Browse the API</a>
-            <a className="g-btn g-btn-ghost" href="/essentials/get-stats#1-generate-your-api-key">Get an API key</a>
+            <a className="g-btn g-btn-ghost" href="/api-reference/authentication#create-a-key">Get an API key</a>
           </div>
           <button type="button" className="g-base" onClick={copy} aria-label="Copy base URL">
             <span className="g-base-label">base url</span>
@@ -110,7 +110,7 @@ export const GrowiHome = () => {
           ["bag", "Add the tracking scripts", "Track affiliate sales on a headless storefront.", "/essentials/shopify-headless-integration#1-add-tracking-scripts-to-your-root-file"],
           ["form", "Embed the signup form", "Let visitors sign up as ambassadors on your site.", "/essentials/shopify-headless-integration#2-embed-the-signup-form-optional"],
           ["bell", "Get sale webhooks", "Hear about every attributed order.", "/essentials/campaign-creator-webhooks"],
-          ["chart", "Pull GMV by creator", "Rank creators by the revenue they drive.", "/api-reference/endpoint/get-top-creators-by-gmv"],
+          ["chart", "Pull Shopify stats", "Orders, revenue and top creators from your store.", "/api-reference/endpoint/shopify/stats"],
         ],
       },
       {
@@ -181,26 +181,52 @@ export const GrowiHome = () => {
         ["patch", "Update campaign affiliate", "/campaign_affiliates/{id}", ep("update-campaign-affiliate")],
         ["patch", "Bulk update campaign affiliates", "/campaign_affiliates/bulk", ep("bulk-update-campaign-affiliates")],
       ] },
-      { icon: "inbox", name: "Applications", text: "Submit creators into a campaign", count: 1, rows: [
+      { icon: "inbox", name: "Applications", text: "Submit, approve and deny creator applications", count: 6, rows: [
+        ["get", "List campaign applications", "/campaign_applications", ep("list-campaign-applications")],
         ["post", "Create campaign application", "/campaign_applications", ep("create-campaign-application")],
+        ["post", "Approve campaign application", "/campaign_applications/{id}/approve", ep("approve-campaign-application")],
+        ["post", "Bulk approve applications", "/campaign_applications/bulk_approve", ep("bulk-approve-campaign-applications")],
+      ] },
+      { icon: "box", name: "Sample requests", text: "Review and ship product samples", count: 5, rows: [
+        ["get", "List sample requests", "/sample_requests", ep("list-sample-requests")],
+        ["post", "Approve sample request", "/sample_requests/{id}/approve", ep("approve-sample-request")],
+        ["post", "Reject sample request", "/sample_requests/{id}/reject", ep("reject-sample-request")],
       ] },
       { icon: "building", name: "Organization", text: "Brands and campaigns", count: 2, rows: [
         ["get", "Get brands", "/organizations/brands", ep("get-brands")],
         ["get", "Get campaigns", "/organizations/campaigns", ep("get-campaigns")],
       ] },
-      { icon: "chart", name: "Stats", text: "Creators, content, GMV and payouts", count: 17, rows: [
-        ["get", "Get snapshots", "/stats/snapshots", ep("get-snapshots")],
-        ["get", "Get top creators by GMV", "/stats/top_creators_by_gmv", ep("get-top-creators-by-gmv")],
-        ["get", "Get top posts by views", "/stats/top_posts_by_views", ep("get-top-posts-by-views")],
-        ["get", "Get transactions", "/stats/transactions", ep("get-transactions")],
-        ["post", "Refresh data", "/stats/refresh_data", ep("refresh-data")],
+      { icon: "chart", name: "Content analytics", text: "Views, engagement, posts and top creators", count: 15, rows: [
+        ["get", "Content summary", "/content/summary", ep("content/summary")],
+        ["get", "Content series", "/content/series", ep("content/series")],
+        ["get", "Top posts", "/content/top_posts", ep("content/top-posts")],
+        ["get", "Top creators", "/content/top_creators", ep("content/top-creators")],
+        ["get", "Posting report", "/posts", ep("content/posting-report")],
       ] },
-      { icon: "video", name: "TikTok Shop", text: "Store creators, videos, LIVE streams, products", count: 7, rows: [
+      { icon: "bag", name: "Sales and stores", text: "Store, Shopify and app stats", count: 8, rows: [
+        ["get", "Stores overview", "/stores/overview", ep("stores/overview")],
+        ["get", "Shopify stats", "/shopify/stats", ep("shopify/stats")],
+        ["get", "Store creators", "/shopify/store_creators", ep("shopify/store-creators")],
+        ["get", "iOS app analytics", "/apps/ios/analytics", ep("apps/ios-analytics")],
+      ] },
+      { icon: "card", name: "Payouts", text: "Creator payouts, credits and transactions", count: 5, rows: [
+        ["get", "List payouts", "/payouts", ep("payouts/list-payouts")],
+        ["get", "Payout totals", "/payouts/totals", ep("payouts/payout-totals")],
+        ["post", "Mark credit payout", "/stats/mark_credit_payout", ep("mark-credit-payout")],
+        ["get", "Get transactions", "/stats/transactions", ep("get-transactions")],
+      ] },
+      { icon: "video", name: "TikTok Shop", text: "Store data, finance, shop health and samples", count: 42, rows: [
         ["get", "TikTok Shop creators", "/tik_tok_shop/creators", ep("get-tik-tok-shop-store-creators")],
         ["get", "TikTok Shop videos", "/tik_tok_shop/videos", ep("get-tik-tok-shop-store-videos")],
         ["get", "TikTok Shop LIVE streams", "/tik_tok_shop/lives", ep("get-tik-tok-shop-store-lives")],
         ["get", "TikTok Shop products", "/tik_tok_shop/products", ep("get-tik-tok-shop-store-products")],
-        ["get", "Top TikTok Shop products by GMV", "/stats/tik_tok_shop_products", ep("get-tik-tok-shop-products")],
+        ["get", "Profit and loss", "/tik_tok_shop/finance/pnl", ep("tik-tok-shop/finance-pnl")],
+      ] },
+      { icon: "chart", name: "Meta ads", text: "Ad performance and launching creator ads", count: 11, rows: [
+        ["get", "Performance overview", "/meta_ads/overview", ep("meta-ads/performance-overview")],
+        ["get", "Performance by creator", "/meta_ads/creators", ep("meta-ads/performance-creators")],
+        ["post", "Bulk create ads", "/meta_ads/bulk", ep("meta-ads/bulk-create-ads")],
+        ["post", "Launch ad", "/meta_ads/{id}/launch", ep("meta-ads/launch-ad")],
       ] },
       { icon: "pointer", name: "Tracking events", text: "Storefront, cart and checkout events", count: 1, rows: [
         ["post", "Create tracking event", "/tracking_events", ep("create")],
@@ -217,7 +243,7 @@ export const GrowiHome = () => {
     return (
       <section className="g-sec">
         <h2 className="g-h2">The whole API on one screen</h2>
-        <p className="g-sub">34 endpoints and 5 webhook events, grouped by the job they do.</p>
+        <p className="g-sub">104 endpoints and 5 webhook events, grouped by the job they do.</p>
         <div className="g-x">
           <div className="g-x-list" role="tablist" aria-label="API area">
             {areas.map((a, i) => (

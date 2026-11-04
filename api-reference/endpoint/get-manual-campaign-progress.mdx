@@ -1,7 +1,16 @@
 ---
 title: "Get manual campaign progress"
 openapi: "GET /stats/manual_campaign_progress"
+deprecated: true
 ---
+
+<Warning>
+  **Deprecated.** This is one of the old Home stats endpoints. It still works, but new
+  integrations should use the faster endpoints. Use [Payout totals](/api-reference/endpoint/payouts/payout-totals) (`GET /payouts/totals`) and [List payouts](/api-reference/endpoint/payouts/list-payouts) (`GET /payouts`).
+  Responses carry `Deprecation` and `Link` headers.
+  It takes `MM/DD/YYYY` dates; the new endpoints take ISO 8601 (`YYYY-MM-DD`). See [deprecations](/api-reference/changelog#deprecations).
+</Warning>
+
 
 Retrieves progress metrics for your manual campaigns within a specified date range.
 

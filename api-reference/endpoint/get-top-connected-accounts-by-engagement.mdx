@@ -1,7 +1,16 @@
 ---
 title: "Get top connected accounts by engagement"
 openapi: "GET /stats/top_connected_accounts_by_engagement"
+deprecated: true
 ---
+
+<Warning>
+  **Deprecated.** This is one of the old Home stats endpoints. It still works, but new
+  integrations should use the faster endpoints. Use [Top accounts](/api-reference/endpoint/content/top-accounts) (`GET /content/top_accounts`).
+  Responses carry `Deprecation` and `Link` headers.
+  It takes `MM/DD/YYYY` dates; the new endpoints take ISO 8601 (`YYYY-MM-DD`). See [deprecations](/api-reference/changelog#deprecations).
+</Warning>
+
 
 Retrieves your top-performing social accounts ranked by engagement within a specified date range.
 

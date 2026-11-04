@@ -1,7 +1,16 @@
 ---
 title: "Get top posts by views"
 openapi: "GET /stats/top_posts_by_views"
+deprecated: true
 ---
+
+<Warning>
+  **Deprecated.** This is one of the old Home stats endpoints. It still works, but new
+  integrations should use the faster endpoints. Use [Top posts](/api-reference/endpoint/content/top-posts) (`GET /content/top_posts`).
+  Responses carry `Deprecation` and `Link` headers.
+  It takes `MM/DD/YYYY` dates; the new endpoints take ISO 8601 (`YYYY-MM-DD`). See [deprecations](/api-reference/changelog#deprecations).
+</Warning>
+
 
 Retrieves your top-performing posts ranked by views within a specified date range.
 

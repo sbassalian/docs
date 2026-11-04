@@ -101,12 +101,26 @@
             "pages": [
               "essentials/meta-ads-automation"
             ]
-          },
+          }
+        ]
+      },
+      {
+        "tab": "AI & MCP",
+        "icon": "sparkles",
+        "groups": [
           {
-            "group": "AI assistants",
+            "group": "Claude and MCP",
             "icon": "sparkles",
             "pages": [
-              "essentials/connect-claude"
+              "essentials/connect-claude",
+              "ai/mcp-tools"
+            ]
+          },
+          {
+            "group": "In the dashboard",
+            "icon": "message-circle",
+            "pages": [
+              "ai/juno"
             ]
           }
         ]
@@ -119,32 +133,12 @@
             "group": "Overview",
             "icon": "book-open",
             "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Conversions",
-            "icon": "send",
-            "pages": [
-              "api-reference/endpoint/list-affiliate-sales",
-              "api-reference/endpoint/create-affiliate-sale",
-              "api-reference/endpoint/update-affiliate-sale"
-            ]
-          },
-          {
-            "group": "Tracking events",
-            "icon": "mouse-pointer-click",
-            "pages": [
-              "api-reference/endpoint/create"
-            ]
-          },
-          {
-            "group": "Campaign affiliates",
-            "icon": "tag",
-            "pages": [
-              "api-reference/endpoint/list-campaign-affiliates",
-              "api-reference/endpoint/update-campaign-affiliate",
-              "api-reference/endpoint/bulk-update-campaign-affiliates"
+              "api-reference/introduction",
+              "api-reference/authentication",
+              "api-reference/rate-limits",
+              "api-reference/conventions",
+              "api-reference/child-brands",
+              "api-reference/changelog"
             ]
           },
           {
@@ -156,64 +150,86 @@
             ]
           },
           {
-            "group": "Applications",
-            "icon": "inbox",
+            "group": "Creators and campaigns",
+            "icon": "users",
             "pages": [
-              "api-reference/endpoint/list-campaign-applications",
-              "api-reference/endpoint/create-campaign-application",
-              "api-reference/endpoint/approve-campaign-application",
-              "api-reference/endpoint/deny-campaign-application",
-              "api-reference/endpoint/bulk-approve-campaign-applications",
-              "api-reference/endpoint/bulk-deny-campaign-applications"
+              {
+                "group": "Campaign affiliates",
+                "pages": [
+                  "api-reference/endpoint/list-campaign-affiliates",
+                  "api-reference/endpoint/update-campaign-affiliate",
+                  "api-reference/endpoint/bulk-update-campaign-affiliates"
+                ]
+              },
+              {
+                "group": "Applications",
+                "pages": [
+                  "api-reference/endpoint/list-campaign-applications",
+                  "api-reference/endpoint/create-campaign-application",
+                  "api-reference/endpoint/approve-campaign-application",
+                  "api-reference/endpoint/deny-campaign-application",
+                  "api-reference/endpoint/bulk-approve-campaign-applications",
+                  "api-reference/endpoint/bulk-deny-campaign-applications"
+                ]
+              },
+              {
+                "group": "Sample requests",
+                "pages": [
+                  "api-reference/endpoint/list-sample-requests",
+                  "api-reference/endpoint/get-sample-request",
+                  "api-reference/endpoint/approve-sample-request",
+                  "api-reference/endpoint/reject-sample-request",
+                  "api-reference/endpoint/update-sample-request"
+                ]
+              }
             ]
           },
           {
-            "group": "Sample requests",
-            "icon": "package",
-            "pages": [
-              "api-reference/endpoint/list-sample-requests",
-              "api-reference/endpoint/get-sample-request",
-              "api-reference/endpoint/approve-sample-request",
-              "api-reference/endpoint/reject-sample-request",
-              "api-reference/endpoint/update-sample-request"
-            ]
-          },
-          {
-            "group": "Stats",
+            "group": "Content analytics",
             "icon": "chart-line",
             "pages": [
+              "api-reference/endpoint/content/summary",
+              "api-reference/endpoint/content/series",
+              "api-reference/endpoint/content/top-posts",
+              "api-reference/endpoint/content/top-creators",
+              "api-reference/endpoint/content/top-accounts",
+              "api-reference/endpoint/content/top-campaigns",
+              "api-reference/endpoint/content/top-platforms",
+              "api-reference/endpoint/content/posts-daily",
+              "api-reference/endpoint/content/new-creators",
+              "api-reference/endpoint/content/creator-activity",
+              "api-reference/endpoint/content/brand-progress",
+              "api-reference/endpoint/content/posting-counts",
+              "api-reference/endpoint/content/post-series",
+              "api-reference/endpoint/content/posting-report",
+              "api-reference/endpoint/content/filters"
+            ]
+          },
+          {
+            "group": "Sales and stores",
+            "icon": "shopping-bag",
+            "pages": [
+              "api-reference/endpoint/stores/overview",
               {
-                "group": "Summary",
+                "group": "Conversions",
                 "pages": [
-                  "api-reference/endpoint/get-snapshots",
-                  "api-reference/endpoint/get-creators-24h",
-                  "api-reference/endpoint/refresh-data"
+                  "api-reference/endpoint/list-affiliate-sales",
+                  "api-reference/endpoint/create-affiliate-sale",
+                  "api-reference/endpoint/update-affiliate-sale"
                 ]
               },
               {
-                "group": "Content",
+                "group": "Tracking events",
                 "pages": [
-                  "api-reference/endpoint/get-user-contents",
-                  "api-reference/endpoint/get-content-platform-composition",
-                  "api-reference/endpoint/get-content-24h-data"
+                  "api-reference/endpoint/create"
                 ]
               },
               {
-                "group": "Leaderboards",
+                "group": "Shopify",
                 "pages": [
-                  "api-reference/endpoint/get-top-creators",
-                  "api-reference/endpoint/get-top-creators-by-posts",
-                  "api-reference/endpoint/get-top-creators-by-gmv",
-                  "api-reference/endpoint/get-top-connected-accounts-by-engagement",
-                  "api-reference/endpoint/get-top-posts-by-views"
-                ]
-              },
-              {
-                "group": "Payouts",
-                "pages": [
-                  "api-reference/endpoint/get-creator-payouts",
-                  "api-reference/endpoint/mark-credit-payout",
-                  "api-reference/endpoint/get-transactions"
+                  "api-reference/endpoint/shopify/stats",
+                  "api-reference/endpoint/shopify/store-creators",
+                  "api-reference/endpoint/shopify/store-creators-summary"
                 ]
               },
               {
@@ -223,7 +239,27 @@
                   "api-reference/endpoint/get-ambassador-sales",
                   "api-reference/endpoint/get-ambassador-stats"
                 ]
+              },
+              {
+                "group": "Mobile apps",
+                "pages": [
+                  "api-reference/endpoint/apps/ios-analytics",
+                  "api-reference/endpoint/apps/ios-creator-funnel",
+                  "api-reference/endpoint/apps/android-analytics",
+                  "api-reference/endpoint/apps/android-creator-funnel"
+                ]
               }
+            ]
+          },
+          {
+            "group": "Payouts",
+            "icon": "wallet",
+            "pages": [
+              "api-reference/endpoint/payouts/list-payouts",
+              "api-reference/endpoint/payouts/payout-totals",
+              "api-reference/endpoint/payouts/get-payout",
+              "api-reference/endpoint/mark-credit-payout",
+              "api-reference/endpoint/get-transactions"
             ]
           },
           {
@@ -238,13 +274,6 @@
                   "api-reference/endpoint/get-tik-tok-shop-store-lives",
                   "api-reference/endpoint/get-tik-tok-shop-store-products",
                   "api-reference/endpoint/get-tik-tok-shop-store-product-creators"
-                ]
-              },
-              {
-                "group": "GMV stats",
-                "pages": [
-                  "api-reference/endpoint/get-tik-tok-shop-gmv-24h",
-                  "api-reference/endpoint/get-tik-tok-shop-products"
                 ]
               },
               {
@@ -325,13 +354,66 @@
             "group": "Meta ads",
             "icon": "megaphone",
             "pages": [
-              "api-reference/endpoint/meta-ads/list-ad-sources",
-              "api-reference/endpoint/meta-ads/get-builder-options",
-              "api-reference/endpoint/meta-ads/bulk-create-ads",
-              "api-reference/endpoint/meta-ads/list-ads",
-              "api-reference/endpoint/meta-ads/get-ad",
-              "api-reference/endpoint/meta-ads/launch-ad",
-              "api-reference/endpoint/meta-ads/pause-ad"
+              {
+                "group": "Performance",
+                "pages": [
+                  "api-reference/endpoint/meta-ads/performance-overview",
+                  "api-reference/endpoint/meta-ads/performance-timeseries",
+                  "api-reference/endpoint/meta-ads/performance-creators",
+                  "api-reference/endpoint/meta-ads/performance-creatives"
+                ]
+              },
+              {
+                "group": "Ad builder",
+                "pages": [
+                  "api-reference/endpoint/meta-ads/list-ad-sources",
+                  "api-reference/endpoint/meta-ads/get-builder-options",
+                  "api-reference/endpoint/meta-ads/bulk-create-ads",
+                  "api-reference/endpoint/meta-ads/list-ads",
+                  "api-reference/endpoint/meta-ads/get-ad",
+                  "api-reference/endpoint/meta-ads/launch-ad",
+                  "api-reference/endpoint/meta-ads/pause-ad"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Deprecated",
+            "icon": "archive",
+            "pages": [
+              {
+                "group": "Old content stats",
+                "pages": [
+                  "api-reference/endpoint/get-content-24h-data",
+                  "api-reference/endpoint/get-creators-24h",
+                  "api-reference/endpoint/get-snapshots",
+                  "api-reference/endpoint/get-top-posts-by-views",
+                  "api-reference/endpoint/get-top-creators",
+                  "api-reference/endpoint/get-top-creators-by-posts",
+                  "api-reference/endpoint/get-top-connected-accounts-by-engagement",
+                  "api-reference/endpoint/get-content-platform-composition",
+                  "api-reference/endpoint/get-user-contents",
+                  "api-reference/endpoint/get-filters",
+                  "api-reference/endpoint/refresh-data"
+                ]
+              },
+              {
+                "group": "Old sales stats",
+                "pages": [
+                  "api-reference/endpoint/get-top-creators-by-gmv",
+                  "api-reference/endpoint/get-top-earning-creators",
+                  "api-reference/endpoint/get-tik-tok-shop-gmv-24h",
+                  "api-reference/endpoint/get-tik-tok-shop-products"
+                ]
+              },
+              {
+                "group": "Old payout stats",
+                "pages": [
+                  "api-reference/endpoint/get-creator-payouts",
+                  "api-reference/endpoint/get-payouts-24h",
+                  "api-reference/endpoint/get-manual-campaign-progress"
+                ]
+              }
             ]
           }
         ]
@@ -386,6 +468,14 @@
     {
       "source": "/essentials/settings",
       "destination": "/introduction"
+    },
+    {
+      "source": "/api-reference/endpoint/get-stats",
+      "destination": "/api-reference/changelog#deprecations"
+    },
+    {
+      "source": "/essentials/stats",
+      "destination": "/essentials/get-stats"
     }
   ],
   "footer": {

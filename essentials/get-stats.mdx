@@ -1,73 +1,76 @@
 ---
-title: "Getting stats"
-description: "Learn how to authenticate and access Growi statistics"
+title: "Content analytics"
+description: "Pull the numbers on your Home page (views, engagement, posts and top creators) into your own reports."
 ---
 
 <Info>
-  **Prerequisite** You should have administrative access to your Growi dashboard.
+  **Prerequisite** A Growi organization on the Growth plan or higher, and access to
+  **Settings → Developer** in the dashboard.
 </Info>
 
-# How to access Growi statistics
+The content analytics endpoints return the same numbers as your Home page, for any
+date range. Use them to feed a BI tool, a weekly report or your own dashboard.
 
-Follow these steps to set up authentication and start accessing Growi's statistics endpoints.
+## 1. Create a read-only key
 
-## 1. Generate your API key
+Reporting only reads, so create a **viewer** key under **Settings → Developer → API
+keys**. A viewer key can't change anything, which makes it safe to paste into a BI
+tool or share with an agency. See [authentication and keys](/api-reference/authentication).
 
-First, navigate to the "Settings" section of your Growi dashboard, then click on the "Developer" tab. Here you can create a new API key for accessing the statistics endpoints.
-
-<Frame>
-  <img
-    src="/images/bearer-1.png"
-    alt="Navigate to Developer Settings"
-    style={{ borderRadius: "0.5rem" }}
-  />
-</Frame>
-
-## 2. Copy your API key
-
-Once you've created your API key, you can copy it to use in your API requests. Keep this key secure and don't share it publicly.
-
-<Frame>
-  <img
-    src="/images/bearer-2.png"
-    alt="Copy API Key"
-    style={{ borderRadius: "0.5rem" }}
-  />
-</Frame>
-
-## 3. Making authenticated requests
-
-To make requests to any of our stats endpoints, you'll need to include your API key in the Authorization header using Bearer authentication:
+## 2. Get the headline numbers
 
 ```bash
-Base URL: https://api.growi.io/api/public/v1
-Authorization: Bearer YOUR_API_KEY
+curl "https://api.growi.io/api/public/v1/content/summary?start_date=2026-10-01&end_date=2026-10-31" \
+  -H "Authorization: Bearer growi-sk-YOUR-VIEWER-KEY"
 ```
 
-## Available statistics endpoints
+[Content summary](/api-reference/endpoint/content/summary) returns the totals for the
+range and for the same-length range before it, so you can show the change.
 
-You can access various statistics through our API endpoints:
+## 3. Add the detail you need
 
-- Get Snapshots
-- Content Platform Composition
-- 24-Hour Content Data
-- Creator Statistics
-- Top Creators
-- Top Posts
-- User Contents
+| To show | Call |
+| --- | --- |
+| A views and engagement chart | [Content series](/api-reference/endpoint/content/series) |
+| Leaderboards | [Top posts](/api-reference/endpoint/content/top-posts), [top creators](/api-reference/endpoint/content/top-creators), [top accounts](/api-reference/endpoint/content/top-accounts), [top campaigns](/api-reference/endpoint/content/top-campaigns), [top platforms](/api-reference/endpoint/content/top-platforms) |
+| Posting volume | [Posts per day](/api-reference/endpoint/content/posts-daily), [posting counts](/api-reference/endpoint/content/posting-counts) |
+| Who's active | [New creators](/api-reference/endpoint/content/new-creators), [creator activity](/api-reference/endpoint/content/creator-activity), [posting report](/api-reference/endpoint/content/posting-report) |
+| One post over time | [Post series](/api-reference/endpoint/content/post-series) |
+| Each brand, for agencies | [Brand progress](/api-reference/endpoint/content/brand-progress) |
+| Filter options | [Content filters](/api-reference/endpoint/content/filters) |
 
-For detailed information about each endpoint and their specific parameters, please refer to our [API Documentation](/api-reference/introduction).
+For sales, use [Stores overview](/api-reference/endpoint/stores/overview) and
+[Shopify stats](/api-reference/endpoint/shopify/stats). For payouts, use
+[List payouts](/api-reference/endpoint/payouts/list-payouts).
+
+## 4. Stay inside the rate limit
+
+A key gets 40 requests an hour and needs 2 seconds between calls. A report that
+calls six endpoints once a day is well inside that. Cache the filters, and don't
+poll. See [rate limits](/api-reference/rate-limits).
+
+## Moving off the old stats endpoints
+
+The `/stats/*` endpoints that used to power Home are deprecated. They still work,
+but they're slower and use `MM/DD/YYYY` dates. The
+[deprecations table](/api-reference/changelog#deprecations) maps each one to its
+replacement.
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="API Key Not Working">
-    Verify that you're using the correct API key and that it hasn't expired. You may need to generate a new one if you're experiencing issues.
+  <Accordion title="401 Not Authenticated">
+    Check the header is `Authorization: Bearer <key>` with no extra spaces, and that the
+    key wasn't deleted under Settings → Developer → API keys.
   </Accordion>
-  <Accordion title="Authorization Errors">
-    Ensure you're formatting the Authorization header correctly with 'Bearer' followed by your API key. Check that there are no extra spaces or special characters.
+  <Accordion title="403 This API key is read-only">
+    A viewer key tried a write. Reporting endpoints are all `GET`. For writes, use a full key.
   </Accordion>
-  <Accordion title="Cannot Access Certain Endpoints">
-    Confirm that your API key has the necessary permissions for the endpoints you're trying to access. You may need to adjust the permissions in your developer settings.
+  <Accordion title="429 Rate limit exceeded">
+    Wait for the `Retry-After` seconds, then space calls at least 2 seconds apart.
   </Accordion>
-</AccordionGroup> 
+  <Accordion title="The numbers don't match the dashboard">
+    Days are UTC and both ends of the range are included. Pass the same
+    `organization_id` and campaign filters the dashboard has selected.
+  </Accordion>
+</AccordionGroup>

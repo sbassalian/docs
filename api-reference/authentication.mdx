@@ -1,0 +1,48 @@
+---
+title: "Authentication and keys"
+description: "Create an API key, pick full or read-only access, and send it with every request."
+---
+
+Every request needs an API key in the `Authorization` header:
+
+```bash
+Authorization: Bearer growi-sk-YOUR-API-KEY
+```
+
+## Create a key
+
+1. In the Growi dashboard, open **Settings → Developer**.
+2. Under **API keys**, create a key and choose its access level.
+3. Copy the key. Keep it on your server and never put it in a browser or mobile app.
+
+<Frame>
+  <img src="/images/bearer-1.png" alt="Developer settings in the Growi dashboard" style={{ borderRadius: "0.5rem" }} />
+</Frame>
+
+Delete a key on the same page to revoke it. It stops working right away.
+
+## Full and viewer keys
+
+| Access level | Can do | Use it for |
+| --- | --- | --- |
+| **Full** | Every endpoint: reads and writes (`POST`, `PATCH`, `PUT`, `DELETE`) | Your own backend: recording sales, updating creator codes, approving applications |
+| **Viewer** | `GET` requests only | Dashboards, BI tools, agencies and anyone who only needs to read |
+
+A viewer key that sends a write gets `403`:
+
+```json
+{ "error": "This API key is read-only and cannot modify data." }
+```
+
+## Which organization a key reads
+
+A key belongs to the organization that created it. If that's a parent organization
+with child brands, the key can read every child brand too. See
+[child brands](/api-reference/child-brands).
+
+## Authentication errors
+
+| Status | Body | Why |
+| --- | --- | --- |
+| `401` | `{ "error": "Not Authenticated" }` | The header is missing, or the key is wrong or deleted |
+| `403` | `{ "error": "This API key is read-only and cannot modify data." }` | A viewer key sent a write |

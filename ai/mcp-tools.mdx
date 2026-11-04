@@ -1,0 +1,87 @@
+---
+title: "MCP tool reference"
+description: "Every tool Growi's MCP server offers, and which roles can use it."
+---
+
+Growi's MCP server lives at `POST https://api.growi.io/mcp`. Clients list its tools
+when they connect, so you never call these by hand. This page tells you what
+Claude can look up and change for you. To connect, see
+[Connect Claude to Growi](/essentials/connect-claude).
+
+## How it works
+
+- **Transport.** Stateless Streamable HTTP: one JSON-RPC request per `POST`, plain JSON
+  responses, no sessions. `GET /mcp` returns `405`.
+- **Auth.** A Growi API key as a bearer token, or a sign-in through claude.ai or
+  ChatGPT (OAuth). What a key can do follows the role of the person it belongs to,
+  checked again on every call. A viewer key never writes.
+- **Scope.** One organization, plus its child brands for a parent organization,
+  the same as the REST API.
+- **Limits.** 60 units a minute and 1,000 an hour per key, separate from the REST API.
+  A read costs 1 unit, a change 3 and a heavy report 5.
+- **Formats.** Money is integer cents in your organization's currency (`*_cents`),
+  dates are `YYYY-MM-DD`, and list tools take `page` and `per_page` (up to 100) and
+  return `meta.has_more`.
+
+## Reads, for every role
+
+| Tool | What it answers |
+| --- | --- |
+| `get_organization` | Your brands and connected sales channels. Claude calls it first |
+| `list_campaigns` | Campaigns, contracts and programs with status, dates and creator counts |
+| `get_campaign` | One campaign in detail: tiers, products and creators by status |
+| `list_campaign_creators` | A campaign's creators, filtered by status or searched by name or email |
+| `get_creator` | One creator's lifetime orders, posts and payout totals |
+| `list_orders` | Attributed orders across TikTok Shop, Shopify, Amazon, iOS and Stripe |
+| `get_sales_timeseries` | Daily revenue and funnel events for the organization, a campaign or a creator (up to 92 days) |
+| `list_creator_payouts` | Payouts with status, amounts and due dates |
+| `list_invoices` | Your invoices with status and totals |
+| `list_posts` | Creator content with lifetime engagement |
+| `get_top_posts` | Top posts by views for a period (up to 92 days, top 50) |
+| `list_products` | Your catalog across channels |
+| `list_creator_performance` | Per-creator tier, samples, approved videos, TikTok Shop GMV and contact details |
+| `list_delivered_videos` | Approved delivered videos with link, posted date, creator and campaign |
+| `list_sample_applications` | Shopify sample applications and claimed gifts |
+| `summarize_view_bonuses` | View bonuses per post by tier, per payout cycle, with a CSV link. Heavy |
+| `get_growi_guide` | How Growi works, for "how" and "why" questions |
+| `explain_creator_payout` | Why a creator was paid what they were, line by line, with a CSV link. Heavy |
+| `get_creator_attribution_breakdown` | Where a creator's attributed sales came from |
+| `get_creator_post_count_audit` | Which of a creator's posts counted, and why others didn't |
+| `diagnose_campaign_video_attribution` | Why a video did or didn't count toward a campaign |
+| `diagnose_creator_discount_code` | Why a creator's discount code isn't working |
+| `list_tts_top_creators`, `list_tts_top_videos`, `list_tts_shop_videos_by_views`, `get_tts_revenue_trend` | TikTok Shop top creators, top videos and revenue trend |
+
+## Changes any signed-in role can make
+
+These need a key tied to a person (any key created while signed in, or a claude.ai sign-in).
+
+| Tool | What it does |
+| --- | --- |
+| `repair_creator_discount_code` | Fixes a creator's broken discount code |
+| `update_campaign_discount` | Changes a campaign's discount |
+| `assign_creator_discount_code` | Gives a creator a specific code |
+| `get_invoice_pdf` | Gets an invoice PDF |
+
+## Owners and admins only
+
+**Customer data**, masked: `list_creator_sales`, `get_order_journey`,
+`list_creator_referrers`, `search_shopify_schema`, `query_shopify_admin` (read-only
+Shopify queries) and `get_organization_balance`.
+
+**Fraud checks**: `get_shopify_fraud_report`, `get_creator_fraud_dossier` and
+`generate_shopify_fraud_report`.
+
+**Campaign and creator changes**: commission and tier rates, milestone and per-post
+bonuses, payout delay, views payout, names and descriptions, contract templates,
+tracking and attribution settings, social channels, Discord, content submissions,
+free sample products, discount settings, approving or denying applications, adding
+and removing creators, attributing videos, refunding your remaining balance and
+changing an invoice's payment method.
+
+**Meta ads**: `create_meta_ads` and `manage_meta_ads` (launch or pause). Listing ad
+sources, builder options and ads works for every role. See
+[building Meta ads](/essentials/connect-claude#4-building-meta-ads).
+
+Claude previews every change before making it. Changes that move money or remove
+data need a confirmation that works once and expires after 10 minutes. Every change
+is logged with who asked for it.

@@ -5,17 +5,17 @@ description: "What changed in the Growi API, and which endpoints to move off."
 
 ## Deprecations
 
-The old Home stats endpoints (`/stats/*` below) are deprecated. They keep working,
-and no removal date is set. When one is, we'll email every organization that still
-calls them and add a `Sunset` header first.
+The old Home stats endpoints (`/stats/*` below) are deprecated. They keep working
+exactly as before. Before any of them stops working, we'll email every organization
+that still calls it.
 
-Responses from a deprecated endpoint carry:
+Every response from a deprecated endpoint, errors included, carries:
 
-| Header | Meaning |
-| --- | --- |
-| `Deprecation` | The endpoint is deprecated |
-| `Link` | The replacement's docs, with `rel="successor-version"` |
-| `Sunset` | The date it stops working. Only sent once a removal date is set |
+| Header | Example | Meaning |
+| --- | --- | --- |
+| `Deprecation` | `@1793750400` | When it was deprecated, as a Unix timestamp ([RFC 9745](https://www.rfc-editor.org/rfc/rfc9745)) |
+| `Sunset` | `Tue, 04 May 2027 00:00:00 GMT` | The earliest date it may stop working ([RFC 8594](https://www.rfc-editor.org/rfc/rfc8594)) |
+| `Link` | `<https://api.growi.io/api/public/v1/content/series>; rel="successor-version"` | The endpoint to use instead. Some list two |
 
 | Deprecated | Use instead |
 | --- | --- |

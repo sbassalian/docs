@@ -153,14 +153,7 @@ paths:
     method: get
     page: api-reference/endpoint/shopify/stats
     title: Shopify stats
-    description: Orders, revenue and commission from your Shopify store for a date range, with the top creators.
-    child_brands: true
-    pending: true
-  - path: /shopify/ambassador_stats
-    method: get
-    page: api-reference/endpoint/shopify/ambassador-stats
-    title: Ambassador stats
-    description: Revenue and orders from your Shopify ambassador program for a date range.
+    description: Your Shopify ambassador program for a date range, with orders, revenue, commission and the top creators.
     child_brands: true
     pending: true
   - path: /shopify/store_creators
@@ -188,7 +181,7 @@ paths:
     method: get
     page: api-reference/endpoint/apps/ios-creator-funnel
     title: iOS creator funnel
-    description: Per-creator funnel for your iOS app, from link clicks to installs and purchases.
+    description: Read-only per-creator funnel for your iOS app, from link clicks to installs and purchases. Only creators with an app link appear, from the day their link exists.
     child_brands: true
     pending: true
   - path: /apps/android/analytics
@@ -202,7 +195,7 @@ paths:
     method: get
     page: api-reference/endpoint/apps/android-creator-funnel
     title: Android creator funnel
-    description: Per-creator funnel for your Android app, from link clicks to installs and purchases.
+    description: Read-only per-creator funnel for your Android app, from link clicks to installs and purchases. Only creators with an app link appear, from the day their link exists.
     child_brands: true
     pending: true
 
@@ -212,6 +205,7 @@ paths:
     page: api-reference/endpoint/payouts/list-payouts
     title: List payouts
     description: Creator payouts with status, amounts and due dates, the same list as Finance > Payouts.
+    replaces: [api-reference/endpoint/get-creator-payouts]
     child_brands: true
     pending: true
   - path: /payouts/totals

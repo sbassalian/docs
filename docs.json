@@ -228,7 +228,6 @@
                 "group": "Shopify",
                 "pages": [
                   "api-reference/endpoint/shopify/stats",
-                  "api-reference/endpoint/shopify/ambassador-stats",
                   "api-reference/endpoint/shopify/store-creators",
                   "api-reference/endpoint/shopify/store-creators-summary"
                 ]
@@ -259,7 +258,6 @@
               "api-reference/endpoint/payouts/list-payouts",
               "api-reference/endpoint/payouts/payout-totals",
               "api-reference/endpoint/payouts/get-payout",
-              "api-reference/endpoint/get-creator-payouts",
               "api-reference/endpoint/mark-credit-payout",
               "api-reference/endpoint/get-transactions"
             ]
@@ -411,6 +409,7 @@
               {
                 "group": "Old payout stats",
                 "pages": [
+                  "api-reference/endpoint/get-creator-payouts",
                   "api-reference/endpoint/get-payouts-24h",
                   "api-reference/endpoint/get-manual-campaign-progress"
                 ]

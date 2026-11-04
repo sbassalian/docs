@@ -105,7 +105,7 @@ All errors return a non-2xx response with a JSON body of the form:
 
 ## Typical workflow
 
-1. `GET /stats/creator_payouts?start_date=…&end_date=…&credits_only=true` — fetch the list of credit payouts due to your creators.
+1. `GET /stats/creator_payouts?invoice_status=due&credits_only=true` — fetch the list of credit payouts due to your creators.
 2. Pay each creator their credits in your own system.
 3. For each paid creator, `POST /stats/mark_credit_payout` with their `creator_payout_uuid` to record the payout in Growi.
 

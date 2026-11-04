@@ -203,13 +203,13 @@ export const GrowiHome = () => {
         ["get", "Top creators", "/content/top_creators", ep("content/top-creators")],
         ["get", "Posting report", "/posts", ep("content/posting-report")],
       ] },
-      { icon: "bag", name: "Sales and stores", text: "Store, Shopify and app stats", count: 9, rows: [
+      { icon: "bag", name: "Sales and stores", text: "Store, Shopify and app stats", count: 8, rows: [
         ["get", "Stores overview", "/stores/overview", ep("stores/overview")],
         ["get", "Shopify stats", "/shopify/stats", ep("shopify/stats")],
         ["get", "Store creators", "/shopify/store_creators", ep("shopify/store-creators")],
         ["get", "iOS app analytics", "/apps/ios/analytics", ep("apps/ios-analytics")],
       ] },
-      { icon: "card", name: "Payouts", text: "Creator payouts, credits and transactions", count: 6, rows: [
+      { icon: "card", name: "Payouts", text: "Creator payouts, credits and transactions", count: 5, rows: [
         ["get", "List payouts", "/payouts", ep("payouts/list-payouts")],
         ["get", "Payout totals", "/payouts/totals", ep("payouts/payout-totals")],
         ["post", "Mark credit payout", "/stats/mark_credit_payout", ep("mark-credit-payout")],
@@ -243,7 +243,7 @@ export const GrowiHome = () => {
     return (
       <section className="g-sec">
         <h2 className="g-h2">The whole API on one screen</h2>
-        <p className="g-sub">76 endpoints, 30 more on the way, and 5 webhook events, grouped by the job they do.</p>
+        <p className="g-sub">75 endpoints, 29 more on the way, and 5 webhook events, grouped by the job they do.</p>
         <div className="g-x">
           <div className="g-x-list" role="tablist" aria-label="API area">
             {areas.map((a, i) => (

@@ -28,7 +28,7 @@ curl https://api.growi.io/api/public/v1/organizations/brands \
 | [Rate limits](/api-reference/rate-limits) | 40 requests per hour per key, and at least **2 seconds** between calls. `X-RateLimit-*` headers show where you are; a `429` comes with `Retry-After`. |
 | [Child brands](/api-reference/child-brands) | A key belongs to your top-level organization. Pass `organization_id` to read one of its child brands. |
 | [Dates, money and errors](/api-reference/conventions) | New endpoints take and return ISO 8601 dates (`YYYY-MM-DD`, UTC days). Errors are JSON with an `error` message. |
-| [Changelog and deprecations](/api-reference/changelog) | What changed, and which endpoints are deprecated. Deprecated endpoints keep working and send `Deprecation`, `Sunset` and `Link` headers that name the replacement. |
+| [Changelog and deprecations](/api-reference/changelog) | What changed, and which endpoints are deprecated. Deprecated endpoints keep working and send a `Deprecation` header and a `Link` header that names the replacement. |
 
 ## What's in the API
 

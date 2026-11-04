@@ -8860,42 +8860,40 @@
           {
             "name": "start_date",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
-              "type": "string",
-              "format": "date"
+              "type": "string"
             },
-            "description": "Payout cycle start (YYYY-MM-DD)",
-            "example": "2026-03-01"
+            "description": "Earliest paid date (MM/DD/YYYY). Only applied with invoice_status=paid",
+            "example": "03/01/2026"
           },
           {
             "name": "end_date",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
-              "type": "string",
-              "format": "date"
+              "type": "string"
             },
-            "description": "Payout cycle end (YYYY-MM-DD)",
-            "example": "2026-05-31"
+            "description": "Latest paid date (MM/DD/YYYY). Only applied with invoice_status=paid",
+            "example": "05/31/2026"
           },
           {
-            "name": "status",
+            "name": "invoice_status",
             "in": "query",
             "required": false,
             "schema": {
               "type": "string",
               "enum": [
+                "all",
+                "due",
+                "in_progress",
                 "paid",
-                "pending",
                 "open",
-                "failed",
-                "void",
                 "canceled",
                 "completed"
               ]
             },
-            "description": "Filter by status"
+            "description": "Filter by payout status"
           },
           {
             "name": "credits_only",
@@ -9096,7 +9094,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/stats/mark_credit_payout": {

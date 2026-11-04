@@ -102,6 +102,36 @@ paths:
     title: Content filters
     replaces: [api-reference/endpoint/get-filters]
     child_brands: true
+  - path: /content/spikes
+    method: get
+    page: api-reference/endpoint/content/spikes
+    title: Spike days
+    child_brands: true
+  - path: /content/day_breakdown
+    method: get
+    page: api-reference/endpoint/content/day-breakdown
+    title: What drove a day
+    child_brands: true
+  - path: /content/breakout_posts
+    method: get
+    page: api-reference/endpoint/content/breakout-posts
+    title: Breakout posts
+    child_brands: true
+  - path: /content/series_by
+    method: get
+    page: api-reference/endpoint/content/series-by
+    title: Content series by group
+    child_brands: true
+  - path: /content/per_post_series
+    method: get
+    page: api-reference/endpoint/content/per-post-series
+    title: Views per post
+    child_brands: true
+  - path: /content/data_health
+    method: get
+    page: api-reference/endpoint/content/data-health
+    title: Post readings per day
+    child_brands: true
   - path: /posts
     method: get
     page: api-reference/endpoint/content/posting-report

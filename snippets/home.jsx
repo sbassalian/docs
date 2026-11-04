@@ -196,7 +196,7 @@ export const GrowiHome = () => {
         ["get", "Get brands", "/organizations/brands", ep("get-brands")],
         ["get", "Get campaigns", "/organizations/campaigns", ep("get-campaigns")],
       ] },
-      { icon: "chart", name: "Content analytics", text: "Views, engagement, posts and top creators", count: 15, rows: [
+      { icon: "chart", name: "Content analytics", text: "Views, engagement, posts, spikes and top creators", count: 21, rows: [
         ["get", "Content summary", "/content/summary", ep("content/summary")],
         ["get", "Content series", "/content/series", ep("content/series")],
         ["get", "Top posts", "/content/top_posts", ep("content/top-posts")],
@@ -243,7 +243,7 @@ export const GrowiHome = () => {
     return (
       <section className="g-sec">
         <h2 className="g-h2">The whole API on one screen</h2>
-        <p className="g-sub">104 endpoints and 5 webhook events, grouped by the job they do.</p>
+        <p className="g-sub">110 endpoints and 5 webhook events, grouped by the job they do.</p>
         <div className="g-x">
           <div className="g-x-list" role="tablist" aria-label="API area">
             {areas.map((a, i) => (

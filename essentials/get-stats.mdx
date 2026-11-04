@@ -32,6 +32,11 @@ range and for the same-length range before it, so you can show the change.
 | To show | Call |
 | --- | --- |
 | A views and engagement chart | [Content series](/api-reference/endpoint/content/series) |
+| The same chart split by creator, post, platform or campaign | [Content series by group](/api-reference/endpoint/content/series-by) |
+| Average views per post | [Views per post](/api-reference/endpoint/content/per-post-series) |
+| Days that jumped, and why | [Spike days](/api-reference/endpoint/content/spikes), [what drove a day](/api-reference/endpoint/content/day-breakdown) |
+| Posts taking off right now | [Breakout posts](/api-reference/endpoint/content/breakout-posts) |
+| Whether a dip is real or missing data | [Post readings per day](/api-reference/endpoint/content/data-health) |
 | Leaderboards | [Top posts](/api-reference/endpoint/content/top-posts), [top creators](/api-reference/endpoint/content/top-creators), [top accounts](/api-reference/endpoint/content/top-accounts), [top campaigns](/api-reference/endpoint/content/top-campaigns), [top platforms](/api-reference/endpoint/content/top-platforms) |
 | Posting volume | [Posts per day](/api-reference/endpoint/content/posts-daily), [posting counts](/api-reference/endpoint/content/posting-counts) |
 | Who's active | [New creators](/api-reference/endpoint/content/new-creators), [creator activity](/api-reference/endpoint/content/creator-activity), [posting report](/api-reference/endpoint/content/posting-report) |
@@ -48,6 +53,28 @@ For sales, use [Stores overview](/api-reference/endpoint/stores/overview) and
 A key gets 40 requests an hour and needs 2 seconds between calls. A report that
 calls six endpoints once a day is well inside that. Cache the filters, and don't
 poll. See [rate limits](/api-reference/rate-limits).
+
+## Spikes and breakout posts
+
+A **spike** is a day whose gain is at least 3 times the median of the 14 days before
+it. The baseline reaches back before `start_date`, so the first days of your range are
+covered too. Today is never a spike, because it's a partial day, and neither is a day
+whose baseline is under 1,000: small numbers swing on a single post. Pass `threshold`
+and `baseline_days` to [Spike days](/api-reference/endpoint/content/spikes) to change the 3 and the 14.
+
+[What drove a day](/api-reference/endpoint/content/day-breakdown) takes one `date` inside your range and returns
+that day's total against the same baseline, how many posts gained and how many were
+new, the top posts by gain with each one's share of the day, and everyone else rolled
+up.
+
+[Breakout posts](/api-reference/endpoint/content/breakout-posts) are posts gaining far faster than their own normal
+pace: views gained yesterday and today so far, against their average daily gain over
+the 7 days before. It always answers for right now and **ignores `start_date` and
+`end_date`**; `meta.window` says which days it used.
+
+If a dip looks wrong, check [post readings per day](/api-reference/endpoint/content/data-health) first. A day marked
+`low` had under half the usual number of fresh post readings, so the dip may be missing
+data rather than fewer views.
 
 ## Moving off the old stats endpoints
 

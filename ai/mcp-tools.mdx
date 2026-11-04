@@ -51,6 +51,31 @@ Claude can look up and change for you. To connect, see
 | `diagnose_creator_discount_code` | Why a creator's discount code isn't working |
 | `list_tts_top_creators`, `list_tts_top_videos`, `list_tts_shop_videos_by_views`, `get_tts_revenue_trend` | TikTok Shop top creators, top videos and revenue trend |
 
+## Dashboard numbers, for every role
+
+These read the same numbers as the dashboard pages, so Claude's answers match what you
+see. Tools marked heavy cost 5 units.
+
+| Tool | Page | What it answers |
+| --- | --- | --- |
+| `get_content_summary` | Home | Views and engagement gained against the previous period, and active posts, creators and accounts. Heavy |
+| `get_content_series` | Home | The daily series for your organization or campaigns, or one post (`social_post_id`). Pass `group` (`creator`, `post`, `platform` or `campaign`) to split it into the top groups plus everyone else. Heavy |
+| `list_top_content` | Home | Leaderboards of posts, creators, accounts, campaigns and platforms. Heavy |
+| `get_content_filters` | Home | The campaigns and platforms you can filter by |
+| `get_creator_activity` | Home | New creators, posts per day, retention and, for agencies, each brand's progress. Heavy |
+| `get_content_spikes` | Home | Days that jumped to at least 3 times the trailing 14-day median, each with its top 3 posts. Heavy |
+| `explain_day` | Home | One day broken down: total against normal, top posts, everyone else, and a note when post readings were low, plus a one-line summary. Heavy |
+| `list_breakout_posts` | Home | Posts gaining at least 5 times their own 7-day pace right now, with the 24-hour gain, the pace ratio and a sparkline. Heavy |
+| `get_stores_overview` | Stores › Overview | GMV, commission and orders per store and blended, against the previous period. Heavy |
+| `get_shopify_stats` | Shopify | Ambassador totals, series, top creators and top products. Heavy |
+| `get_meta_ads_overview` | Meta Ads | Overview, over time, by creator and top creatives. Heavy |
+| `get_tiktok_shop_stats` | TikTok Shop | Outreach scorecard totals for the window |
+| `get_payout_totals` | Payouts | Owed and paid totals and what's owed per cycle. `null` while a payout recalculates. Heavy |
+| `get_payout_breakdown` | Payouts | One payout's breakdown: components, tier lines, views paid for and top posts. Heavy |
+
+Try "Why did views jump on October 12?", "Which posts are breaking out right now?" or
+"Show views per day split by creator for the Spring campaign."
+
 ## Changes any signed-in role can make
 
 These need a key tied to a person (any key created while signed in, or a claude.ai sign-in).

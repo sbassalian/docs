@@ -190,6 +190,11 @@
             "pages": [
               "api-reference/endpoint/content/summary",
               "api-reference/endpoint/content/series",
+              "api-reference/endpoint/content/series-by",
+              "api-reference/endpoint/content/per-post-series",
+              "api-reference/endpoint/content/spikes",
+              "api-reference/endpoint/content/day-breakdown",
+              "api-reference/endpoint/content/breakout-posts",
               "api-reference/endpoint/content/top-posts",
               "api-reference/endpoint/content/top-creators",
               "api-reference/endpoint/content/top-accounts",
@@ -202,6 +207,7 @@
               "api-reference/endpoint/content/posting-counts",
               "api-reference/endpoint/content/post-series",
               "api-reference/endpoint/content/posting-report",
+              "api-reference/endpoint/content/data-health",
               "api-reference/endpoint/content/filters"
             ]
           },

@@ -1,11 +1,11 @@
 ---
-title: "List campaign affiliates"
+title: "List campaign creators"
 openapi: "GET /campaign_affiliates"
 ---
 
-Retrieves the organization's enrolled creators (campaign affiliates). By default it returns every active creator across all of your campaigns. Pass the optional **`campaign_id`** parameter to restrict the list to the creators enrolled in a single campaign — the recommended way to **identify and extract the list of creators added to a specific campaign**.
+Retrieves the organization's enrolled creators. By default it returns every active creator across all of your campaigns. Pass the optional **`campaign_id`** parameter to restrict the list to the creators enrolled in a single campaign — the recommended way to **identify and extract the list of creators added to a specific campaign**.
 
-Each item represents one creator's enrollment (a campaign affiliate) and includes creator identity, contact details, connected social accounts, and attributed performance. The full payload is large (~90 fields); this page documents the creator-identification subset most useful for listing creators, and notes that additional campaign-configuration and commission fields are also returned.
+Each item represents one creator's enrollment (a campaign creator) and includes creator identity, contact details, connected social accounts, and attributed performance. The full payload is large (~90 fields); this page documents the creator-identification subset most useful for listing creators, and notes that additional campaign-configuration and commission fields are also returned.
 
 ## Recipe: List the creators in a specific campaign
 
@@ -134,8 +134,8 @@ The documented subset most useful for listing the creators in a campaign:
 
 | Field                            | Type           | Description                                                              |
 | -------------------------------- | -------------- | ----------------------------------------------------------------------- |
-| `affiliates`                     | Array          | Array of campaign-affiliate (enrollment) objects                        |
-| `affiliates[].id`                | Integer        | Campaign-affiliate (enrollment) ID                                      |
+| `affiliates`                     | Array          | Array of campaign creator (enrollment) objects                        |
+| `affiliates[].id`                | Integer        | Campaign creator (enrollment) ID                                      |
 | `affiliates[].user_id`           | Integer        | The creator's user ID                                                   |
 | `affiliates[].campaign_id`       | Integer        | Campaign the creator is enrolled in                                     |
 | `affiliates[].campaign_name`     | String         | Human-readable campaign name (or `Contract <uuid>` for contracts)       |
@@ -195,7 +195,7 @@ This endpoint is useful for:
 - **Creator directory / CRM sync**: Pull creator identity, contact details, and social accounts into an external system.
 - **Status segmentation**: Filter by `status` to separate active, completed, or removed creators within a campaign.
 - **Performance review**: Use `revenue_generated`, `affiliate_amount_earned`, and `order_count` to rank creators in a campaign.
-- **Drill-down**: Use `affiliates[].id` with the single campaign-affiliate endpoint, or `user_id` to join against other API data.
+- **Drill-down**: Use `affiliates[].id` with the single campaign creator endpoint, or `user_id` to join against other API data.
 
 <RequestExample>
 

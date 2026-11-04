@@ -176,10 +176,10 @@ export const GrowiHome = () => {
         ["get", "List affiliate sales", "/affiliate_sales", ep("list-affiliate-sales")],
         ["patch", "Update affiliate sale", "/affiliate_sales/{id}", ep("update-affiliate-sale")],
       ] },
-      { icon: "tag", name: "Campaign affiliates", text: "Creator enrollments and codes", count: 3, rows: [
-        ["get", "List campaign affiliates", "/campaign_affiliates", ep("list-campaign-affiliates")],
-        ["patch", "Update campaign affiliate", "/campaign_affiliates/{id}", ep("update-campaign-affiliate")],
-        ["patch", "Bulk update campaign affiliates", "/campaign_affiliates/bulk", ep("bulk-update-campaign-affiliates")],
+      { icon: "tag", name: "Campaign creators", text: "Creator enrollments and codes", count: 3, rows: [
+        ["get", "List campaign creators", "/campaign_affiliates", ep("list-campaign-affiliates")],
+        ["patch", "Update campaign creator", "/campaign_affiliates/{id}", ep("update-campaign-affiliate")],
+        ["patch", "Bulk update campaign creators", "/campaign_affiliates/bulk", ep("bulk-update-campaign-affiliates")],
       ] },
       { icon: "inbox", name: "Applications", text: "Submit, approve and deny creator applications", count: 6, rows: [
         ["get", "List campaign applications", "/campaign_applications", ep("list-campaign-applications")],

@@ -1,0 +1,100 @@
+---
+title: "Shopify integration"
+description: "Connect a regular Shopify store to Growi with the Shopify app"
+---
+
+<Info>
+  **Prerequisite** You need a Shopify store on a Shopify theme (Online Store)
+  and permission to install apps on it. Running a custom storefront on
+  Hydrogen or another framework? Use the [Shopify headless
+  integration](/essentials/shopify-headless-integration) instead.
+</Info>
+
+# How to connect Shopify to Growi
+
+The Growi Shopify app tracks the sales your campaign creators drive, creates their discount codes in your store, and can add a creator signup form to your site. Setup takes a few minutes and needs no code.
+
+## 1. Install the Growi app
+
+Install **Growi: Creator Management** from the Shopify App Store:
+
+<Card title="Growi on the Shopify App Store" icon="shopping-bag" href="https://apps.shopify.com/growi-affiliate-links">
+  Open the listing and click **Install**.
+</Card>
+
+Shopify asks you to approve the app's permissions. Growi reads orders, products, customers and discounts to attribute sales to creators and pay commission, and writes discounts so each campaign creator's code exists in your store.
+
+<Tip>
+  Already have a Growi account? Make sure the store URL saved on your Growi
+  brand is your **.myshopify.com** domain (for example
+  `yourbrand.myshopify.com`) before you install. Growi matches the install to
+  your brand by that domain, or by the store's primary domain. If neither
+  matches, the install opens a separate Growi account.
+</Tip>
+
+After you approve, Shopify sends you to Growi, where you sign in or finish creating your account.
+
+## 2. Turn on the Growi app embed
+
+The app embed loads Growi's tracking on your storefront. It records which creator sent each visitor and applies their discount code at checkout.
+
+1. In Shopify admin, go to **Online Store → Themes**.
+2. Next to your live theme, click **Customize**.
+3. In the left sidebar, open **App embeds** (the puzzle-piece icon).
+4. Turn on **Growi App Embed** and click **Save**.
+
+<Warning>
+  Sales are only attributed while the app embed is on. If you change or
+  duplicate your theme, turn it on again in the new theme.
+</Warning>
+
+Growi also adds a Shopify web pixel for checkout events. It is installed with the app and needs no setup.
+
+## 3. Add the creator signup form (optional)
+
+To let visitors apply to become creators from your store:
+
+1. In the theme editor, open the page where the form should appear.
+2. Click **Add section** (or **Add block**) and choose **Affiliate Signup Form** under **Apps**.
+3. Click **Save**.
+
+Applications land in Growi under **Creators → Applications**.
+
+## 4. Add creator storefronts (optional)
+
+The **Growi Creator Storefront** block shows a creator's picks on your store when a shopper arrives through their link. Add it the same way, from **Add section → Apps** in the theme editor.
+
+## 5. Check that it works
+
+1. In Growi, open **Stores → Shopify**. The store shows as connected.
+2. Open a creator's link from one of your campaigns in a private browser window.
+3. Place a test order with their code. It appears in Growi under the campaign's sales within a few minutes.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The install created a new Growi account">
+    The store's .myshopify.com domain didn't match the store URL saved on your
+    existing brand. Save the .myshopify.com domain on your brand, then reinstall
+    the app, or contact [support](mailto:info@growi.io) to move the store over.
+  </Accordion>
+  <Accordion title="Sales aren't showing up">
+    Check that **Growi App Embed** is on in your *live* theme (step 2), and that
+    the order used the creator's link or code.
+  </Accordion>
+  <Accordion title="Discount codes are missing in Shopify">
+    Codes are created when a creator joins a campaign that uses discount codes.
+    Make sure the app is still installed and its permissions were approved.
+  </Accordion>
+</AccordionGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Klaviyo integration" icon="mail" href="/essentials/klaviyo-integration">
+    Send creator events to Klaviyo flows.
+  </Card>
+  <Card title="Campaign creator webhooks" icon="webhook" href="/essentials/campaign-creator-webhooks">
+    Get notified when creators join, change codes or drive sales.
+  </Card>
+</CardGroup>

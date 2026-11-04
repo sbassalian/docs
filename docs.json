@@ -82,9 +82,10 @@
             "group": "Integrations",
             "icon": "plug",
             "pages": [
-              "essentials/stripe-integration",
               "essentials/shopify-headless-integration",
+              "essentials/shopify-integration",
               "essentials/klaviyo-integration",
+              "essentials/stripe-integration",
               "essentials/custom-store-samples"
             ]
           },
@@ -154,7 +155,7 @@
             "icon": "users",
             "pages": [
               {
-                "group": "Campaign affiliates",
+                "group": "Campaign creators",
                 "pages": [
                   "api-reference/endpoint/list-campaign-affiliates",
                   "api-reference/endpoint/update-campaign-affiliate",

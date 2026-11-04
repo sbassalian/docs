@@ -5,6 +5,10 @@ openapi: "GET /stats/query_ambassador_sales"
 
 Retrieves detailed ambassador sales data including order information, commission amounts, and program details within a specified date range. This endpoint supports filtering by payment status, creator email, and pagination.
 
+<Note>
+This is a legacy endpoint that is only enabled for a few accounts. For Shopify ambassador program sales use [List affiliate sales](/api-reference/endpoint/list-affiliate-sales) with `campaign_scope=ambassador`, which every API key can call and which returns the same sales with GMV and commission totals.
+</Note>
+
 ## Request parameters
 
 | Parameter        | Type    | Description                                                           | Required |

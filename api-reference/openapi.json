@@ -1832,6 +1832,84 @@
                             "type": "string",
                             "example": "Growi",
                             "description": "Name of the organization"
+                          },
+                          "invoice": {
+                            "type": "object",
+                            "nullable": true,
+                            "description": "The invoice behind the transaction. For a payout, line_items lists each creator paid (up to 100 per transaction).",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 14438
+                              },
+                              "description": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": "Campaign"
+                              },
+                              "status": {
+                                "type": "string",
+                                "example": "paid"
+                              },
+                              "line_items": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "integer",
+                                      "example": 40958
+                                    },
+                                    "amount": {
+                                      "type": "number",
+                                      "example": 1250.0,
+                                      "description": "Amount in dollars"
+                                    },
+                                    "user_name": {
+                                      "type": "string",
+                                      "example": "Sophia"
+                                    },
+                                    "user_id": {
+                                      "type": "integer",
+                                      "example": 162177,
+                                      "description": "Creator (user) id"
+                                    },
+                                    "campaign_id": {
+                                      "type": "integer",
+                                      "nullable": true,
+                                      "example": 30945
+                                    },
+                                    "campaign_name": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "example": "Growi campaign"
+                                    },
+                                    "campaign_affiliate_id": {
+                                      "type": "integer",
+                                      "nullable": true,
+                                      "example": 3908633
+                                    },
+                                    "creator_payout_id": {
+                                      "type": "integer",
+                                      "nullable": true,
+                                      "example": 164340
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "example": "sent_from_account"
+                                    },
+                                    "description": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "refunded": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                }
+                              }
+                            }
                           }
                         }
                       }
@@ -3524,13 +3602,22 @@
             "description": "Filter by custom source/sub-ID tag (e.g., instagram, youtube)"
           },
           {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Parent keys only: narrow to one brand under the parent. Omit to include every brand. Any other id returns 404."
+          },
+          {
             "name": "store_id",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "integer"
             },
-            "description": "Store identifier (required for Shopify, not needed for website)"
+            "description": "Growi's numeric Shopify store id (not the .myshopify.com domain). Only used with store_platform=shopify_store."
           },
           {
             "name": "store_platform",
@@ -3545,6 +3632,20 @@
               ]
             },
             "description": "Platform type: website or shopify_store"
+          },
+          {
+            "name": "campaign_scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "social",
+                "ambassador",
+                "all"
+              ]
+            },
+            "description": "Campaign types to include: social (campaigns and contracts, the default), ambassador (ambassador programs) or all. Ignored when campaign_id is set."
           },
           {
             "name": "ambassador_program",
@@ -17486,6 +17587,26 @@
             "type": "string",
             "example": "instagram",
             "description": "Custom source/sub-ID tag captured on the sale (null when not set)"
+          },
+          "organization_id": {
+            "type": "integer",
+            "example": 15039,
+            "description": "Brand (organization) the sale belongs to"
+          },
+          "campaign_id": {
+            "type": "integer",
+            "example": 30945,
+            "description": "Campaign the sale is attributed to"
+          },
+          "campaign_affiliate_id": {
+            "type": "integer",
+            "example": 3908633,
+            "description": "Creator's enrollment in that campaign"
+          },
+          "creator_id": {
+            "type": "integer",
+            "example": 2820793,
+            "description": "Growi creator (user) id"
           }
         }
       },

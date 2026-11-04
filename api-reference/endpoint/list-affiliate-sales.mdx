@@ -7,6 +7,14 @@ Retrieves paginated affiliate sales (conversions) for the organization. These en
 
 For **website** conversions, call with `store_platform=website` (no `store_id` required). For **Shopify** conversions, use `store_platform=shopify_store` along with your `store_id`.
 
+<Note>
+**Parent organizations with several brands.** An API key created on the parent organization returns the sales of every brand under it. Pass `organization_id=<brand id>` to narrow to one brand (an id that is not one of your brands returns 404). A key created on a brand returns that brand's sales only. Each sale row carries its `organization_id`, `campaign_id` and `creator_id`, so a parent-wide pull can be split per brand, campaign and creator.
+</Note>
+
+<Note>
+**`store_id` for Shopify** is Growi's numeric id for your connected Shopify store, not the `.myshopify.com` domain or Shopify's own shop id. It only applies together with `store_platform=shopify_store`; any other value matches no sales and returns 0 rows. You rarely need it: a brand key, or `organization_id` on a parent key, already scopes the results to that brand's store. Ask Growi support for your store id if you want to filter by it.
+</Note>
+
 The response includes `data` (array of sales), `meta` (pagination info), and `additional_data` (aggregate totals like total GMV, commission breakdown, and order counts).
 
 ## Request parameters
@@ -25,9 +33,11 @@ The response includes `data` (array of sales), `meta` (pagination info), and `ad
 | `status`            | String  | Filter by status: `paid`, `due`, `unpaid`, `canceled`, or `refunded`                                  | No       |
 | `affiliate_tag`     | String  | Filter by affiliate tag (campaign_affiliate_id tag)                                                   | No       |
 | `sub_id`            | String  | Filter by custom source/sub-ID tag (e.g., `instagram`, `youtube`)                                     | No       |
-| `store_id`          | String  | Store identifier (required for Shopify, not needed for website)                                       | No       |
+| `organization_id`   | Integer | Parent keys only: narrow to one brand under the parent. Omit to include every brand.                  | No       |
+| `store_id`          | Integer | Growi's numeric Shopify store id. Only used with `store_platform=shopify_store`.                      | No       |
 | `store_platform`    | String  | Platform type: `website` or `shopify_store`. Use `website` for website-sourced conversions.           | No       |
-| `ambassador_program`| Boolean | Filter to only ambassador program sales. Default is false.                                            | No       |
+| `campaign_scope`    | String  | Which campaign types to include: `social` (campaigns and contracts, the default), `ambassador` (ambassador programs), or `all`. Ignored when `campaign_id` is set. | No |
+| `ambassador_program`| Boolean | Filter to only ambassador program sales (same as `campaign_scope=ambassador`). Default is false.      | No       |
 
 ## Request example
 
@@ -56,7 +66,12 @@ curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=w
       "occurred_at": "2025-09-30T23:55:29.000Z",
       "total": 9999,
       "commission": 500,
-      "currency": "usd"
+      "currency": "usd",
+      "sub_id": null,
+      "organization_id": 15039,
+      "campaign_id": 30945,
+      "campaign_affiliate_id": 3908633,
+      "creator_id": 2820793
     }
   ],
   "meta": {
@@ -90,6 +105,10 @@ curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=w
 | `data[].commission`                 | Integer | Commission amount in cents                                        |
 | `data[].currency`                   | String  | Currency code (e.g., `usd`, `eur`)                                |
 | `data[].sub_id`                     | String  | Custom source/sub-ID tag captured on the sale (e.g., `instagram`) |
+| `data[].organization_id`            | Integer | Brand (organization) the sale belongs to                          |
+| `data[].campaign_id`                | Integer | Campaign the sale is attributed to                                |
+| `data[].campaign_affiliate_id`      | Integer | Creator's enrollment in that campaign                             |
+| `data[].creator_id`                 | Integer | Growi creator (user) id                                           |
 | `meta`                              | Object  | Pagination metadata                                               |
 | `meta.row_count`                    | Integer | Total number of sales matching the query                          |
 | `meta.page_count`                   | Integer | Total number of pages available                                   |
@@ -111,7 +130,7 @@ This endpoint is useful for:
 - **Data Warehouse Sync**: Export conversion data to your analytics or data warehouse
 - **Payout Reconciliation**: Verify commission amounts before processing creator payouts
 - **Creator Performance**: Filter by `creator_id` or `creator_email` to analyze individual creator performance
-- **Campaign Analytics**: Filter by `campaign_id` to measure campaign-specific conversion metrics
+- **Campaign Analytics**: Filter by `campaign_id` to measure campaign-specific conversion metrics. `additional_data.total_gmv` is the campaign's attributed Shopify or website GMV.
 - **Financial Reporting**: Use `additional_data` totals for GMV and commission reporting
 
 <RequestExample>
@@ -124,6 +143,16 @@ curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=w
 ```bash Date range and status
 curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=website&start_date=01/01/2025&end_date=01/31/2025&status=unpaid" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+```bash Campaign GMV (parent key)
+curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?campaign_id=30945&per_page=100" \
+     -H "Authorization: Bearer YOUR_PARENT_API_KEY"
+```
+
+```bash One brand, all campaign types
+curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?organization_id=15039&campaign_scope=all&start_date=10/01/2026&end_date=10/31/2026" \
+     -H "Authorization: Bearer YOUR_PARENT_API_KEY"
 ```
 
 </RequestExample>
@@ -141,7 +170,12 @@ curl -X GET "https://api.growi.io/api/public/v1/affiliate_sales?store_platform=w
       "occurred_at": "2025-09-30T23:55:29.000Z",
       "total": 9999,
       "commission": 500,
-      "currency": "usd"
+      "currency": "usd",
+      "sub_id": null,
+      "organization_id": 15039,
+      "campaign_id": 30945,
+      "campaign_affiliate_id": 3908633,
+      "creator_id": 2820793
     }
   ],
   "meta": {

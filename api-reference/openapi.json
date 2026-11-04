@@ -2986,7 +2986,9 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["tag"],
+                "required": [
+                  "tag"
+                ],
                 "properties": {
                   "tag": {
                     "type": "string",
@@ -3006,9 +3008,18 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": { "type": "boolean", "example": true },
-                    "id": { "type": "integer", "example": 3490313 },
-                    "tag": { "type": "string", "example": "theirexistingcode" }
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "id": {
+                      "type": "integer",
+                      "example": 3490313
+                    },
+                    "tag": {
+                      "type": "string",
+                      "example": "theirexistingcode"
+                    }
                   }
                 }
               }
@@ -3021,7 +3032,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": { "type": "string", "example": "Not Authenticated" }
+                    "error": {
+                      "type": "string",
+                      "example": "Not Authenticated"
+                    }
                   }
                 }
               }
@@ -3071,14 +3085,19 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["affiliates"],
+                "required": [
+                  "affiliates"
+                ],
                 "properties": {
                   "affiliates": {
                     "type": "array",
                     "maxItems": 300,
                     "items": {
                       "type": "object",
-                      "required": ["id", "tag"],
+                      "required": [
+                        "id",
+                        "tag"
+                      ],
                       "properties": {
                         "id": {
                           "type": "integer",
@@ -3106,14 +3125,21 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": { "type": "boolean", "example": true },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
                     "updated": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
-                          "id": { "type": "integer" },
-                          "tag": { "type": "string" }
+                          "id": {
+                            "type": "integer"
+                          },
+                          "tag": {
+                            "type": "string"
+                          }
                         }
                       }
                     },
@@ -3122,8 +3148,12 @@
                       "items": {
                         "type": "object",
                         "properties": {
-                          "id": { "type": "integer" },
-                          "error": { "type": "string" }
+                          "id": {
+                            "type": "integer"
+                          },
+                          "error": {
+                            "type": "string"
+                          }
                         }
                       }
                     }
@@ -3139,7 +3169,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": { "type": "string", "example": "Not Authenticated" }
+                    "error": {
+                      "type": "string",
+                      "example": "Not Authenticated"
+                    }
                   }
                 }
               }
@@ -3152,10 +3185,25 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": { "type": "boolean", "example": false },
-                    "error": { "type": "string" },
-                    "updated": { "type": "array", "items": { "type": "object" } },
-                    "errors": { "type": "array", "items": { "type": "object" } }
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "updated": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
                   }
                 }
               }

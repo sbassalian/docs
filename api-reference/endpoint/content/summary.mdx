@@ -1,0 +1,19 @@
+---
+title: "Content summary"
+description: "Totals for a date range and the same-length range before it, the active post, creator and account counts, and when a post last landed."
+tag: "Soon"
+---
+
+<Info>
+  **Coming soon.** `GET /content/summary` ships in the next API release.
+  This page fills in with parameters, response fields and a playground when it does.
+</Info>
+
+<Tip>
+  Replaces [`/stats/content_24h_data`](/api-reference/endpoint/get-content-24h-data) and [`/stats/creators_24h`](/api-reference/endpoint/get-creators-24h), which are deprecated.
+</Tip>
+
+It works with full and read-only (viewer) API keys, counts toward the same
+[rate limits](/api-reference/rate-limits) as every other endpoint, takes and returns
+[ISO 8601 dates](/api-reference/conventions), and accepts `organization_id` to read
+one of your [child brands](/api-reference/child-brands).

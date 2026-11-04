@@ -150,7 +150,7 @@ end
 def page_body(entry)
   parts = []
   links = replaced_links(entry)
-  parts << "<Tip>\n  Replaces #{links.join(', ')}, which #{links.size == 1 ? 'is' : 'are'} deprecated.\n</Tip>" if links.any?
+  parts << "<Tip>\n  Replaces #{links.size > 1 ? "#{links[0..-2].join(', ')} and #{links.last}" : links.first}, which #{links.size == 1 ? 'is' : 'are'} deprecated.\n</Tip>" if links.any?
   parts << entry['notes'].strip if entry['notes']
   parts.empty? ? '' : "\n#{parts.join("\n\n")}\n"
 end

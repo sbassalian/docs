@@ -1,0 +1,19 @@
+---
+title: "Stores overview"
+description: "Sales, revenue and commission across every connected sales channel for a date range, the same numbers as Stores > Overview."
+tag: "Soon"
+---
+
+<Info>
+  **Coming soon.** `GET /stores/overview` ships in the next API release.
+  This page fills in with parameters, response fields and a playground when it does.
+</Info>
+
+<Tip>
+  Replaces [`/stats/top_creators_by_gmv`](/api-reference/endpoint/get-top-creators-by-gmv) and [`/stats/top_earning_creators`](/api-reference/endpoint/get-top-earning-creators), which are deprecated.
+</Tip>
+
+It works with full and read-only (viewer) API keys, counts toward the same
+[rate limits](/api-reference/rate-limits) as every other endpoint, takes and returns
+[ISO 8601 dates](/api-reference/conventions), and accepts `organization_id` to read
+one of your [child brands](/api-reference/child-brands).

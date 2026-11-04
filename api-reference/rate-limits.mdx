@@ -1,0 +1,51 @@
+---
+title: "Rate limits"
+description: "40 requests per hour per key, 2 seconds between calls, and the headers that tell you where you stand."
+---
+
+Each API key has two limits:
+
+| Limit | Default | When you hit it |
+| --- | --- | --- |
+| Hourly | **40 requests** in the last hour | `429` with `Retry-After` (seconds) and `reset_time` |
+| Spacing | **2 seconds** between calls | `429` with `Retry-After: 2` |
+
+Every endpoint counts toward the same budget, including the content, stores,
+Shopify, Meta ads and payouts endpoints.
+
+## Headers
+
+Successful responses tell you where you stand:
+
+| Header | Meaning |
+| --- | --- |
+| `X-RateLimit-Limit` | Your hourly limit |
+| `X-RateLimit-Remaining` | Requests left |
+| `X-RateLimit-Reset` | When the count resets, as a Unix timestamp |
+
+A `429` adds `Retry-After`, in seconds:
+
+```json
+{
+  "error": "Hourly rate limit of 40 requests exceeded.",
+  "retry_after": 1260,
+  "reset_time": "2026-11-04T15:00:00Z"
+}
+```
+
+## Exceptions
+
+- `POST /campaign_applications` skips the 2-second spacing, because signup forms on
+  your site can submit at the same moment. It still counts toward the hourly limit.
+- `GET /posts` (the [posting report](/api-reference/endpoint/content/posting-report))
+  doesn't count toward either limit, so Zapier and other pollers can call it on a schedule.
+- The [MCP server](/essentials/connect-claude#limits) has its own limits, separate from these.
+
+## Staying under the limit
+
+- Wait at least 2 seconds between calls, and honor `Retry-After`.
+- Ask for bigger pages (`per_page`) instead of more requests.
+- Cache what doesn't change often, such as brands, campaigns and filters.
+
+Need more? Email [info@growi.io](mailto:info@growi.io) with your use case. Higher limits
+are set per organization.

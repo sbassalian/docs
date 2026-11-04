@@ -1,0 +1,28 @@
+---
+title: "Child brands"
+description: "Read one child brand of your organization by passing organization_id."
+---
+
+Agencies and parent organizations can have child brands. An API key always belongs
+to the top-level organization, and reads cover the whole family unless you narrow
+them down.
+
+## Pick a child brand
+
+1. List your child brands and their ids with [Get brands](/api-reference/endpoint/get-brands).
+2. Pass one as `organization_id`:
+
+```bash
+curl "https://api.growi.io/api/public/v1/content/summary?start_date=2026-10-01&end_date=2026-10-31&organization_id=4821" \
+  -H "Authorization: Bearer growi-sk-YOUR-API-KEY"
+```
+
+`organization_id` has to be an active child brand of the key's organization.
+Anything else is refused with an `error` message, so one brand's key can never read
+another organization's data.
+
+## Which endpoints take it
+
+Every content analytics, stores, Shopify, mobile app, Meta ads performance and payouts
+endpoint, the older stats endpoints, and the TikTok Shop endpoints. Each endpoint's
+reference lists `organization_id` when it takes it.

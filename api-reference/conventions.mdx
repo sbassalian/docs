@@ -1,0 +1,49 @@
+---
+title: "Dates, money and errors"
+description: "The formats every endpoint uses for dates, pagination, money and errors."
+---
+
+## Dates
+
+New endpoints (content analytics, stores, Shopify, mobile apps, Meta ads performance
+and payouts) take and return ISO 8601:
+
+- Dates are `YYYY-MM-DD`, for example `start_date=2026-10-01&end_date=2026-10-31`.
+  Both ends are included, and days are UTC.
+- Timestamps are ISO 8601 with a time zone, for example `2026-10-31T18:04:11Z`.
+
+<Warning>
+  The [deprecated stats endpoints](/api-reference/changelog#deprecations) take
+  `MM/DD/YYYY` and some return `MM/DD/YYYY` strings. Switch to ISO dates when you
+  move to the new endpoints.
+</Warning>
+
+## Pagination
+
+List endpoints take `page` (from 1) and `per_page`, and return a `meta` object with
+the current page and whether there are more (`has_more`, or `page_count` on older
+endpoints). Each endpoint's reference states its maximum `per_page`.
+
+## Money
+
+Each endpoint's reference says whether an amount is a number in the currency's major
+unit, integer cents (fields ending in `_cents`) or a formatted string, and which
+currency field goes with it. Don't assume USD: amounts are in your organization's
+currency.
+
+## Errors
+
+Errors return a non-2xx status and a JSON body with an `error` message:
+
+```json
+{ "error": "Missing required parameter(s): start_date, end_date" }
+```
+
+| Status | Meaning |
+| --- | --- |
+| `401` | Missing or invalid API key |
+| `403` | A read-only (viewer) key sent a write |
+| `404` | The record doesn't exist or isn't yours |
+| `422` | Missing or invalid params, or the action isn't allowed in the record's current state |
+| `429` | [Rate limited](/api-reference/rate-limits). Wait for `Retry-After` |
+| `5xx` | Something failed on our side. Retry with backoff, and email [info@growi.io](mailto:info@growi.io) if it keeps happening |

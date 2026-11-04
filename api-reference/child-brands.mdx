@@ -17,9 +17,9 @@ curl "https://api.growi.io/api/public/v1/content/summary?start_date=2026-10-01&e
   -H "Authorization: Bearer growi-sk-YOUR-API-KEY"
 ```
 
-`organization_id` has to be an active child brand of the key's organization.
-Anything else is refused with an `error` message, so one brand's key can never read
-another organization's data.
+`organization_id` has to be an active child brand of the key's organization. Any
+other id gets `404` on the newer endpoints (and an `error` message on the deprecated
+stats endpoints), so one brand's key can never read another organization's data.
 
 ## Which endpoints take it
 

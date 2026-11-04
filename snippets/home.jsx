@@ -243,7 +243,7 @@ export const GrowiHome = () => {
     return (
       <section className="g-sec">
         <h2 className="g-h2">The whole API on one screen</h2>
-        <p className="g-sub">75 endpoints, 29 more on the way, and 5 webhook events, grouped by the job they do.</p>
+        <p className="g-sub">104 endpoints and 5 webhook events, grouped by the job they do.</p>
         <div className="g-x">
           <div className="g-x-list" role="tablist" aria-label="API area">
             {areas.map((a, i) => (

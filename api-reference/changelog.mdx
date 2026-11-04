@@ -42,11 +42,12 @@ aren't deprecated.
 ## November 2026
 
 <Update label="November 2026">
-  **Coming soon**
-  - Content analytics: `/content/*` endpoints for the numbers on your Home page.
-  - Sales and stores: `GET /stores/overview`, Shopify stats and store creators, and iOS and Android app analytics.
-  - Payouts: `GET /payouts`, `GET /payouts/totals` and `GET /payouts/{uuid}`, the same list as Finance → Payouts.
+  **New**
+  - Content analytics: 14 `/content/*` endpoints with the numbers on your Home page, live on every call.
+  - Sales and stores: `GET /stores/overview`, `GET /shopify/stats` (ambassador stats), `GET /shopify/store_creators` and its summary, and iOS and Android app analytics and creator funnels.
+  - Payouts: `GET /payouts`, `GET /payouts/totals` and `GET /payouts/{uuid}`, the same rows as Finance → Payouts. Each payout has a `state` (`ready`, `updating` or `canceled`).
   - Meta ads performance: overview, over time, by creator and by creative.
+  - All of them work with viewer keys, take ISO 8601 dates and accept `organization_id`.
 
   **Changed**
   - The old Home stats endpoints are deprecated. See the table above.

@@ -28,108 +28,80 @@ paths:
     method: get
     page: api-reference/endpoint/content/summary
     title: Content summary
-    description: Totals for a date range and the same-length range before it, the active post, creator and account counts, and when a post last landed.
     replaces: [api-reference/endpoint/get-content-24h-data, api-reference/endpoint/get-creators-24h]
     child_brands: true
-    pending: true
   - path: /content/series
     method: get
     page: api-reference/endpoint/content/series
     title: Content series
-    description: Daily views, engagement and posts for a date range, for charting.
     replaces: [api-reference/endpoint/get-snapshots]
     child_brands: true
-    pending: true
   - path: /content/top_posts
     method: get
     page: api-reference/endpoint/content/top-posts
     title: Top posts
-    description: Your creators' best posts in a date range, sorted by views or engagement.
     replaces: [api-reference/endpoint/get-top-posts-by-views]
     child_brands: true
-    pending: true
   - path: /content/top_creators
     method: get
     page: api-reference/endpoint/content/top-creators
     title: Top creators
-    description: Creators ranked by views, engagement or posts in a date range.
     replaces: [api-reference/endpoint/get-top-creators, api-reference/endpoint/get-top-creators-by-posts]
     child_brands: true
-    pending: true
   - path: /content/top_accounts
     method: get
     page: api-reference/endpoint/content/top-accounts
     title: Top accounts
-    description: Connected social accounts ranked by views and engagement in a date range.
     replaces: [api-reference/endpoint/get-top-connected-accounts-by-engagement]
     child_brands: true
-    pending: true
   - path: /content/top_campaigns
     method: get
     page: api-reference/endpoint/content/top-campaigns
     title: Top campaigns
-    description: Campaigns ranked by the views and engagement their posts earned in a date range. A post in two campaigns counts toward both.
     child_brands: true
-    pending: true
   - path: /content/top_platforms
     method: get
     page: api-reference/endpoint/content/top-platforms
     title: Top platforms
-    description: Views, engagement and posts split by social platform.
     replaces: [api-reference/endpoint/get-content-platform-composition]
     child_brands: true
-    pending: true
   - path: /content/posts_daily
     method: get
     page: api-reference/endpoint/content/posts-daily
     title: Posts per day
-    description: New posts per day, overall and by platform, with the previous period alongside. A post counts once, on the day Growi started tracking it.
     child_brands: true
-    pending: true
   - path: /content/new_creators
     method: get
     page: api-reference/endpoint/content/new-creators
     title: New creators
-    description: Creators whose first campaign with your brand started in the date range. A creator who joined months ago and joins another campaign now isn't new.
     child_brands: true
-    pending: true
   - path: /content/creator_activity
     method: get
     page: api-reference/endpoint/content/creator-activity
     title: Creator activity
-    description: Who keeps posting. Per week or month, the new, retained, returning and churned creators and the retention rate, plus monthly cohorts.
     child_brands: true
-    pending: true
   - path: /content/brand_progress
     method: get
     page: api-reference/endpoint/content/brand-progress
     title: Brand progress
-    description: For agencies and parent organizations, each brand's views, new posts and active creators in the period, and how many campaigns it runs. Empty for a single brand.
     child_brands: true
-    pending: true
   - path: /content/posting_counts
     method: get
     page: api-reference/endpoint/content/posting-counts
     title: Posting counts
-    description: Total posts and active creators in a date range, counted by when each post went up.
     child_brands: true
-    pending: true
   - path: /content/post_series
     method: get
     page: api-reference/endpoint/content/post-series
     title: Post series
-    description: One post's daily views and engagement over a date range. Each day is that day's gain, with every day present.
     replaces: [api-reference/endpoint/get-user-contents]
     child_brands: true
-    pending: true
   - path: /content/filters
     method: get
     page: api-reference/endpoint/content/filters
     title: Content filters
-    description: The campaigns, creators and platforms you can filter the content endpoints by.
     replaces: [api-reference/endpoint/get-filters]
     child_brands: true
-    pending: true
   - path: /posts
     method: get
     page: api-reference/endpoint/content/posting-report
@@ -145,111 +117,97 @@ paths:
     method: get
     page: api-reference/endpoint/stores/overview
     title: Stores overview
-    description: Sales, revenue and commission across every connected sales channel for a date range, the same numbers as Stores > Overview.
     replaces: [api-reference/endpoint/get-top-creators-by-gmv, api-reference/endpoint/get-top-earning-creators]
     child_brands: true
-    pending: true
   - path: /shopify/stats
     method: get
     page: api-reference/endpoint/shopify/stats
     title: Shopify stats
-    description: Your Shopify ambassador program for a date range, with orders, revenue, commission and the top creators.
     child_brands: true
-    pending: true
   - path: /shopify/store_creators
     method: get
     page: api-reference/endpoint/shopify/store-creators
     title: Store creators
-    description: Every creator who drove sales in your Shopify store, with orders, revenue and commission.
     child_brands: true
-    pending: true
   - path: /shopify/store_creators/summary
     method: get
     page: api-reference/endpoint/shopify/store-creators-summary
     title: Store creators summary
-    description: Totals for the store creators list.
     child_brands: true
-    pending: true
   - path: /apps/ios/analytics
     method: get
     page: api-reference/endpoint/apps/ios-analytics
     title: iOS app analytics
-    description: Installs, purchases and revenue your creators drove to your iOS app.
     child_brands: true
-    pending: true
   - path: /apps/ios/creator_funnel
     method: get
     page: api-reference/endpoint/apps/ios-creator-funnel
     title: iOS creator funnel
-    description: Read-only per-creator funnel for your iOS app, from link clicks to installs and purchases. Only creators with an app link appear, from the day their link exists.
     child_brands: true
-    pending: true
   - path: /apps/android/analytics
     method: get
     page: api-reference/endpoint/apps/android-analytics
     title: Android app analytics
-    description: Installs, purchases and revenue your creators drove to your Android app.
     child_brands: true
-    pending: true
   - path: /apps/android/creator_funnel
     method: get
     page: api-reference/endpoint/apps/android-creator-funnel
     title: Android creator funnel
-    description: Read-only per-creator funnel for your Android app, from link clicks to installs and purchases. Only creators with an app link appear, from the day their link exists.
     child_brands: true
-    pending: true
 
   # Payouts: the Finance > Payouts page.
   - path: /payouts
     method: get
     page: api-reference/endpoint/payouts/list-payouts
     title: List payouts
-    description: Creator payouts with status, amounts and due dates, the same list as Finance > Payouts.
     replaces: [api-reference/endpoint/get-creator-payouts]
     child_brands: true
-    pending: true
+    notes: |
+      <Note>
+        Each payout has a `state`: `ready`, `canceled`, or `updating` while it
+        recalculates. An `updating` payout has `pending_update: true` and `null`
+        amounts, dates, views and content counts until it's ready. While payouts are
+        being recalculated for your whole organization, every row comes back `updating`
+        with null amounts. Call again in a few minutes.
+      </Note>
   - path: /payouts/totals
     method: get
     page: api-reference/endpoint/payouts/payout-totals
     title: Payout totals
-    description: Totals for the payouts list, by status.
     replaces: [api-reference/endpoint/get-payouts-24h, api-reference/endpoint/get-manual-campaign-progress]
     child_brands: true
-    pending: true
   - path: /payouts/{uuid}
     method: get
     page: api-reference/endpoint/payouts/get-payout
     title: Get payout
-    description: One payout with its line-by-line breakdown.
     child_brands: true
-    pending: true
+    notes: |
+      <Note>
+        Each payout has a `state`: `ready`, `canceled`, or `updating` while it
+        recalculates. An `updating` payout has `pending_update: true` and `null`
+        amounts, dates, views and content counts until it's ready. While payouts are
+        being recalculated for your whole organization, every row comes back `updating`
+        with null amounts. Call again in a few minutes.
+      </Note>
 
   # Meta ads performance: the Meta Ads page and its Creators tab.
   - path: /meta_ads/overview
     method: get
     page: api-reference/endpoint/meta-ads/performance-overview
     title: Performance overview
-    description: Spend, impressions, clicks, attributed sales and ROAS across your Meta ads for a date range.
     child_brands: true
-    pending: true
   - path: /meta_ads/timeseries
     method: get
     page: api-reference/endpoint/meta-ads/performance-timeseries
     title: Performance over time
-    description: Daily spend, impressions, clicks and attributed sales.
     child_brands: true
-    pending: true
   - path: /meta_ads/creators
     method: get
     page: api-reference/endpoint/meta-ads/performance-creators
     title: Performance by creator
-    description: Meta ads performance grouped by the creator whose content runs in the ad.
     child_brands: true
-    pending: true
   - path: /meta_ads/creatives
     method: get
     page: api-reference/endpoint/meta-ads/performance-creatives
     title: Performance by creative
-    description: Meta ads performance per ad creative.
     child_brands: true
-    pending: true

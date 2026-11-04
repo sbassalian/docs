@@ -1,7 +1,15 @@
 ---
 title: "Get TikTok Shop GMV 24h"
 openapi: 'GET /stats/tik_tok_shop_gmv_24h'
+deprecated: true
 ---
+
+<Warning>
+  **Deprecated.** This is one of the old Home stats endpoints. It still works, but new
+  integrations should use the faster endpoints. Use [Affiliate summary](/api-reference/endpoint/tik-tok-shop/affiliate-summary) (`GET /tik_tok_shop/affiliate/summary`) for GMV over a date range and [Weekly summary](/api-reference/endpoint/tik-tok-shop/summary-weekly) (`GET /tik_tok_shop/summary/weekly`) for the change against the week before.
+  Responses carry `Deprecation` and `Link` headers. See [deprecations](/api-reference/changelog#deprecations).
+</Warning>
+
 
 Retrieves TikTok Shop Gross Merchandise Value (GMV) data with daily breakdown and comparison to previous period. Returns time-series data showing GMV performance, order counts, and period-over-period comparisons for each day in the specified date range.
 

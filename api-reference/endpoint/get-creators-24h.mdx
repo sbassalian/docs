@@ -1,7 +1,15 @@
 ---
 title: "Get creators 24h"
 openapi: 'GET /stats/creators_24h'
+deprecated: true
 ---
+
+<Warning>
+  **Deprecated.** This is one of the old Home stats endpoints. It still works, but new
+  integrations should use the faster endpoints. Use [Content summary](/api-reference/endpoint/content/summary) (`GET /content/summary`) for active creators and [New creators](/api-reference/endpoint/content/new-creators) (`GET /content/new_creators`) for who joined.
+  Responses carry `Deprecation` and `Link` headers. See [deprecations](/api-reference/changelog#deprecations).
+</Warning>
+
 
 Retrieves daily creator metrics with comparison to previous period. This endpoint tracks both new creators (who joined your database) and active creators (who made posts) for each date.
 

@@ -1,7 +1,15 @@
 ---
 title: "Get payouts 24h"
 openapi: 'GET /stats/payouts_24h'
+deprecated: true
 ---
+
+<Warning>
+  **Deprecated.** This is one of the old Home stats endpoints. It still works, but new
+  integrations should use the faster endpoints. Use [Payout totals](/api-reference/endpoint/payouts/payout-totals) (`GET /payouts/totals`).
+  Responses carry `Deprecation` and `Link` headers. See [deprecations](/api-reference/changelog#deprecations).
+</Warning>
+
 
 Retrieves payout data with comparison to previous period.
 

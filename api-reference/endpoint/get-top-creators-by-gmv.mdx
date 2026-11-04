@@ -1,7 +1,15 @@
 ---
 title: "Get top creators by GMV"
 openapi: "GET /stats/top_creators_by_gmv"
+deprecated: true
 ---
+
+<Warning>
+  **Deprecated.** This is one of the old Home stats endpoints. It still works, but new
+  integrations should use the faster endpoints. Use [Stores overview](/api-reference/endpoint/stores/overview) (`GET /stores/overview`) for every sales channel and [Shopify stats](/api-reference/endpoint/shopify/stats) (`GET /shopify/stats`) for Shopify's top creators. For TikTok Shop, use [TikTok Shop creators](/api-reference/endpoint/get-tik-tok-shop-store-creators).
+  Responses carry `Deprecation` and `Link` headers. See [deprecations](/api-reference/changelog#deprecations).
+</Warning>
+
 
 Retrieves your top-performing creators ranked by Gross Merchandise Value (GMV) within a specified date range.
 

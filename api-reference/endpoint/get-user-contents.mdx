@@ -1,7 +1,15 @@
 ---
 title: "Get user contents"
 openapi: "GET /stats/user_contents"
+deprecated: true
 ---
+
+<Warning>
+  **Deprecated.** This is one of the old Home stats endpoints. It still works, but new
+  integrations should use the faster endpoints. Use [Posting report](/api-reference/endpoint/content/posting-report) (`GET /posts`) for who posted and [Post series](/api-reference/endpoint/content/post-series) (`GET /content/post_series`) for a post's daily numbers.
+  Responses carry `Deprecation` and `Link` headers. See [deprecations](/api-reference/changelog#deprecations).
+</Warning>
+
 
 Retrieves all user content creation data within a specified date range.
 

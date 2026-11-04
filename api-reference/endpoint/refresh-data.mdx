@@ -1,7 +1,15 @@
 ---
 title: "Refresh data"
 openapi: 'POST /stats/refresh_data'
+deprecated: true
 ---
+
+<Warning>
+  **Deprecated.** This is one of the old Home stats endpoints. It still works, but new
+  integrations should use the faster endpoints. No replacement needed. The new endpoints read live data, so there is nothing to refresh.
+  Responses carry `Deprecation` and `Link` headers. See [deprecations](/api-reference/changelog#deprecations).
+</Warning>
+
 
 Refreshes and re-syncs all creator social accounts data. This endpoint triggers a background job to update content snapshots and synchronize creator data across all connected platforms.
 

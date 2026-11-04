@@ -1,7 +1,15 @@
 ---
 title: "Get snapshots"
 openapi: 'GET /stats/snapshots'
+deprecated: true
 ---
+
+<Warning>
+  **Deprecated.** This is one of the old Home stats endpoints. It still works, but new
+  integrations should use the faster endpoints. Use [Content series](/api-reference/endpoint/content/series) (`GET /content/series`).
+  Responses carry `Deprecation` and `Link` headers. See [deprecations](/api-reference/changelog#deprecations).
+</Warning>
+
 
 Retrieves time-series data for content engagement metrics within a specified date range.
 

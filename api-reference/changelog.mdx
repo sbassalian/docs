@@ -1,0 +1,53 @@
+---
+title: "Changelog and deprecations"
+description: "What changed in the Growi API, and which endpoints to move off."
+---
+
+## Deprecations
+
+The old Home stats endpoints (`/stats/*` below) are deprecated. They keep working,
+and no removal date is set. When one is, we'll email every organization that still
+calls them and add a `Sunset` header first.
+
+Responses from a deprecated endpoint carry:
+
+| Header | Meaning |
+| --- | --- |
+| `Deprecation` | The endpoint is deprecated |
+| `Link` | The replacement's docs, with `rel="successor-version"` |
+| `Sunset` | The date it stops working. Only sent once a removal date is set |
+
+| Deprecated | Use instead |
+| --- | --- |
+| [`GET /stats/snapshots`](/api-reference/endpoint/get-snapshots) | [`GET /content/series`](/api-reference/endpoint/content/series) |
+| [`GET /stats/content_24h_data`](/api-reference/endpoint/get-content-24h-data), [`GET /stats/creators_24h`](/api-reference/endpoint/get-creators-24h) | [`GET /content/summary`](/api-reference/endpoint/content/summary) |
+| [`GET /stats/top_creators_by_engagement`](/api-reference/endpoint/get-top-creators), [`GET /stats/top_creators_by_posts`](/api-reference/endpoint/get-top-creators-by-posts) | [`GET /content/top_creators`](/api-reference/endpoint/content/top-creators) |
+| [`GET /stats/top_connected_accounts_by_engagement`](/api-reference/endpoint/get-top-connected-accounts-by-engagement) | [`GET /content/top_accounts`](/api-reference/endpoint/content/top-accounts) |
+| [`GET /stats/top_posts_by_views`](/api-reference/endpoint/get-top-posts-by-views) | [`GET /content/top_posts`](/api-reference/endpoint/content/top-posts) |
+| [`GET /stats/content_platform_composition`](/api-reference/endpoint/get-content-platform-composition) | [`GET /content/top_platforms`](/api-reference/endpoint/content/top-platforms) |
+| [`GET /stats/user_contents`](/api-reference/endpoint/get-user-contents) | [`GET /posts`](/api-reference/endpoint/content/posting-report) and [`GET /content/post_series`](/api-reference/endpoint/content/post-series) |
+| [`GET /stats/filters`](/api-reference/endpoint/get-filters) | [`GET /content/filters`](/api-reference/endpoint/content/filters) |
+| [`GET /stats/tik_tok_shop_gmv_24h`](/api-reference/endpoint/get-tik-tok-shop-gmv-24h) | [`GET /tik_tok_shop/affiliate/summary`](/api-reference/endpoint/tik-tok-shop/affiliate-summary) and [`GET /tik_tok_shop/summary/weekly`](/api-reference/endpoint/tik-tok-shop/summary-weekly) |
+| [`GET /stats/tik_tok_shop_products`](/api-reference/endpoint/get-tik-tok-shop-products) | [`GET /tik_tok_shop/products`](/api-reference/endpoint/get-tik-tok-shop-store-products) |
+| [`GET /stats/top_creators_by_gmv`](/api-reference/endpoint/get-top-creators-by-gmv), [`GET /stats/top_earning_creators`](/api-reference/endpoint/get-top-earning-creators) | [`GET /stores/overview`](/api-reference/endpoint/stores/overview) and [`GET /shopify/stats`](/api-reference/endpoint/shopify/stats) |
+| [`GET /stats/payouts_24h`](/api-reference/endpoint/get-payouts-24h), [`GET /stats/manual_campaign_progress`](/api-reference/endpoint/get-manual-campaign-progress) | [`GET /payouts/totals`](/api-reference/endpoint/payouts/payout-totals) |
+| [`POST /stats/refresh_data`](/api-reference/endpoint/refresh-data) | Nothing. The new endpoints read live data |
+
+`/stats/creator_payouts`, `/stats/mark_credit_payout`, `/stats/transactions` and the
+ambassador endpoints aren't deprecated.
+
+## November 2026
+
+<Update label="November 2026">
+  **Coming soon**
+  - Content analytics: `/content/*` endpoints for the numbers on your Home page.
+  - Sales and stores: `GET /stores/overview`, Shopify stats and store creators, and iOS and Android app analytics.
+  - Payouts: `GET /payouts`, `GET /payouts/totals` and `GET /payouts/{uuid}`, the same list as Finance → Payouts.
+  - Meta ads performance: overview, over time, by creator and by creative.
+
+  **Changed**
+  - The old Home stats endpoints are deprecated. See the table above.
+  - The API reference is grouped by product area, and the old stats endpoints moved to **Deprecated**.
+  - `GET /posts` (posting report) is documented.
+  - `GET /stats/creator_payouts`, `POST /stats/mark_credit_payout` and `GET /stats/filters` now show their parameters and responses.
+</Update>

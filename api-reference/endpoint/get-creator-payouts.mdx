@@ -9,7 +9,7 @@ deprecated: true
   integrations should use [List payouts](/api-reference/endpoint/payouts/list-payouts)
   (`GET /payouts`), the same list as Finance → Payouts.
   Responses carry `Deprecation` and `Link` headers.
-  It takes `MM/DD/YYYY` dates; the new endpoints take ISO 8601 (`YYYY-MM-DD`).
+  It takes `YYYY-MM-DD` or `MM/DD/YYYY` dates.
   See [deprecations](/api-reference/changelog#deprecations).
 </Warning>
 
@@ -24,8 +24,8 @@ Returns a paginated list of creator payouts for the authenticated organization. 
 
 | Parameter        | Type                | Description                                                                               | Required |
 | ---------------- | ------------------- | ----------------------------------------------------------------------------------------- | -------- |
-| `start_date`     | String (MM/DD/YYYY) | Earliest paid date. Only applied with `invoice_status=paid`                               | No       |
-| `end_date`       | String (MM/DD/YYYY) | Latest paid date. Only applied with `invoice_status=paid`                                 | No       |
+| `start_date`     | String (YYYY-MM-DD or MM/DD/YYYY) | Returns payouts whose cycle ends on or after this date. With `invoice_status=paid`, the earliest paid date instead. See [Date filtering](#date-filtering) | No       |
+| `end_date`       | String (YYYY-MM-DD or MM/DD/YYYY) | Returns payouts whose cycle starts on or before this date. With `invoice_status=paid`, the latest paid date instead | No       |
 | `invoice_status` | String              | One of `all`, `due`, `in_progress`, `paid`, `open`, `canceled`, `completed`               | No       |
 | `credits_only`   | Boolean             | When `true`, only returns credit-based payouts                                            | No       |
 | `campaign_id`    | Integer / CSV / Array | Filter by campaign (single ID, comma-separated list, or array)                          | No       |
@@ -35,10 +35,21 @@ Returns a paginated list of creator payouts for the authenticated organization. 
 | `page`           | Integer             | Page number for pagination. Defaults to 1.                                                | No       |
 | `per_page`       | Integer             | Results per page. Defaults to 4, maximum 40. (`limit` is accepted as an alias.)           | No       |
 
+## Date filtering
+
+`start_date` and `end_date` filter by the payout cycle: a payout is returned when its
+cycle, from `since_date` (cycle start) to `deal_date` (cycle end), overlaps the window.
+A monthly payout for October 1 to October 31 is returned for
+`start_date=2026-10-27&end_date=2026-11-03`, and so is the November 1 to November 30 one.
+You can send one bound on its own. A custom payout that isn't tied to a campaign cycle
+is matched on the day it was created.
+
+With `invoice_status=paid`, the two dates filter by the day the payout was paid instead.
+
 ## Request example
 
 ```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?invoice_status=paid&start_date=03/01/2026&end_date=05/31/2026&credits_only=true&per_page=20" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?start_date=2026-03-01&end_date=2026-05-31&credits_only=true&per_page=20" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
@@ -90,8 +101,8 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?invoice_st
 | `data[].creator_avatar_url`          | String          | URL to the creator's avatar image                                                                                                                                   |
 | `data[].creator_id`                  | Integer         | Unique identifier for the creator                                                                                                                                   |
 | `data[].amount`                      | String          | Cash amount, formatted with currency                                                                                                                                |
-| `data[].deal_date`                   | String          | Billing cycle end / due date (MM/DD/YYYY)                                                                                                                           |
-| `data[].since_date`                  | String          | Start date of the payout period (MM/DD/YYYY)                                                                                                                        |
+| `data[].deal_date`                   | String          | Payout cycle end / due date (MM/DD/YYYY)                                                                                                                            |
+| `data[].since_date`                  | String          | Payout cycle start (MM/DD/YYYY)                                                                                                                                     |
 | `data[].campaign_category`           | String          | Category of the campaign                                                                                                                                            |
 | `data[].campaign_name`               | String          | Name of the associated campaign                                                                                                                                     |
 | `data[].views`                       | String          | View status or completion status                                                                                                                                    |
@@ -120,7 +131,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?invoice_st
 <RequestExample>
 
 ```bash cURL
-curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?invoice_status=paid&start_date=03/01/2026&end_date=05/31/2026&credits_only=true&per_page=20" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/creator_payouts?start_date=2026-03-01&end_date=2026-05-31&credits_only=true&per_page=20" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```

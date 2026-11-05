@@ -41,6 +41,12 @@ aren't deprecated.
 
 ## November 2026
 
+<Update label="November 2026: creator payouts dates and ambassador sales">
+  **Changed**
+  - [`GET /stats/creator_payouts`](/api-reference/endpoint/get-creator-payouts): `start_date` and `end_date` now filter by payout cycle, returning payouts whose cycle overlaps the window. They used to be ignored unless `invoice_status=paid`, which still filters by paid date. Both `YYYY-MM-DD` and `MM/DD/YYYY` work.
+  - [`GET /stats/query_ambassador_sales`](/api-reference/endpoint/get-ambassador-sales) reads the same ambassador program sales as `GET /affiliate_sales?campaign_scope=ambassador`, takes `YYYY-MM-DD` or `MM/DD/YYYY` dates, and adds `ambassador.id`, `currency` and `platform`. `order.id` is now the store's order id.
+</Update>
+
 <Update label="November 2026: spikes and breakouts">
   **New**
   - [Spike days](/api-reference/endpoint/content/spikes) and [what drove a day](/api-reference/endpoint/content/day-breakdown): days that jumped above normal and the posts behind them.

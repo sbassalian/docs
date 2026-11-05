@@ -2201,7 +2201,7 @@
     },
     "/stats/query_ambassador_sales": {
       "get": {
-        "description": "Retrieves detailed ambassador sales data including order information, commission amounts, and program details within a specified date range",
+        "description": "Ambassador program sales in a date range (the same sales as GET /affiliate_sales?campaign_scope=ambassador), with order, commission and program details. Sales from regular campaigns are not included",
         "parameters": [
           {
             "name": "start_date",
@@ -2213,7 +2213,7 @@
               "format": "date",
               "default": "09/01/2025"
             },
-            "description": "Start date in MM/DD/YYYY format"
+            "description": "Start date, YYYY-MM-DD or MM/DD/YYYY. Filters on when the sale happened"
           },
           {
             "name": "end_date",
@@ -2225,7 +2225,7 @@
               "format": "date",
               "default": "09/30/2025"
             },
-            "description": "End date in MM/DD/YYYY format"
+            "description": "End date (inclusive), YYYY-MM-DD or MM/DD/YYYY"
           },
           {
             "name": "page",
@@ -2298,7 +2298,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Filter by a Shopify order ID"
+            "description": "Filter by the store's order ID"
           }
         ],
         "responses": {
@@ -2322,6 +2322,10 @@
                           "ambassador": {
                             "type": "object",
                             "properties": {
+                              "id": {
+                                "type": "integer",
+                                "description": "Growi user id of the ambassador"
+                              },
                               "name": {
                                 "type": "string",
                                 "example": "Amanda Paradis",
@@ -2363,9 +2367,9 @@
                             "type": "object",
                             "properties": {
                               "id": {
-                                "type": "integer",
-                                "example": 1024995,
-                                "description": "Unique identifier for the order"
+                                "type": "string",
+                                "example": "6123456789012",
+                                "description": "The store's order id"
                               },
                               "total": {
                                 "type": "string",
@@ -2377,12 +2381,12 @@
                                 "example": "$276.50",
                                 "description": "Order subtotal"
                               },
-                              "log": {
+                              "logs": {
                                 "type": "array",
                                 "items": {
                                   "type": "object"
                                 },
-                                "description": "Order activity log"
+                                "description": "Order activity logs"
                               }
                             }
                           },
@@ -2407,7 +2411,7 @@
                               "amount": {
                                 "type": "number",
                                 "example": 8.75,
-                                "description": "Commission amount"
+                                "description": "Commission after refunds"
                               },
                               "formatted": {
                                 "type": "string",
@@ -2417,7 +2421,7 @@
                               "original_amount": {
                                 "type": "number",
                                 "example": 8.75,
-                                "description": "Original commission amount"
+                                "description": "Commission before refunds"
                               },
                               "original_formatted": {
                                 "type": "string",
@@ -2427,7 +2431,7 @@
                               "override": {
                                 "type": "number",
                                 "example": 0.0,
-                                "description": "Override amount"
+                                "description": "Always 0. Kept for compatibility"
                               },
                               "has_override": {
                                 "type": "boolean",
@@ -2447,9 +2451,22 @@
                             "description": "Number of days until commission is due"
                           },
                           "invoice": {
-                            "type": "string",
+                            "type": "object",
                             "nullable": true,
-                            "description": "Associated invoice"
+                            "description": "The invoice that paid this commission",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "paid_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "nullable": true
+                              }
+                            }
                           },
                           "status": {
                             "type": "string",
@@ -2477,6 +2494,16 @@
                             "type": "boolean",
                             "example": false,
                             "description": "Whether this is a self-referral"
+                          },
+                          "currency": {
+                            "type": "string",
+                            "example": "usd",
+                            "description": "Currency of the sale"
+                          },
+                          "platform": {
+                            "type": "string",
+                            "example": "shopify",
+                            "description": "Where the sale happened: shopify, website, ios or android"
                           }
                         }
                       }
@@ -8864,8 +8891,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Earliest paid date (MM/DD/YYYY). Only applied with invoice_status=paid",
-            "example": "03/01/2026"
+            "description": "Returns payouts whose cycle (since_date to deal_date) ends on or after this date. YYYY-MM-DD or MM/DD/YYYY. With invoice_status=paid, the earliest paid date instead",
+            "example": "2026-10-27"
           },
           {
             "name": "end_date",
@@ -8874,8 +8901,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Latest paid date (MM/DD/YYYY). Only applied with invoice_status=paid",
-            "example": "05/31/2026"
+            "description": "Returns payouts whose cycle (since_date to deal_date) starts on or before this date. YYYY-MM-DD or MM/DD/YYYY. With invoice_status=paid, the latest paid date instead",
+            "example": "2026-11-03"
           },
           {
             "name": "invoice_status",

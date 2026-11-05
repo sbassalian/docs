@@ -5,18 +5,23 @@ openapi: "GET /stats/query_ambassador_sales"
 
 Retrieves detailed ambassador sales data including order information, commission amounts, and program details within a specified date range. This endpoint supports filtering by payment status, creator email, and pagination.
 
+It returns the sales of your ambassador programs: the same sales as
+[`GET /affiliate_sales?campaign_scope=ambassador`](/api-reference/endpoint/list-affiliate-sales),
+in the shape below. Sales from regular campaigns are not included; list those with
+`GET /affiliate_sales`. The date range filters on when the sale happened (`occurred_at`).
+
 ## Request parameters
 
 | Parameter        | Type    | Description                                                           | Required |
 | ---------------- | ------- | --------------------------------------------------------------------- | -------- |
-| `start_date`     | String  | Start date in MM/DD/YYYY format                                       | Yes      |
-| `end_date`       | String  | End date in MM/DD/YYYY format                                         | Yes      |
+| `start_date`     | String  | Start date, `YYYY-MM-DD` or `MM/DD/YYYY`                              | Yes      |
+| `end_date`       | String  | End date, `YYYY-MM-DD` or `MM/DD/YYYY` (inclusive)                    | Yes      |
 | `page`           | Integer | Page number for pagination. Default is 1.                             | No       |
 | `per_page`       | Integer | Number of results per page. Default is 20. Maximum is 100.            | No       |
 | `status`         | String  | Filter by status: `paid`, `due`, `pending`, `canceled`, or `refunded` | No       |
 | `creator_email`  | String  | Filter results by the creator’s (ambassador’s) email address          | No       |
 | `affiliate_tag`  | String  | Filter by affiliate tag                                               | No       |
-| `order_id`       | String  | Filter by a Shopify order id                                          | No       |
+| `order_id`       | String  | Filter by the store's order id                                        | No       |
 
 ## Request example
 
@@ -45,7 +50,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?sta
         "affiliate_status": "active"
       },
       "order": {
-        "id": 0,
+        "id": "6123456789012",
         "total": "$1.70",
         "subtotal": "$1.50",
         "logs": []
@@ -68,7 +73,9 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?sta
       "status": "pending",
       "refunded": false,
       "disable_attribution": false,
-      "self_referral": false
+      "self_referral": false,
+      "currency": "usd",
+      "platform": "shopify"
     }
   ],
   "meta": {
@@ -98,6 +105,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?sta
 | `data`                                  | Array   | Array of ambassador sale objects                                       |
 | `data[].id`                             | Integer | Unique identifier for the sale record                                  |
 | `data[].ambassador`                     | Object  | Ambassador information                                                 |
+| `data[].ambassador.id`                  | Integer | Growi user id of the ambassador                                        |
 | `data[].ambassador.name`                | String  | Display name of the ambassador                                         |
 | `data[].ambassador.email`               | String  | Email address of the ambassador                                        |
 | `data[].ambassador.avatar_url`          | String  | URL to the ambassador's avatar image (null if not available)           |
@@ -106,7 +114,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?sta
 | `data[].program.name`                   | String  | Name of the ambassador program                                         |
 | `data[].program.affiliate_status`       | String  | Status of the affiliate (e.g., "active")                               |
 | `data[].order`                          | Object  | Order details                                                          |
-| `data[].order.id`                       | Integer | Unique identifier for the order                                        |
+| `data[].order.id`                       | String  | The store's order id                                                   |
 | `data[].order.total`                    | String  | Total order amount in formatted currency                               |
 | `data[].order.subtotal`                 | String  | Order subtotal in formatted currency                                   |
 | `data[].order.logs`                     | Array   | Order activity logs                                                    |
@@ -114,19 +122,21 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?sta
 | `data[].sale_amount.formatted`          | String  | Formatted sale amount with currency symbol                             |
 | `data[].sale_amount.cents`              | Integer | Sale amount in cents                                                   |
 | `data[].commission`                     | Object  | Commission details                                                     |
-| `data[].commission.amount`              | Number  | Commission amount in dollars                                           |
+| `data[].commission.amount`              | Number  | Commission after refunds, in the sale's currency                       |
 | `data[].commission.formatted`           | String  | Formatted commission amount with currency symbol                       |
-| `data[].commission.original_amount`     | Number  | Original commission amount before any overrides                        |
+| `data[].commission.original_amount`     | Number  | Commission before refunds                                              |
 | `data[].commission.original_formatted`  | String  | Formatted original commission amount                                   |
-| `data[].commission.override`            | Number  | Override amount applied to commission                                  |
+| `data[].commission.override`            | Number  | Always `0`. Kept for compatibility                                     |
 | `data[].commission.has_override`        | Boolean | Whether commission has been manually overridden                        |
 | `data[].occurred_at`                    | String  | ISO 8601 timestamp when the sale occurred                              |
 | `data[].due_in_days`                    | Integer | Number of days until commission payment is due                         |
-| `data[].invoice`                        | String  | Associated invoice (null if none)                                      |
+| `data[].invoice`                        | Object  | The invoice that paid this commission: `id`, `status`, `paid_at`. Null if none |
 | `data[].status`                         | String  | Sale status: `paid`, `due`, `pending`, `canceled`, or `refunded`       |
 | `data[].refunded`                       | Boolean | Whether the sale has been refunded                                     |
 | `data[].disable_attribution`            | Boolean | Whether attribution is disabled for this sale                          |
 | `data[].self_referral`                  | Boolean | Whether this is a self-referral (ambassador purchased from themselves) |
+| `data[].currency`                       | String  | Currency of the sale, for example `usd`                                |
+| `data[].platform`                       | String  | Where the sale happened: `shopify`, `website`, `ios` or `android`      |
 | `meta`                                  | Object  | Pagination metadata                                                    |
 | `meta.row_count`                        | Integer | Total number of records matching the query                             |
 | `meta.page_count`                       | Integer | Total number of pages available                                        |
@@ -137,10 +147,10 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?sta
 | `additional_data.paid_commission`       | Number  | Total commission already paid out                                      |
 | `additional_data.unpaid_commission`     | Number  | Total commission not yet paid                                          |
 | `additional_data.total_orders`          | Integer | Total number of orders                                                 |
-| `additional_data.total_quantity`        | Integer | Total quantity of items sold                                           |
+| `additional_data.total_quantity`        | Integer | Total units sold                                                       |
 | `additional_data.total_refunded_amount` | Number  | Total amount refunded                                                  |
-| `additional_data.total_returned_amount` | Number  | Total amount returned                                                  |
-| `additional_data.total_posts`           | Integer | Total number of posts associated with sales                            |
+| `additional_data.total_returned_amount` | Number  | Always `0`. Kept for compatibility                                     |
+| `additional_data.total_posts`           | Integer | Always `0`. Kept for compatibility                                     |
 
 ## Status filter options
 
@@ -194,7 +204,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?sta
         "affiliate_status": "active"
       },
       "order": {
-        "id": 0,
+        "id": "6123456789012",
         "total": "$1.70",
         "subtotal": "$1.50",
         "logs": []
@@ -217,7 +227,9 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/query_ambassador_sales?sta
       "status": "pending",
       "refunded": false,
       "disable_attribution": false,
-      "self_referral": false
+      "self_referral": false,
+      "currency": "usd",
+      "platform": "shopify"
     }
   ],
   "meta": {

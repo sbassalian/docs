@@ -36,6 +36,7 @@ You can attribute the sale using one of two methods:
 | `sale_type`            | String  | Type of sale: `one_time` or `subscription`. Default is `one_time`.                    | No       |
 | `commission`           | Integer | Override commission amount in **cents**. If omitted, calculated from campaign rules for the given platform.  | No       |
 | `sub_id`               | String  | Custom source/sub-ID tag (e.g., `instagram`, `youtube`) for platform-level tracking within a single campaign. Returned in sale responses and filterable on the list endpoint. For custom-website traffic, put the same value on the landing URL as `utm_source` (same campaign + tag, no extra campaigns). | No       |
+| `meta_ad_id`           | String  | Meta ad id (`{{ad.id}}` on your Meta ad landing URL). Used only when `campaign_affiliate_id` is the creator's Meta ad tag (starts with `meta_`), so the sale shows under that ad in the creator's ads tab. If omitted and the creator has exactly one Meta ad, that ad is used. | No       |
 
 ## Request example
 

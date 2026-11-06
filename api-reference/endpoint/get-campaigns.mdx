@@ -3,7 +3,7 @@ title: "Get campaigns"
 openapi: "GET /organizations/campaigns"
 ---
 
-Retrieves a list of all available campaigns for your organization. This endpoint returns basic campaign information including campaign IDs, names, types, and statuses that can be used for filtering and organization purposes.
+Retrieves every campaign and contract for your organization, with the deal details you need to show them outside Growi: image, brand, signup link, dates, payment details and tiers. For TikTok Shop retainer deals, `tiers` lists the pay for each GMV level.
 
 ## Request parameters
 
@@ -29,21 +29,107 @@ curl -X GET "https://api.growi.io/api/public/v1/organizations/campaigns" \
   "campaigns": [
     {
       "id": 16425,
-      "name": "Campaign Name",
+      "name": "Glow Labs Retainer",
       "campaign_type": "Campaign",
-      "status": "Active"
+      "status": "Active",
+      "description": "<p>Post 5 videos about the Glow Labs serum.</p>",
+      "image_url": "https://imagedelivery.net/example/glow-labs-logo/public",
+      "brand": {
+        "id": 18430,
+        "name": "Glow Labs",
+        "logo_url": "https://imagedelivery.net/example/glow-labs-logo/public"
+      },
+      "signup_url": "https://growi.io/o/glow-labs/c/16425",
+      "start_date": "2026-09-17",
+      "end_date": "2026-10-31",
+      "platforms": ["tik_tok_shop"],
+      "currency": "usd",
+      "videos_per_cycle": 5,
+      "cycle_duration_days": 0,
+      "hide_payout_on_signup": false,
+      "payment_details": [
+        {
+          "title": "Retainer Tiers",
+          "type": "entry",
+          "items": [
+            { "amount": "$250.00", "description": "If you have $10,000.00 GMV in the last 30 days" },
+            { "amount": "$450.00", "description": "If you have $30,000.00 GMV in the last 30 days" }
+          ]
+        }
+      ],
+      "tiers": [
+        {
+          "type": "standard",
+          "level": "bronze",
+          "qualification_criteria": "gmv",
+          "threshold": 0.0,
+          "base_payment": 0.0,
+          "commissions": [],
+          "performance_payment": null
+        },
+        {
+          "type": "entry",
+          "level": "silver",
+          "qualification_criteria": "gmv",
+          "threshold": 10000.0,
+          "base_payment": 250.0,
+          "commissions": [],
+          "performance_payment": null
+        },
+        {
+          "type": "entry",
+          "level": "gold",
+          "qualification_criteria": "gmv",
+          "threshold": 30000.0,
+          "base_payment": 450.0,
+          "commissions": [],
+          "performance_payment": null
+        }
+      ]
     },
     {
       "id": 16426,
-      "name": "Summer Collection 2024",
-      "campaign_type": "Contract",
-      "status": "Paused"
-    },
-    {
-      "id": 16427,
-      "name": "Brand Ambassador Program",
-      "campaign_type": "Ambassador Program",
-      "status": "Active"
+      "name": "Fresh Co Video Deal",
+      "campaign_type": "Campaign",
+      "status": "Active",
+      "description": null,
+      "image_url": "https://imagedelivery.net/example/fresh-co-share/public",
+      "brand": {
+        "id": 11297,
+        "name": "Fresh Co",
+        "logo_url": "https://imagedelivery.net/example/fresh-co-logo/public"
+      },
+      "signup_url": "https://growi.io/o/fresh-co/c/16426",
+      "start_date": "2026-10-01",
+      "end_date": null,
+      "platforms": ["tik_tok_shop"],
+      "currency": "usd",
+      "videos_per_cycle": 10,
+      "cycle_duration_days": 30,
+      "hide_payout_on_signup": false,
+      "payment_details": [
+        {
+          "title": "Payment details",
+          "type": "standard",
+          "items": [
+            {
+              "amount": "$500.00 + 25.0% (TikTok Shop)",
+              "description": "Paid once deliverables are met. Commission on TikTok Shop sales (paid through TikTok)"
+            }
+          ]
+        }
+      ],
+      "tiers": [
+        {
+          "type": "standard",
+          "level": "bronze",
+          "qualification_criteria": "no_criteria",
+          "threshold": 0.0,
+          "base_payment": 500.0,
+          "commissions": [{ "platform": "tik_tok_shop", "type": "percentage", "value": 25.0 }],
+          "performance_payment": null
+        }
+      ]
     }
   ]
 }
@@ -51,21 +137,44 @@ curl -X GET "https://api.growi.io/api/public/v1/organizations/campaigns" \
 
 ## Response fields
 
-| Field                      | Type    | Description                                    |
-| -------------------------- | ------- | ---------------------------------------------- |
-| `success`                  | Boolean | Indicates whether the request was successful   |
-| `campaigns`                | Array   | Array of campaign objects                      |
-| `campaigns[].id`           | Integer | Unique identifier for the campaign             |
-| `campaigns[].name`         | String  | Display name of the campaign                   |
-| `campaigns[].campaign_type`| String  | Type of campaign (Campaign, Contract, Ambassador Program) |
-| `campaigns[].status`       | String  | Current status of the campaign (Active, Paused, Canceled, Completed, Archived, Void) |
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `success` | Boolean | Indicates whether the request was successful |
+| `campaigns` | Array | Array of campaign objects |
+| `campaigns[].id` | Integer | Unique identifier for the campaign |
+| `campaigns[].name` | String | Display name of the campaign |
+| `campaigns[].campaign_type` | String | Type of campaign (Campaign, Contract, Ambassador Program) |
+| `campaigns[].status` | String | Current status of the campaign (Active, Paused, Canceled, Completed, Archived, Void) |
+| `campaigns[].description` | String or null | Campaign description, as HTML |
+| `campaigns[].image_url` | String | Campaign share image if the brand uploaded one, otherwise the brand logo |
+| `campaigns[].brand` | Object | `id`, `name` and `logo_url` of the brand that owns the campaign |
+| `campaigns[].signup_url` | String or null | Page where creators apply. Null for contracts |
+| `campaigns[].start_date` | String or null | Start date (YYYY-MM-DD) |
+| `campaigns[].end_date` | String or null | End date (YYYY-MM-DD) |
+| `campaigns[].platforms` | Array | Sales platforms the campaign tracks, such as `tik_tok_shop`, `shopify` or `amazon` |
+| `campaigns[].currency` | String | Currency of every amount in `payment_details` and `tiers`, such as `usd` |
+| `campaigns[].videos_per_cycle` | Integer | Videos a creator must post per cycle |
+| `campaigns[].cycle_duration_days` | Integer | Cycle length in days. `0` means the deal does not repeat |
+| `campaigns[].hide_payout_on_signup` | Boolean | True when the brand hides pay on its own Growi signup page. You may want to hide it too |
+| `campaigns[].payment_details` | Array | Pay exactly as creators see it on the Growi signup page, one group per section |
+| `campaigns[].payment_details[].title` | String | Section title, such as "Payment details" or "Retainer Tiers" |
+| `campaigns[].payment_details[].type` | String | `standard` (base pay), `entry` (retainer paid by GMV level), `gmv` or `posts` (leaderboard prizes) |
+| `campaigns[].payment_details[].items` | Array | Each item has a display `amount` and a `description` |
+| `campaigns[].tiers` | Array | Active tiers, lowest level first. Money values are in currency units, not cents |
+| `campaigns[].tiers[].type` | String | `standard`, or `entry` for retainer levels unlocked by the creator's GMV |
+| `campaigns[].tiers[].level` | String | Tier name: bronze, silver, gold, platinum, diamond, elite, and so on |
+| `campaigns[].tiers[].qualification_criteria` | String | Metric that unlocks the level, such as `gmv` |
+| `campaigns[].tiers[].threshold` | Number | Amount of that metric needed to reach the level (GMV in currency units, posts as a count) |
+| `campaigns[].tiers[].base_payment` | Number | Fixed pay at this level |
+| `campaigns[].tiers[].commissions` | Array | Commission per sales platform: `platform`, `type` (`percentage` or `fixed`) and `value` |
+| `campaigns[].tiers[].performance_payment` | Object or null | Pay per views or likes: `amount` paid per `per` `metric` |
 
 ## Use cases
 
+- **Deal listings**: Show your pay-per-video and TikTok Shop deals on your own site or app, linking creators to `signup_url`
 - **Campaign Filtering**: Use campaign IDs to filter data in other API endpoints
 - **Campaign Management**: Retrieve available campaigns for management interfaces
-- **Organization Setup**: Get campaign information for initial application setup
-- **Reporting**: Include campaign names and statuses in reports and analytics dashboards
+- **Reporting**: Include campaign names, statuses and rates in reports and analytics dashboards
 - **Status Monitoring**: Track campaign statuses across your organization
 
 ## Error responses
@@ -101,21 +210,107 @@ curl -X GET "https://api.growi.io/api/public/v1/organizations/campaigns" \
   "campaigns": [
     {
       "id": 16425,
-      "name": "Campaign Name",
+      "name": "Glow Labs Retainer",
       "campaign_type": "Campaign",
-      "status": "Active"
+      "status": "Active",
+      "description": "<p>Post 5 videos about the Glow Labs serum.</p>",
+      "image_url": "https://imagedelivery.net/example/glow-labs-logo/public",
+      "brand": {
+        "id": 18430,
+        "name": "Glow Labs",
+        "logo_url": "https://imagedelivery.net/example/glow-labs-logo/public"
+      },
+      "signup_url": "https://growi.io/o/glow-labs/c/16425",
+      "start_date": "2026-09-17",
+      "end_date": "2026-10-31",
+      "platforms": ["tik_tok_shop"],
+      "currency": "usd",
+      "videos_per_cycle": 5,
+      "cycle_duration_days": 0,
+      "hide_payout_on_signup": false,
+      "payment_details": [
+        {
+          "title": "Retainer Tiers",
+          "type": "entry",
+          "items": [
+            { "amount": "$250.00", "description": "If you have $10,000.00 GMV in the last 30 days" },
+            { "amount": "$450.00", "description": "If you have $30,000.00 GMV in the last 30 days" }
+          ]
+        }
+      ],
+      "tiers": [
+        {
+          "type": "standard",
+          "level": "bronze",
+          "qualification_criteria": "gmv",
+          "threshold": 0.0,
+          "base_payment": 0.0,
+          "commissions": [],
+          "performance_payment": null
+        },
+        {
+          "type": "entry",
+          "level": "silver",
+          "qualification_criteria": "gmv",
+          "threshold": 10000.0,
+          "base_payment": 250.0,
+          "commissions": [],
+          "performance_payment": null
+        },
+        {
+          "type": "entry",
+          "level": "gold",
+          "qualification_criteria": "gmv",
+          "threshold": 30000.0,
+          "base_payment": 450.0,
+          "commissions": [],
+          "performance_payment": null
+        }
+      ]
     },
     {
       "id": 16426,
-      "name": "Summer Collection 2024",
-      "campaign_type": "Contract",
-      "status": "Paused"
-    },
-    {
-      "id": 16427,
-      "name": "Brand Ambassador Program",
-      "campaign_type": "Ambassador Program",
-      "status": "Active"
+      "name": "Fresh Co Video Deal",
+      "campaign_type": "Campaign",
+      "status": "Active",
+      "description": null,
+      "image_url": "https://imagedelivery.net/example/fresh-co-share/public",
+      "brand": {
+        "id": 11297,
+        "name": "Fresh Co",
+        "logo_url": "https://imagedelivery.net/example/fresh-co-logo/public"
+      },
+      "signup_url": "https://growi.io/o/fresh-co/c/16426",
+      "start_date": "2026-10-01",
+      "end_date": null,
+      "platforms": ["tik_tok_shop"],
+      "currency": "usd",
+      "videos_per_cycle": 10,
+      "cycle_duration_days": 30,
+      "hide_payout_on_signup": false,
+      "payment_details": [
+        {
+          "title": "Payment details",
+          "type": "standard",
+          "items": [
+            {
+              "amount": "$500.00 + 25.0% (TikTok Shop)",
+              "description": "Paid once deliverables are met. Commission on TikTok Shop sales (paid through TikTok)"
+            }
+          ]
+        }
+      ],
+      "tiers": [
+        {
+          "type": "standard",
+          "level": "bronze",
+          "qualification_criteria": "no_criteria",
+          "threshold": 0.0,
+          "base_payment": 500.0,
+          "commissions": [{ "platform": "tik_tok_shop", "type": "percentage", "value": 25.0 }],
+          "performance_payment": null
+        }
+      ]
     }
   ]
 }

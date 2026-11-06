@@ -126,6 +126,14 @@ A repeat submission returns `200` with the same shape and `"created": false`.
 { "error": "email is required" }
 ```
 
+**422: blocked email**
+
+When the applicant's email, or its domain, is on your organization's Blocked emails list (Applications > Application settings > Blocked emails), no application is created and no creator account is made. Gmail dots and `+tags` count as the same address.
+
+```json
+{ "error": "We couldn't submit your application right now." }
+```
+
 ## Use cases
 
 - **Host your own signup form**: keep the application experience on your domain (with your pixels and analytics firing natively) while applicants flow straight into Growi for review.

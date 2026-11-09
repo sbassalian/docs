@@ -12,4 +12,11 @@ openapi: "GET /payouts/{uuid}"
   being recalculated for your whole organization, every row comes back `updating`
   with null amounts. Call again in a few minutes.
 </Note>
+<Note>
+  `amount_cents` is what the payout earns as currently calculated. For a paid
+  payout, read `paid_amount_cents` to get what was actually paid, together with
+  `paid_at`. The two can differ when the brand set a custom amount or the payout
+  was recalculated after payment. `paid_amount_cents` and `custom_amount` are
+  returned even while a payout is `updating`.
+</Note>
 

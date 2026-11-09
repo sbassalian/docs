@@ -15876,9 +15876,19 @@
             "name": "cycle",
             "in": "query",
             "required": false,
-            "description": "Only this payout cycle number (1 = first).",
+            "description": "Only this payout cycle number (1 = first; the rows' cycle_number).",
             "schema": {
               "type": "integer"
+            }
+          },
+          {
+            "name": "updated_since",
+            "in": "query",
+            "required": false,
+            "description": "Only payouts that changed at or after this ISO 8601 date-time (a date, or no offset, reads as UTC): the payout itself (status, amount, invoice), its calculated values, or its invoice. For incremental polling: pass the time you started your previous poll.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
             }
           },
           {
@@ -16019,11 +16029,103 @@
                           "amount": {
                             "type": "string",
                             "nullable": true,
-                            "description": "Formatted, e.g. $123.00"
+                            "description": "Formatted amount_cents, e.g. $123.00"
                           },
                           "amount_cents": {
                             "type": "integer",
-                            "nullable": true
+                            "nullable": true,
+                            "description": "What the payout earns as currently calculated (cents). On a paid payout this can differ from what was paid (a custom amount, or a recalculation after payment): read paid_amount_cents for that"
+                          },
+                          "paid_amount_cents": {
+                            "type": "integer",
+                            "nullable": true,
+                            "description": "What was actually paid for this payout (cents): its own line on its paid invoice, excluding processing fees and the other payouts on the same invoice. null until paid, when paid outside Growi, or once refunded. Live: served even while pending_update is true"
+                          },
+                          "paid_amount": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Formatted paid_amount_cents"
+                          },
+                          "paid_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "nullable": true,
+                            "description": "When the payout was paid (ISO 8601): its own paid date, else its invoice's"
+                          },
+                          "custom_amount": {
+                            "type": "object",
+                            "properties": {
+                              "amount": {
+                                "type": "number",
+                                "description": "Dollars (major units)"
+                              },
+                              "description": {
+                                "type": "string"
+                              }
+                            },
+                            "nullable": true,
+                            "description": "The custom amount the brand set on the payout, less any creator-paid processing fee; null without one or for a credit payout. Live"
+                          },
+                          "custom_amount_cents": {
+                            "type": "integer",
+                            "nullable": true,
+                            "description": "custom_amount in cents"
+                          },
+                          "fixed_amount": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Formatted fixed_amount_cents"
+                          },
+                          "fixed_amount_cents": {
+                            "type": "integer",
+                            "nullable": true,
+                            "description": "The fixed (flat fee) part of amount_cents"
+                          },
+                          "residual_amount": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Formatted residual_amount_cents"
+                          },
+                          "residual_amount_cents": {
+                            "type": "integer",
+                            "nullable": true,
+                            "description": "The residual (views / performance) part of amount_cents"
+                          },
+                          "residual_values": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "integer",
+                                "nullable": true
+                              },
+                              "metric": {
+                                "type": "string",
+                                "nullable": true
+                              }
+                            },
+                            "nullable": true,
+                            "description": "The cycle's residual metric and its value, e.g. { \"value\": 11616, \"metric\": \"Views\" }"
+                          },
+                          "sequence_index": {
+                            "type": "integer",
+                            "description": "The payout's cycle, from 0"
+                          },
+                          "cycle_number": {
+                            "type": "integer",
+                            "description": "sequence_index + 1: the dashboard's \"Cycle N\" and the value the cycle filter takes"
+                          },
+                          "cycle_label": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "e.g. \"October 2026\" for a calendar-month cycle; null otherwise"
+                          },
+                          "contents_delivered_by_platform": {
+                            "type": "object",
+                            "nullable": true,
+                            "additionalProperties": {
+                              "type": "integer"
+                            },
+                            "description": "Contents delivered this cycle per platform, e.g. { \"tik_tok\": 15, \"instagram\": 15 }"
                           },
                           "deal_date": {
                             "type": "string",
@@ -16072,7 +16174,7 @@
                           },
                           "pending_update": {
                             "type": "boolean",
-                            "description": "true while the payout is recalculating: its amount, dates, views and content counts are null until it finishes"
+                            "description": "true while the payout is recalculating: its amount, dates, views, content counts, cycle_label and amount components are null until it finishes"
                           }
                         }
                       }
@@ -16219,9 +16321,19 @@
             "name": "cycle",
             "in": "query",
             "required": false,
-            "description": "Only this payout cycle number (1 = first).",
+            "description": "Only this payout cycle number (1 = first; the rows' cycle_number).",
             "schema": {
               "type": "integer"
+            }
+          },
+          {
+            "name": "updated_since",
+            "in": "query",
+            "required": false,
+            "description": "Only payouts that changed at or after this ISO 8601 date-time (a date, or no offset, reads as UTC): the payout itself (status, amount, invoice), its calculated values, or its invoice. For incremental polling: pass the time you started your previous poll.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
             }
           },
           {
@@ -16403,11 +16515,103 @@
                         "amount": {
                           "type": "string",
                           "nullable": true,
-                          "description": "Formatted, e.g. $123.00"
+                          "description": "Formatted amount_cents, e.g. $123.00"
                         },
                         "amount_cents": {
                           "type": "integer",
-                          "nullable": true
+                          "nullable": true,
+                          "description": "What the payout earns as currently calculated (cents). On a paid payout this can differ from what was paid (a custom amount, or a recalculation after payment): read paid_amount_cents for that"
+                        },
+                        "paid_amount_cents": {
+                          "type": "integer",
+                          "nullable": true,
+                          "description": "What was actually paid for this payout (cents): its own line on its paid invoice, excluding processing fees and the other payouts on the same invoice. null until paid, when paid outside Growi, or once refunded. Live: served even while pending_update is true"
+                        },
+                        "paid_amount": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Formatted paid_amount_cents"
+                        },
+                        "paid_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "nullable": true,
+                          "description": "When the payout was paid (ISO 8601): its own paid date, else its invoice's"
+                        },
+                        "custom_amount": {
+                          "type": "object",
+                          "properties": {
+                            "amount": {
+                              "type": "number",
+                              "description": "Dollars (major units)"
+                            },
+                            "description": {
+                              "type": "string"
+                            }
+                          },
+                          "nullable": true,
+                          "description": "The custom amount the brand set on the payout, less any creator-paid processing fee; null without one or for a credit payout. Live"
+                        },
+                        "custom_amount_cents": {
+                          "type": "integer",
+                          "nullable": true,
+                          "description": "custom_amount in cents"
+                        },
+                        "fixed_amount": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Formatted fixed_amount_cents"
+                        },
+                        "fixed_amount_cents": {
+                          "type": "integer",
+                          "nullable": true,
+                          "description": "The fixed (flat fee) part of amount_cents"
+                        },
+                        "residual_amount": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Formatted residual_amount_cents"
+                        },
+                        "residual_amount_cents": {
+                          "type": "integer",
+                          "nullable": true,
+                          "description": "The residual (views / performance) part of amount_cents"
+                        },
+                        "residual_values": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "integer",
+                              "nullable": true
+                            },
+                            "metric": {
+                              "type": "string",
+                              "nullable": true
+                            }
+                          },
+                          "nullable": true,
+                          "description": "The cycle's residual metric and its value, e.g. { \"value\": 11616, \"metric\": \"Views\" }"
+                        },
+                        "sequence_index": {
+                          "type": "integer",
+                          "description": "The payout's cycle, from 0"
+                        },
+                        "cycle_number": {
+                          "type": "integer",
+                          "description": "sequence_index + 1: the dashboard's \"Cycle N\" and the value the cycle filter takes"
+                        },
+                        "cycle_label": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "e.g. \"October 2026\" for a calendar-month cycle; null otherwise"
+                        },
+                        "contents_delivered_by_platform": {
+                          "type": "object",
+                          "nullable": true,
+                          "additionalProperties": {
+                            "type": "integer"
+                          },
+                          "description": "Contents delivered this cycle per platform, e.g. { \"tik_tok\": 15, \"instagram\": 15 }"
                         },
                         "deal_date": {
                           "type": "string",
@@ -16456,7 +16660,7 @@
                         },
                         "pending_update": {
                           "type": "boolean",
-                          "description": "true while the payout is recalculating: its amount, dates, views and content counts are null until it finishes"
+                          "description": "true while the payout is recalculating: its amount, dates, views, content counts, cycle_label and amount components are null until it finishes"
                         }
                       }
                     },

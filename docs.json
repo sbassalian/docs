@@ -383,45 +383,6 @@
                 ]
               }
             ]
-          },
-          {
-            "group": "Deprecated",
-            "icon": "archive",
-            "pages": [
-              {
-                "group": "Old content stats",
-                "pages": [
-                  "api-reference/endpoint/get-content-24h-data",
-                  "api-reference/endpoint/get-creators-24h",
-                  "api-reference/endpoint/get-snapshots",
-                  "api-reference/endpoint/get-top-posts-by-views",
-                  "api-reference/endpoint/get-top-creators",
-                  "api-reference/endpoint/get-top-creators-by-posts",
-                  "api-reference/endpoint/get-top-connected-accounts-by-engagement",
-                  "api-reference/endpoint/get-content-platform-composition",
-                  "api-reference/endpoint/get-user-contents",
-                  "api-reference/endpoint/get-filters",
-                  "api-reference/endpoint/refresh-data"
-                ]
-              },
-              {
-                "group": "Old sales stats",
-                "pages": [
-                  "api-reference/endpoint/get-top-creators-by-gmv",
-                  "api-reference/endpoint/get-top-earning-creators",
-                  "api-reference/endpoint/get-tik-tok-shop-gmv-24h",
-                  "api-reference/endpoint/get-tik-tok-shop-products"
-                ]
-              },
-              {
-                "group": "Old payout stats",
-                "pages": [
-                  "api-reference/endpoint/get-creator-payouts",
-                  "api-reference/endpoint/get-payouts-24h",
-                  "api-reference/endpoint/get-manual-campaign-progress"
-                ]
-              }
-            ]
           }
         ]
       },

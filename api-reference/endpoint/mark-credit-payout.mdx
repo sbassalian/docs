@@ -18,7 +18,7 @@ Marks a single credit-only creator payout as **paid externally**. Use this after
 
 | Field                 | Type   | Description                                                  | Required |
 | --------------------- | ------ | ------------------------------------------------------------ | -------- |
-| `creator_payout_uuid` | String | The `uuid` of the payout (from `GET /stats/creator_payouts`) | Yes      |
+| `creator_payout_uuid` | String | The `uuid` of the payout (from [List payouts](/api-reference/endpoint/payouts/list-payouts), `GET /payouts`) | Yes      |
 
 ## Validation rules
 
@@ -105,7 +105,7 @@ All errors return a non-2xx response with a JSON body of the form:
 
 ## Typical workflow
 
-1. `GET /stats/creator_payouts?invoice_status=due&credits_only=true` — fetch the list of credit payouts due to your creators.
+1. [`GET /payouts?invoice_status=due`](/api-reference/endpoint/payouts/list-payouts) to fetch the payouts due to your creators. Keep the rows with a `total_credit_amount` above `0`: those are the credit payouts. A row that is `updating` has `null` amounts until it finishes recalculating, so check it again on a later call.
 2. Pay each creator their credits in your own system.
 3. For each paid creator, `POST /stats/mark_credit_payout` with their `creator_payout_uuid` to record the payout in Growi.
 

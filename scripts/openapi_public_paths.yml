@@ -6,7 +6,6 @@
 #   page           the page to generate, without .mdx. Leave it out to update the spec only
 #   title          sidebar and page title (defaults to the backend summary)
 #   description    public description of the endpoint (replaces the backend's)
-#   replaces       deprecated pages this endpoint replaces; the page links them
 #   notes          extra MDX shown under the generated reference
 #   child_brands   true when organization_id picks a child brand (adds the 404)
 #   rate_limit_exempt  true for endpoints outside the rate limits (no 429)
@@ -28,31 +27,26 @@ paths:
     method: get
     page: api-reference/endpoint/content/summary
     title: Content summary
-    replaces: [api-reference/endpoint/get-content-24h-data, api-reference/endpoint/get-creators-24h]
     child_brands: true
   - path: /content/series
     method: get
     page: api-reference/endpoint/content/series
     title: Content series
-    replaces: [api-reference/endpoint/get-snapshots]
     child_brands: true
   - path: /content/top_posts
     method: get
     page: api-reference/endpoint/content/top-posts
     title: Top posts
-    replaces: [api-reference/endpoint/get-top-posts-by-views]
     child_brands: true
   - path: /content/top_creators
     method: get
     page: api-reference/endpoint/content/top-creators
     title: Top creators
-    replaces: [api-reference/endpoint/get-top-creators, api-reference/endpoint/get-top-creators-by-posts]
     child_brands: true
   - path: /content/top_accounts
     method: get
     page: api-reference/endpoint/content/top-accounts
     title: Top accounts
-    replaces: [api-reference/endpoint/get-top-connected-accounts-by-engagement]
     child_brands: true
   - path: /content/top_campaigns
     method: get
@@ -63,7 +57,6 @@ paths:
     method: get
     page: api-reference/endpoint/content/top-platforms
     title: Top platforms
-    replaces: [api-reference/endpoint/get-content-platform-composition]
     child_brands: true
   - path: /content/posts_daily
     method: get
@@ -94,13 +87,11 @@ paths:
     method: get
     page: api-reference/endpoint/content/post-series
     title: Post series
-    replaces: [api-reference/endpoint/get-user-contents]
     child_brands: true
   - path: /content/filters
     method: get
     page: api-reference/endpoint/content/filters
     title: Content filters
-    replaces: [api-reference/endpoint/get-filters]
     child_brands: true
   - path: /content/spikes
     method: get
@@ -147,7 +138,6 @@ paths:
     method: get
     page: api-reference/endpoint/stores/overview
     title: Stores overview
-    replaces: [api-reference/endpoint/get-top-creators-by-gmv, api-reference/endpoint/get-top-earning-creators]
     child_brands: true
   - path: /shopify/stats
     method: get
@@ -190,7 +180,6 @@ paths:
     method: get
     page: api-reference/endpoint/payouts/list-payouts
     title: List payouts
-    replaces: [api-reference/endpoint/get-creator-payouts]
     child_brands: true
     notes: |
       <Note>
@@ -217,7 +206,6 @@ paths:
     method: get
     page: api-reference/endpoint/payouts/payout-totals
     title: Payout totals
-    replaces: [api-reference/endpoint/get-payouts-24h, api-reference/endpoint/get-manual-campaign-progress]
     child_brands: true
   - path: /payouts/{uuid}
     method: get

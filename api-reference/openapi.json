@@ -154,7 +154,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/content_platform_composition": {
@@ -229,7 +230,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/content_24h_data": {
@@ -304,7 +306,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/creators_24h": {
@@ -427,7 +430,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/top_creators_by_engagement": {
@@ -502,7 +506,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/top_creators_by_gmv": {
@@ -710,7 +715,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/top_posts_by_views": {
@@ -926,7 +932,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/tik_tok_shop_gmv_24h": {
@@ -1049,7 +1056,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/tik_tok_shop_products": {
@@ -1153,7 +1161,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/manual_campaign_progress": {
@@ -1228,7 +1237,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/top_connected_accounts_by_engagement": {
@@ -1303,7 +1313,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/top_creators_by_posts": {
@@ -1378,7 +1389,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/top_earning_creators": {
@@ -1453,7 +1465,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/payouts_24h": {
@@ -1528,7 +1541,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/user_contents": {
@@ -1651,7 +1665,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/refresh_data": {
@@ -1685,7 +1700,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/transactions": {
@@ -9095,7 +9111,8 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/stats/mark_credit_payout": {
@@ -9113,7 +9130,7 @@
                 "properties": {
                   "creator_payout_uuid": {
                     "type": "string",
-                    "description": "The payout uuid from GET /stats/creator_payouts"
+                    "description": "The payout uuid from GET /payouts"
                   }
                 }
               },
@@ -9344,13 +9361,14 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "x-hidden": true
       }
     },
     "/content/summary": {
       "get": {
         "summary": "Content summary",
-        "description": "The KPI strip: views, likes, comments, shares, saves, engagement rate and active posts, creators and accounts for the range, the same-length range before it, and the change. `last_measured_at` is when the newest post reading landed. Replaces /stats/content_24h_data and /stats/creators_24h. Live: new post readings show up on the next call.",
+        "description": "The KPI strip: views, likes, comments, shares, saves, engagement rate and active posts, creators and accounts for the range, the same-length range before it, and the change. `last_measured_at` is when the newest post reading landed. Live: new post readings show up on the next call.",
         "parameters": [
           {
             "name": "organization_id",
@@ -9619,7 +9637,7 @@
     "/content/series": {
       "get": {
         "summary": "Content series",
-        "description": "One point per day of the range (zeros filled) with the day's views, likes, comments, shares, saves and engagement rate. Replaces /stats/snapshots. Live: new post readings show up on the next call.",
+        "description": "One point per day of the range (zeros filled) with the day's views, likes, comments, shares, saves and engagement rate. Live: new post readings show up on the next call.",
         "parameters": [
           {
             "name": "organization_id",
@@ -9796,7 +9814,7 @@
     "/content/top_posts": {
       "get": {
         "summary": "Top posts",
-        "description": "Posts ranked by what they gained in the range. Replaces /stats/top_posts_by_views. Live: new post readings show up on the next call.",
+        "description": "Posts ranked by what they gained in the range. Live: new post readings show up on the next call.",
         "parameters": [
           {
             "name": "organization_id",
@@ -10106,7 +10124,7 @@
     "/content/top_creators": {
       "get": {
         "summary": "Top creators",
-        "description": "Creators ranked by their posts' gains in the range, or by posts. Replaces /stats/top_creators_by_engagement and /stats/top_creators_by_posts. Live: new post readings show up on the next call.",
+        "description": "Creators ranked by their posts' gains in the range, or by posts. Live: new post readings show up on the next call.",
         "parameters": [
           {
             "name": "organization_id",
@@ -10358,7 +10376,7 @@
     "/content/top_accounts": {
       "get": {
         "summary": "Top accounts",
-        "description": "Creator social accounts ranked by their posts' gains, or by posts. Replaces /stats/top_connected_accounts_by_engagement. Live: new post readings show up on the next call.",
+        "description": "Creator social accounts ranked by their posts' gains, or by posts. Live: new post readings show up on the next call.",
         "parameters": [
           {
             "name": "organization_id",
@@ -10932,7 +10950,7 @@
     "/content/top_platforms": {
       "get": {
         "summary": "Top platforms",
-        "description": "Each platform's posts, gains and share of views. Replaces /stats/content_platform_composition. Live: new post readings show up on the next call.",
+        "description": "Each platform's posts, gains and share of views. Live: new post readings show up on the next call.",
         "parameters": [
           {
             "name": "organization_id",
@@ -12302,7 +12320,7 @@
     "/content/filters": {
       "get": {
         "summary": "Content filters",
-        "description": "The campaigns (across your brands) and platforms you can filter the content endpoints by. Replaces /stats/filters.",
+        "description": "The campaigns (across your brands) and platforms you can filter the content endpoints by.",
         "parameters": [
           {
             "name": "organization_id",
@@ -14190,6 +14208,12 @@
                                 "format": "date",
                                 "nullable": true
                               },
+                              "data_through": {
+                                "type": "string",
+                                "format": "date",
+                                "nullable": true,
+                                "description": "Newest day the source has synced through; daily series are complete up to it."
+                              },
                               "available": {
                                 "type": "boolean",
                                 "description": "Connected, or has data in the range. totals, deltas and series appear only when true."
@@ -14460,7 +14484,7 @@
     "/shopify/stats": {
       "get": {
         "summary": "Shopify stats",
-        "description": "The Shopify Ambassadors stats: revenue, commission, orders, page views, link clicks, creators added and ambassador sign-ins, as totals and a daily series, plus top creators and top products. Revenue, commission and orders equal the Sales tab for the same filters. Money is in cents. Refreshed every 15 minutes. Replaces /stats/top_creators_by_gmv and /stats/top_earning_creators.",
+        "description": "The Shopify Ambassadors stats: revenue, commission, orders, page views, link clicks, creators added and ambassador sign-ins, as totals and a daily series, plus top creators and top products. Revenue, commission and orders equal the Sales tab for the same filters. Money is in cents. Refreshed every 15 minutes.",
         "parameters": [
           {
             "name": "organization_id",
@@ -15825,7 +15849,7 @@
     "/payouts": {
       "get": {
         "summary": "List payouts",
-        "description": "Your creator payouts, the same rows as the dashboard's Payouts page, newest first unless sorted. Values come from the payouts cache: a payout that is recalculating is returned with pending_update true and null amounts. Replaces /stats/creator_payouts for reading.",
+        "description": "Your creator payouts, the same rows as the dashboard's Payouts page, newest first unless sorted. Values come from the payouts cache: a payout that is recalculating is returned with pending_update true and null amounts.",
         "parameters": [
           {
             "name": "organization_id",
@@ -16270,7 +16294,7 @@
     "/payouts/totals": {
       "get": {
         "summary": "Payout totals",
-        "description": "Totals for the same filters as /payouts: owed and paid amounts, counts, the breakdown by payout component and what is owed per cycle. A total is null, never partial, while a payout it needs is recalculating. Replaces /stats/payouts_24h.",
+        "description": "Totals for the same filters as /payouts: owed and paid amounts, counts, the breakdown by payout component and what is owed per cycle. A total is null, never partial, while a payout it needs is recalculating.",
         "parameters": [
           {
             "name": "organization_id",

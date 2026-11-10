@@ -4,7 +4,9 @@
 # Checks what `mint broken-links` doesn't:
 #   - every page in docs.json navigation has a file
 #   - every `openapi:` frontmatter names an operation that exists in a spec
-#   - every page under api-reference/ and essentials/ is in the navigation
+#   - every page under api-reference/ and essentials/ is in the navigation,
+#     except hidden pages (`hidden: true` frontmatter), which must stay out of it
+#   - no page links to a hidden page (deprecated endpoints are hidden on purpose)
 #   - every redirect destination resolves
 #
 #   ruby scripts/check_nav.rb
@@ -51,10 +53,25 @@ Dir['**/*.mdx'].each do |file|
   end
 end
 
+def frontmatter(file)
+  File.read(file)[/\A---\n(.*?)^---$/m, 1].to_s
+end
+
+hidden = Dir['**/*.mdx'].select { |file| frontmatter(file).match?(/^hidden:\s*true\s*$/) }.map { |f| f.delete_suffix('.mdx') }
 listed = nav.to_h { |page| [page, true] }
 Dir['{api-reference,essentials,ai}/**/*.mdx'].each do |file|
   page = file.delete_suffix('.mdx')
+  next if hidden.include?(page)
+
   problems << "Not in the nav: #{page}" unless listed[page]
+end
+hidden.each { |page| problems << "Hidden page is in the nav: #{page}" if listed[page] }
+
+hidden_link = %r{\(/(#{hidden.map { |p| Regexp.escape(p) }.join('|')})(?:[)#?])}
+Dir['**/*.mdx'].each do |file|
+  next if hidden.empty? || hidden.include?(file.delete_suffix('.mdx'))
+
+  File.read(file).scan(hidden_link) { |(page)| problems << "#{file} links to hidden page #{page}" }
 end
 
 (docs['redirects'] || []).each do |r|
@@ -64,7 +81,7 @@ end
 end
 
 if problems.empty?
-  puts "OK: #{nav.size} nav pages, #{all_ops.size} spec operations, no problems."
+  puts "OK: #{nav.size} nav pages, #{hidden.size} hidden pages, #{all_ops.size} spec operations, no problems."
 else
   puts problems
   exit 1

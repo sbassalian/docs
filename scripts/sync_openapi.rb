@@ -137,22 +137,8 @@ def public_op(source, entry)
   op
 end
 
-# The deprecated pages an entry replaces, as `METHOD /path` links read from their frontmatter.
-def replaced_links(entry)
-  (entry['replaces'] || []).map do |slug|
-    file = File.join(ROOT, "#{slug}.mdx")
-    abort "replaces: #{slug} has no page" unless File.exist?(file)
-    op = File.read(file)[/^openapi:\s*["']?([^"'\n]+)/, 1] || slug
-    "[`#{op.split.last}`](/#{slug})"
-  end
-end
-
 def page_body(entry)
-  parts = []
-  links = replaced_links(entry)
-  parts << "<Tip>\n  Replaces #{links.size > 1 ? "#{links[0..-2].join(', ')} and #{links.last}" : links.first}, which #{links.size == 1 ? 'is' : 'are'} deprecated.\n</Tip>" if links.any?
-  parts << entry['notes'].strip if entry['notes']
-  parts.empty? ? '' : "\n#{parts.join("\n\n")}\n"
+  entry['notes'] ? "\n#{entry['notes'].strip}\n" : ''
 end
 
 abort "No backend spec at #{BACKEND_SPEC}. Pass its path: ruby scripts/sync_openapi.rb PATH" unless File.exist?(BACKEND_SPEC)
@@ -216,11 +202,16 @@ end
 spec['components']['schemas']['ApiError'] ||= deep_copy(ERROR_SCHEMA)
 normalize_types(spec)
 
+# Deprecated endpoints are hidden from the docs, so drop the backend's
+# "Replaces /stats/..." pointers to them.
+REPLACES_DEPRECATED = %r{\s*Replaces /stats/[^.]*\.}
+
 # Swap in public wording, then refuse to publish anything still internal.
 generated_ops = generated.map { |e| [e['path'], e['method']] }
 generated_ops.each do |path, verb|
   each_text(spec['paths'][path][verb], "#{verb.upcase} #{path}") do |holder, key, where|
     holder[key] = texts[holder[key]] if texts.key?(holder[key])
+    holder[key] = holder[key].gsub(REPLACES_DEPRECATED, '').strip if holder[key].is_a?(String)
     holder.delete(key) if holder[key].nil?
     problems << "#{where}.#{key}: #{holder[key].inspect}" if holder[key]&.match?(INTERNAL)
   end

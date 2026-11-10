@@ -66,7 +66,14 @@ ruby scripts/gen_tik_tok_shop.rb
 
 ## Deprecating an endpoint
 
-1. Add `deprecated: true` to the page's frontmatter and to the operation in the spec.
-2. Add a `<Warning>` at the top of the page that links the replacement.
-3. Move the page to the **Deprecated** group in `docs.json`.
-4. Add a row to the deprecations table in `api-reference/changelog.mdx`.
+Deprecated endpoints are hidden from the docs, not deleted, so old links still load
+while new readers never find them.
+
+1. Add `deprecated: true` and `hidden: true` to the page's frontmatter.
+2. Add `"deprecated": true` and `"x-hidden": true` to the operation in the spec.
+3. Add a `<Warning>` at the top of the page that links the replacement.
+4. Take the page out of the navigation in `docs.json`.
+5. Add a row to the deprecations table in `api-reference/changelog.mdx`, naming the
+   old path as plain code (no link) and linking the replacement.
+6. Remove links to the page from every other page. `ruby scripts/check_nav.rb` fails
+   while one remains.

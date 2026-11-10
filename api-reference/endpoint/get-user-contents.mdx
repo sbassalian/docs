@@ -74,6 +74,7 @@ Sorting is applied **before pagination**, ensuring consistent ordering across al
         "create_time": 1750182815,
         "platform": "tik_tok",
         "connected_account_id": 821801,
+        "user_id": 512340,
         "username": "random_user",
         "profile_share_url": "https://www.tiktok.com/@random_user",
         "date": "Jun 17",
@@ -348,12 +349,14 @@ Sorting is applied **before pagination**, ensuring consistent ordering across al
           "Sep 25"
         ],
         "total_views": 5,
+        "views_updated_at": "2025-06-20T12:25:46Z",
         "share_url": "https://www.tiktok.com/@chulu56578/video/7516977905713417503"
       },
       {
         "create_time": 1750350254,
         "platform": "tik_tok",
         "connected_account_id": 34615,
+        "user_id": 20871,
         "username": "kyliejenner",
         "profile_share_url": "https://www.tiktok.com/@kyliejenner",
         "date": "Jun 19",
@@ -628,12 +631,14 @@ Sorting is applied **before pagination**, ensuring consistent ordering across al
           "Sep 25"
         ],
         "total_views": 19989943,
+        "views_updated_at": "2025-06-20T12:25:46Z",
         "share_url": "https://www.tiktok.com/@kyliejenner/video/7517696966378278175"
       },
       {
         "create_time": 1753459065,
         "platform": "instagram",
         "connected_account_id": 15670,
+        "user_id": 11032,
         "username": "growi.io",
         "profile_share_url": "https://www.instagram.com/growi.io/",
         "date": "Jul 25",
@@ -908,12 +913,14 @@ Sorting is applied **before pagination**, ensuring consistent ordering across al
           "Sep 25"
         ],
         "total_views": 22,
+        "views_updated_at": "2025-06-20T12:25:46Z",
         "share_url": "https://www.instagram.com/stories/growi.io/18072156922998939/"
       },
       {
         "create_time": 1753459032,
         "platform": "instagram",
         "connected_account_id": 15670,
+        "user_id": 11032,
         "username": "growi.io",
         "profile_share_url": "https://www.instagram.com/growi.io/",
         "date": "Jul 25",
@@ -1188,6 +1195,7 @@ Sorting is applied **before pagination**, ensuring consistent ordering across al
           "Sep 25"
         ],
         "total_views": 21,
+        "views_updated_at": "2025-06-20T12:25:46Z",
         "share_url": "https://www.instagram.com/stories/growi.io/18052947242148951/"
       }
     ]
@@ -1210,12 +1218,14 @@ Sorting is applied **before pagination**, ensuring consistent ordering across al
 | `data.user_contents`                        | Array   | Array of user content objects                                    |
 | `data.user_contents[].create_time`          | Integer | Unix timestamp of when the content was created                   |
 | `data.user_contents[].platform`             | String  | Platform where the content was posted (`tik_tok` or `instagram`) |
-| `data.user_contents[].connected_account_id` | Integer | ID of the connected account that posted the content              |
+| `data.user_contents[].connected_account_id` | Integer | ID of the creator's social account that posted the content. One creator can have several |
+| `data.user_contents[].user_id`              | Integer | Growi ID of the creator who posted the content. It stays the same across all of the creator's accounts and campaigns. Use it to match posts to creators |
 | `data.user_contents[].username`             | String  | Username of the creator                                          |
 | `data.user_contents[].profile_share_url`    | String  | Direct URL to the creator's profile                              |
 | `data.user_contents[].date`                 | String  | Date when the content was posted (format: "MMM DD")              |
 | `data.user_contents[].sorted_dates`         | Array   | Array of all available dates in "MMM DD" format for filtering    |
 | `data.user_contents[].total_views`          | Integer | Total views within the specified date range (start_date to end_date) |
+| `data.user_contents[].views_updated_at`     | String  | When the views reading behind `total_views` was taken (ISO 8601, UTC). `null` if the post has no reading in the date range yet |
 | `data.user_contents[].all_time_views`       | Integer | The post's current all-time views (only included when `include_all_time_views=true`) |
 | `data.user_contents[].share_url`            | String  | Direct URL to the content on the platform                        |
 | `meta.current_page`                         | Integer | Current page number for pagination                               |
@@ -1223,6 +1233,10 @@ Sorting is applied **before pagination**, ensuring consistent ordering across al
 | `meta.row_count`                            | Integer | Total number of results across all pages                         |
 | `meta.page_count`                           | Integer | Total number of pages available                                  |
 | `meta.has_more`                             | Boolean | Indicates if there are more pages available                      |
+
+## How fresh the views are
+
+Growi re-reads a post's views about twice a day for the first 90 days after it is posted. After 90 days a post is no longer re-read, so its views stay at the last reading. `views_updated_at` shows when that reading was taken.
 
 <RequestExample>
 
@@ -1257,6 +1271,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=0
         "create_time": 1750182815,
         "platform": "tik_tok",
         "connected_account_id": 821801,
+        "user_id": 512340,
         "username": "random_user",
         "profile_share_url": "https://www.tiktok.com/@random_user",
         "date": "Jun 17",
@@ -1531,12 +1546,14 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=0
           "Sep 25"
         ],
         "total_views": 5,
+        "views_updated_at": "2025-06-20T12:25:46Z",
         "share_url": "https://www.tiktok.com/@chulu56578/video/7516977905713417503"
       },
       {
         "create_time": 1750350254,
         "platform": "tik_tok",
         "connected_account_id": 34615,
+        "user_id": 20871,
         "username": "kyliejenner",
         "profile_share_url": "https://www.tiktok.com/@kyliejenner",
         "date": "Jun 19",
@@ -1811,12 +1828,14 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=0
           "Sep 25"
         ],
         "total_views": 19989943,
+        "views_updated_at": "2025-06-20T12:25:46Z",
         "share_url": "https://www.tiktok.com/@kyliejenner/video/7517696966378278175"
       },
       {
         "create_time": 1753459065,
         "platform": "instagram",
         "connected_account_id": 15670,
+        "user_id": 11032,
         "username": "growi.io",
         "profile_share_url": "https://www.instagram.com/growi.io/",
         "date": "Jul 25",
@@ -2091,12 +2110,14 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=0
           "Sep 25"
         ],
         "total_views": 22,
+        "views_updated_at": "2025-06-20T12:25:46Z",
         "share_url": "https://www.instagram.com/stories/growi.io/18072156922998939/"
       },
       {
         "create_time": 1753459032,
         "platform": "instagram",
         "connected_account_id": 15670,
+        "user_id": 11032,
         "username": "growi.io",
         "profile_share_url": "https://www.instagram.com/growi.io/",
         "date": "Jul 25",
@@ -2371,6 +2392,7 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/user_contents?start_date=0
           "Sep 25"
         ],
         "total_views": 21,
+        "views_updated_at": "2025-06-20T12:25:46Z",
         "share_url": "https://www.instagram.com/stories/growi.io/18052947242148951/"
       }
     ]

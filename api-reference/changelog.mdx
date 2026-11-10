@@ -41,6 +41,12 @@ aren't deprecated.
 
 ## November 2026
 
+<Update label="November 2026: user_contents creator ids and freshness">
+  **Changed**
+  - `GET /stats/user_contents` now returns `connected_account_id` (it was always empty), `user_id` (the creator's Growi ID) and `views_updated_at` on every post.
+  - `include_all_time_views=true` on `GET /stats/user_contents` returned 0 views for every post. It now returns the real numbers.
+</Update>
+
 <Update label="November 2026: deprecated endpoints hidden">
   **Changed**
   - The deprecated `/stats/*` endpoints are no longer listed in the API reference or search. They still work. See [deprecations](#deprecations) for what to use instead.

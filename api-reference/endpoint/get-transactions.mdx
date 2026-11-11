@@ -5,6 +5,12 @@ openapi: "GET /stats/transactions"
 
 Retrieves transaction history including payments, payouts, deposits, withdrawals, and disputes with detailed financial information.
 
+<Note>
+**Which creator and campaign a payout paid.** One payout transaction can pay several creators across several campaigns, so the transaction itself has no single creator or campaign. Read `invoice.line_items`: each line item is one creator payment with its `user_id` (the creator), `campaign_id`, `campaign_name`, `creator_payout_id` and `amount`. Up to 100 line items are returned per transaction; for a larger payout use [List payouts](/api-reference/endpoint/payouts/list-payouts), which returns one row per creator payout with `creator_id` and `campaign_id`.
+
+A key created on a parent organization returns the transactions of the parent and every brand; use `child_organization_id` to keep one brand.
+</Note>
+
 ## Request parameters
 
 | Parameter                | Type    | Description                                                          | Required |
@@ -20,7 +26,7 @@ Retrieves transaction history including payments, payouts, deposits, withdrawals
 ## Request example
 
 ```bash
-curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_page=20&transaction_type=payout&start_date=10/01/25&end_date=10/31/25" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_page=20&transaction_type=payout&start_date=10/01/2025&end_date=10/31/2025" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
@@ -66,7 +72,9 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
             "amount": 1250,
             "user_name": "Sophia",
             "campaign_name": "Growi campaign",
+            "campaign_id": 30945,
             "user_id": 162177,
+            "campaign_affiliate_id": 3908633,
             "order_id": null,
             "status": "sent_from_account",
             "creator_payout_id": 164340,
@@ -152,17 +160,19 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
 | `invoice.pretty_status`                  | String  | Human-readable status                          |
 | `invoice.paid_at`                        | String  | ISO timestamp when invoice was paid            |
 | `invoice.payment_method`                 | String  | Payment method used                            |
-| `invoice.line_items`                     | Array   | Array of line item objects                     |
+| `invoice.line_items`                     | Array   | Creator line items, up to 100 per transaction  |
 
 ### Line item object
 
 | Field                          | Type    | Description                           |
 | ------------------------------ | ------- | ------------------------------------- |
 | `line_items[].id`              | Integer | Line item unique identifier           |
-| `line_items[].amount`          | Number  | Line item amount (in cents)           |
+| `line_items[].amount`          | Number  | Line item amount (in dollars)         |
 | `line_items[].user_name`       | String  | Creator/user name                     |
 | `line_items[].campaign_name`   | String  | Associated campaign name              |
+| `line_items[].campaign_id`     | Integer | Associated campaign ID                |
 | `line_items[].user_id`         | Integer | Creator/user ID                       |
+| `line_items[].campaign_affiliate_id` | Integer | Creator's enrollment in the campaign |
 | `line_items[].status`          | String  | Line item status                      |
 | `line_items[].creator_payout_id` | Integer | Associated creator payout ID        |
 | `line_items[].description`     | String  | Line item description                 |
@@ -213,7 +223,7 @@ This endpoint requires viewer role or higher. Users with 'viewer' role will rece
 <RequestExample>
 
 ```bash cURL
-curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_page=20&transaction_type=payout&start_date=10/01/25&end_date=10/31/25" \
+curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_page=20&transaction_type=payout&start_date=10/01/2025&end_date=10/31/2025" \
      -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
      -H "Content-Type: application/json"
 ```
@@ -261,7 +271,9 @@ curl -X GET "https://api.growi.io/api/public/v1/stats/transactions?page=1&per_pa
             "amount": 1250,
             "user_name": "Sophia",
             "campaign_name": "Growi campaign",
+            "campaign_id": 30945,
             "user_id": 162177,
+            "campaign_affiliate_id": 3908633,
             "order_id": null,
             "status": "sent_from_account",
             "creator_payout_id": 164340,

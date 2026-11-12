@@ -1,0 +1,91 @@
+---
+title: "Turn off discount code"
+openapi: "POST /discount_codes/disable"
+---
+
+Turns one code off on your Shopify store so it no longer works at checkout. Past sales stay as they are.
+
+What happens depends on the kind of code. [Look up the code](/api-reference/endpoint/lookup-discount-code) first if you want to know before you call.
+
+| Code | Result |
+| --- | --- |
+| Safe link code (`safe_link`) | Deleted from Shopify right away. The creator stays in the program and their link keeps working. Returns `200` with `"status": "disabled"` |
+| Main or Meta ad code of a creator who was removed or left | Their codes and link are turned off in the background. Returns `202` with `"status": "queued"` |
+| Main or Meta ad code of a creator who is still in the program | Refused with `409`. Give them a new code with [Update campaign creator](/api-reference/endpoint/update-campaign-affiliate) (the old code stops working), or remove them from the program |
+| Alias (`alias`) | Refused with `409`. Delete the alias on the creator's page in the dashboard |
+
+You can call this again for the same code. A code that is already off returns `200` with `"changed": false`.
+
+Every code turned off this way shows in your organization's activity log.
+
+<Info>
+  Requires a full-access API key (read-only keys are rejected).
+</Info>
+
+## Request body
+
+| Field | Type | Description | Required |
+| --- | --- | --- | --- |
+| `code` | String | The code to turn off. Letter case does not matter | Yes |
+
+## Request example
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/discount_codes/disable" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "code": "LEAKEDCODE1234" }'
+```
+
+## Response example
+
+```json
+{
+  "data": {
+    "code": "leakedcode1234",
+    "code_type": "safe_link",
+    "campaign_affiliate_id": 3490313,
+    "status": "disabled",
+    "changed": true,
+    "message": "Code turned off on Shopify."
+  }
+}
+```
+
+## Error responses
+
+**403: read-only API key**
+
+```json
+{ "error": "This API key is read-only and cannot modify data." }
+```
+
+**404: the code is not a Growi creator code in your organization**
+
+```json
+{ "error": "No Growi ambassador code matches this code." }
+```
+
+**409: the creator is still in the program, or the code is an alias**
+
+```json
+{
+  "code": "janedoe",
+  "code_type": "main",
+  "campaign_affiliate_id": 3490313,
+  "error": "This is the ambassador's own code and they are still enrolled, so it cannot be turned off on its own. Give them a new code with PATCH /api/public/v1/campaign_affiliates/{id}, or remove them from the program."
+}
+```
+
+**502: Shopify did not accept the change**
+
+Nothing was changed. Wait a moment and call again.
+
+```json
+{
+  "code": "leakedcode1234",
+  "code_type": "safe_link",
+  "campaign_affiliate_id": 3490313,
+  "error": "Failed to bulk delete discount codes. Response code: 503"
+}
+```

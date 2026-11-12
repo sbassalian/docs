@@ -86,7 +86,8 @@
               "essentials/shopify-integration",
               "essentials/klaviyo-integration",
               "essentials/stripe-integration",
-              "essentials/custom-store-samples"
+              "essentials/custom-store-samples",
+              "essentials/coupon-leak-monitoring"
             ]
           },
           {
@@ -160,6 +161,13 @@
                   "api-reference/endpoint/list-campaign-affiliates",
                   "api-reference/endpoint/update-campaign-affiliate",
                   "api-reference/endpoint/bulk-update-campaign-affiliates"
+                ]
+              },
+              {
+                "group": "Discount codes",
+                "pages": [
+                  "api-reference/endpoint/lookup-discount-code",
+                  "api-reference/endpoint/disable-discount-code"
                 ]
               },
               {

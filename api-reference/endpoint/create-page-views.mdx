@@ -1,0 +1,106 @@
+---
+title: "Create page views"
+openapi: "POST /page_views"
+---
+
+Records link clicks on a custom (non-Shopify) website and attributes them to campaign creators. Use it when creator links point straight at your own site, for example `https://yoursite.com/?a=megan1`.
+
+Shopify stores do not need this endpoint. The Growi storefront script records their clicks.
+
+Once page views are flowing, creators see **Page Views** and **Unique Clicks** on their campaign Revenue page. Brand reports that show link clicks pick them up within about 15 minutes. See [Custom website click tracking](/essentials/custom-website-click-tracking) for a full walkthrough.
+
+## Request body
+
+Send one page view as a flat object, or up to 500 in a `page_views` array.
+
+| Field                   | Type   | Description                                                                                                  | Required |
+| ----------------------- | ------ | ------------------------------------------------------------------------------------------------------------ | -------- |
+| `campaign_affiliate_id` | String | The creator's affiliate tag: the value of the `a` parameter on the link. Not case sensitive.                   | Yes      |
+| `visitor_uid`           | String | Your own stable, anonymous visitor ID (for example a first-party cookie). Unique clicks are counted per value. | Yes      |
+| `occurred_at`           | String | ISO 8601 date-time or Unix seconds. Defaults to now. Past dates are accepted. Future dates are rejected.       | No       |
+| `page_path`             | String | Path of the landing page.                                                                                      | No       |
+| `page_title`            | String | Title of the landing page.                                                                                     | No       |
+| `referrer_url`          | String | The page the visitor came from.                                                                                | No       |
+
+## Behavior
+
+- **Call it from your server.** The API key must never reach the browser.
+- **Unknown tags are skipped, not rejected.** They are counted in `unmatched` and listed in `unmatched_campaign_affiliate_ids`.
+- **Safe to retry.** A page view with an explicit `occurred_at` is recorded once per creator, `visitor_uid` and `occurred_at`. Repeats are counted in `duplicates`.
+- **Malformed requests record nothing.** A missing `visitor_uid`, a missing tag, a bad date, an empty array or more than 500 page views returns `422` with one error per bad row.
+- **Own rate limit.** Up to 1,000 requests per hour per API key, with no 2-second wait between requests. Page views do not use up the budget of your other API calls, and your other calls do not use up this one.
+- **Send people, not bots.** Skip link-preview fetchers, crawlers and prefetch requests before you call the endpoint.
+
+## Response fields
+
+| Field                              | Type    | Description                                                    |
+| ---------------------------------- | ------- | -------------------------------------------------------------- |
+| `success`                          | Boolean | `true` when the request was valid                              |
+| `created`                          | Integer | Page views recorded by this request                            |
+| `duplicates`                       | Integer | Page views skipped because they were already recorded          |
+| `unmatched`                        | Integer | Page views skipped because the tag is not one of your creators |
+| `unmatched_campaign_affiliate_ids` | Array   | The tags that were not found                                   |
+
+The status is `201` when at least one page view was recorded and `200` when the request was valid but nothing new was recorded.
+
+<RequestExample>
+
+```bash One click
+curl -X POST "https://api.growi.io/api/public/v1/page_views" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "campaign_affiliate_id": "megan1",
+       "visitor_uid": "3f6c1f0e-2f0b-4a54-9f4e-0d6a2f1c9b11",
+       "page_path": "/",
+       "referrer_url": "https://www.tiktok.com/"
+     }'
+```
+
+```bash Backfill
+curl -X POST "https://api.growi.io/api/public/v1/page_views" \
+     -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "page_views": [
+         { "campaign_affiliate_id": "megan1", "visitor_uid": "v-1001", "occurred_at": "2026-10-20T15:04:05Z" },
+         { "campaign_affiliate_id": "megan1", "visitor_uid": "v-1002", "occurred_at": "2026-10-21T09:30:00Z" },
+         { "campaign_affiliate_id": "joel2", "visitor_uid": "v-1003", "occurred_at": "2026-10-21T11:12:45Z" }
+       ]
+     }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 201
+{
+  "success": true,
+  "created": 3,
+  "duplicates": 0,
+  "unmatched": 0,
+  "unmatched_campaign_affiliate_ids": []
+}
+```
+
+```json 200
+{
+  "success": true,
+  "created": 0,
+  "duplicates": 0,
+  "unmatched": 1,
+  "unmatched_campaign_affiliate_ids": ["not-a-creator"]
+}
+```
+
+```json 422
+{
+  "error": "Invalid page views",
+  "errors": [
+    { "index": 1, "error": "visitor_uid is required" }
+  ]
+}
+```
+
+</ResponseExample>

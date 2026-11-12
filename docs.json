@@ -83,6 +83,7 @@
             "icon": "plug",
             "pages": [
               "essentials/shopify-headless-integration",
+              "essentials/custom-website-click-tracking",
               "essentials/shopify-integration",
               "essentials/klaviyo-integration",
               "essentials/stripe-integration",
@@ -228,7 +229,8 @@
               {
                 "group": "Tracking events",
                 "pages": [
-                  "api-reference/endpoint/create"
+                  "api-reference/endpoint/create",
+                  "api-reference/endpoint/create-page-views"
                 ]
               },
               {

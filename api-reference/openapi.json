@@ -72,6 +72,95 @@
         }
       }
     },
+    "/page_views": {
+      "post": {
+        "description": "Records link clicks (page views) on a custom website and attributes them to campaign creators. Send one page view per request, or up to 500 in a `page_views` array.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPageViews"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "At least one page view was recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageViewsResult"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "The request was valid but nothing new was recorded (every page view was a duplicate or had an unknown tag)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageViewsResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Malformed request. Nothing is recorded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid page views"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "index": {
+                            "type": "integer",
+                            "description": "Position of the page view in the request, starting at 0"
+                          },
+                          "error": {
+                            "type": "string",
+                            "example": "visitor_uid is required"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "More than 1,000 page view requests in the last hour for this API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/stats/snapshots": {
       "get": {
         "description": "Retrieves time-series data for content engagement metrics within a specified date range",
@@ -20499,6 +20588,92 @@
           "error": {
             "type": "string",
             "description": "What went wrong"
+          }
+        }
+      },
+      "NewPageView": {
+        "type": "object",
+        "required": [
+          "campaign_affiliate_id",
+          "visitor_uid"
+        ],
+        "properties": {
+          "campaign_affiliate_id": {
+            "type": "string",
+            "description": "The creator's affiliate tag: the value of the `a` parameter on the link the visitor clicked. Not case sensitive."
+          },
+          "visitor_uid": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Your own stable, anonymous ID for the visitor (for example a first-party cookie value). Unique clicks are counted per `visitor_uid`."
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the click happened, as an ISO 8601 date-time or a Unix timestamp in seconds. Defaults to now. Past dates are accepted, so you can backfill. Future dates are rejected."
+          },
+          "page_path": {
+            "type": "string",
+            "description": "Path of the landing page, for example `/pricing`."
+          },
+          "page_title": {
+            "type": "string",
+            "description": "Title of the landing page."
+          },
+          "referrer_url": {
+            "type": "string",
+            "description": "The page the visitor came from (`document.referrer`)."
+          }
+        }
+      },
+      "NewPageViews": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/NewPageView"
+          },
+          {
+            "type": "object",
+            "required": [
+              "page_views"
+            ],
+            "properties": {
+              "page_views": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 500,
+                "items": {
+                  "$ref": "#/components/schemas/NewPageView"
+                },
+                "description": "Up to 500 page views in one request."
+              }
+            }
+          }
+        ]
+      },
+      "PageViewsResult": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "created": {
+            "type": "integer",
+            "description": "Page views recorded by this request"
+          },
+          "duplicates": {
+            "type": "integer",
+            "description": "Page views skipped because the same creator, `visitor_uid` and `occurred_at` were already recorded"
+          },
+          "unmatched": {
+            "type": "integer",
+            "description": "Page views skipped because the tag does not belong to a creator in your organization"
+          },
+          "unmatched_campaign_affiliate_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The tags that were not found"
           }
         }
       }

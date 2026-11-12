@@ -1,0 +1,78 @@
+---
+title: "Remove campaign creator"
+openapi: "POST /campaign_affiliates/{id}/remove"
+---
+
+Removes a creator from a campaign or ambassador program. It does the same thing as **Remove** on the creator's row in the dashboard:
+
+- The creator's status becomes `removed` and they stop earning on new sales.
+- Their Shopify discount code and link are turned off in the background.
+- The `campaign_affiliate.removed` [webhook event](/essentials/campaign-creator-webhooks) fires.
+- Past sales and posts stay as they are.
+
+You can call this again for the same creator. A creator who is already out of the program returns `200` with `"changed": false`.
+
+To undo it, add the creator back to the program in the dashboard. Their code and link come back.
+
+<Info>
+  Requires a full-access API key (read-only keys are rejected).
+</Info>
+
+<Warning>
+  1:1 contracts can't be ended through this endpoint. Cancel the contract in the dashboard.
+</Warning>
+
+## Path parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `id` | Integer | Campaign creator (enrollment) id, from [List campaign creators](/api-reference/endpoint/list-campaign-affiliates) or [Look up discount code](/api-reference/endpoint/lookup-discount-code) | Yes |
+
+## Request body
+
+| Field | Type | Description | Required |
+| --- | --- | --- | --- |
+| `reason` | String | Why you removed them, up to 255 characters. Saved in your activity log | No |
+
+## Request example
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/campaign_affiliates/3490313/remove" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "reason": "Code posted on a coupon site" }'
+```
+
+## Response example
+
+```json
+{
+  "data": {
+    "id": 3490313,
+    "campaign_id": 12345,
+    "user_id": 812345,
+    "status": "removed",
+    "changed": true
+  }
+}
+```
+
+## Error responses
+
+**403: read-only API key**
+
+```json
+{ "error": "This API key is read-only and cannot modify data." }
+```
+
+**404: not found for your organization**
+
+```json
+{ "error": "Campaign affiliate not found." }
+```
+
+**409: the creator is on a 1:1 contract**
+
+```json
+{ "error": "This is a 1:1 contract. Cancel the contract in the dashboard instead." }
+```

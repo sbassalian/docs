@@ -160,7 +160,8 @@
                 "pages": [
                   "api-reference/endpoint/list-campaign-affiliates",
                   "api-reference/endpoint/update-campaign-affiliate",
-                  "api-reference/endpoint/bulk-update-campaign-affiliates"
+                  "api-reference/endpoint/bulk-update-campaign-affiliates",
+                  "api-reference/endpoint/remove-campaign-affiliate"
                 ]
               },
               {

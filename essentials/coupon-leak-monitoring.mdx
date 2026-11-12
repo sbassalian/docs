@@ -47,9 +47,22 @@ curl -X POST "https://api.growi.io/api/public/v1/discount_codes/disable" \
 
 - A **safe link code** (a one-time code minted when a shopper clicks a creator's link) is deleted from Shopify right away. The creator stays in the program.
 - The code of a creator who **was removed or left** is cleaned up in the background, together with their link.
-- The main code of a creator who is **still in the program** is refused with `409`. Give them a new code with [Update campaign creator](/api-reference/endpoint/update-campaign-affiliate), which makes the leaked one stop working, or remove them from the program in the dashboard.
+- The main code of a creator who is **still in the program** is refused with `409`. Give them a new code with [Update campaign creator](/api-reference/endpoint/update-campaign-affiliate), which makes the leaked one stop working, or remove them from the program (step 4).
 
 Calling it twice is safe. See [Turn off discount code](/api-reference/endpoint/disable-discount-code).
+
+## 4. Remove a creator who broke your terms
+
+If the creator posted the code themselves, remove them from the program. Use the `campaign_affiliate.id` from the lookup:
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/campaign_affiliates/3490313/remove" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "reason": "Code posted on a coupon site" }'
+```
+
+Their code and link are turned off and they stop earning on new sales. To undo it, add them back in the dashboard. See [Remove campaign creator](/api-reference/endpoint/remove-campaign-affiliate).
 
 ## What to expect
 

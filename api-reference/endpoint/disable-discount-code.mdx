@@ -11,7 +11,7 @@ What happens depends on the kind of code. [Look up the code](/api-reference/endp
 | --- | --- |
 | Safe link code (`safe_link`) | Deleted from Shopify right away. The creator stays in the program and their link keeps working. Returns `200` with `"status": "disabled"` |
 | Main or Meta ad code of a creator who was removed or left | Their codes and link are turned off in the background. Returns `202` with `"status": "queued"` |
-| Main or Meta ad code of a creator who is still in the program | Refused with `409`. Give them a new code with [Update campaign creator](/api-reference/endpoint/update-campaign-affiliate) (the old code stops working), or remove them from the program |
+| Main or Meta ad code of a creator who is still in the program | Refused with `409`. Give them a new code with [Update campaign creator](/api-reference/endpoint/update-campaign-affiliate) (the old code stops working), or [remove them from the program](/api-reference/endpoint/remove-campaign-affiliate) |
 | Alias (`alias`) | Refused with `409`. Delete the alias on the creator's page in the dashboard |
 
 You can call this again for the same code. A code that is already off returns `200` with `"changed": false`.

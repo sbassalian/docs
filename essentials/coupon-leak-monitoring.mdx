@@ -1,0 +1,62 @@
+---
+title: "Coupon leak monitoring"
+description: "Connect a coupon monitoring tool to Growi: find out whose code leaked and turn it off through the API"
+---
+
+<Info>
+  **Prerequisite** You need an admin or owner role in your Growi organization and a full-access API key.
+</Info>
+
+## Overview
+
+Coupon monitoring tools watch coupon sites and browser extensions for your discount codes. When one of your creator codes shows up there, you want to know which creator it belongs to and stop it from working.
+
+With the Growi API you can do both without opening the dashboard:
+
+1. **Look up** the code. Growi tells you the creator, their program, and how many sales used that code.
+2. **Turn off** the code on Shopify.
+
+This works with any monitoring tool that can call an HTTP endpoint, and with your own script if the tool only exports a list.
+
+## 1. Create an API key
+
+In the Growi dashboard, open **Settings → Developer**, create a key under **API keys**, and choose **Full** access. See [authentication](/api-reference/authentication).
+
+Keep the key on a server. Give it to your monitoring tool only if the tool stores it as a secret.
+
+## 2. Look up the code
+
+```bash
+curl "https://api.growi.io/api/public/v1/discount_codes/lookup?code=LEAKEDCODE1234" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+- `200` means the code is a Growi creator code. The response names the creator (`campaign_affiliate`), the program (`campaign`), the sales made with the code (`usage`), and whether it still works on Shopify (`shopify.live`).
+- `404` means the code is not a Growi creator code. It may be one of your own store codes. Nothing to do in Growi.
+
+See [Look up discount code](/api-reference/endpoint/lookup-discount-code) for every field.
+
+## 3. Turn off the code
+
+```bash
+curl -X POST "https://api.growi.io/api/public/v1/discount_codes/disable" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "code": "LEAKEDCODE1234" }'
+```
+
+- A **safe link code** (a one-time code minted when a shopper clicks a creator's link) is deleted from Shopify right away. The creator stays in the program.
+- The code of a creator who **was removed or left** is cleaned up in the background, together with their link.
+- The main code of a creator who is **still in the program** is refused with `409`. Give them a new code with [Update campaign creator](/api-reference/endpoint/update-campaign-affiliate), which makes the leaked one stop working, or remove them from the program in the dashboard.
+
+Calling it twice is safe. See [Turn off discount code](/api-reference/endpoint/disable-discount-code).
+
+## What to expect
+
+| Question | Answer |
+| --- | --- |
+| Does turning off a code remove the creator? | No. Only that code stops working |
+| Do past sales change? | No. Sales and commissions already recorded stay |
+| Where do I see what the API did? | In your organization's activity log. Each entry says it came from the API |
+| How fast can I call? | One call every 2 seconds per API key, with an hourly cap. See [rate limits](/api-reference/rate-limits) |
+| Can I get told when a creator's code changes? | Yes. The `campaign_affiliate.code_updated` [webhook](/essentials/campaign-creator-webhooks) fires on every code change |

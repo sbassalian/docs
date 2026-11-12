@@ -1,0 +1,99 @@
+---
+title: "Look up discount code"
+openapi: "GET /discount_codes/lookup"
+---
+
+Tells you which creator a discount code belongs to. Use it when a code shows up somewhere it should not be, such as a coupon site, and you need to know whose it is before you act.
+
+It matches four kinds of code:
+
+| `code_type` | What it is |
+| --- | --- |
+| `main` | The creator's own code (their affiliate tag) |
+| `meta_ad` | The creator's code used in Meta ads |
+| `alias` | An extra code attached to the creator's main code |
+| `safe_link` | A one-time code minted for one shopper who clicked the creator's link. It is the creator's code plus digits |
+
+Letter case does not matter. Codes of your [child brands](/api-reference/child-brands) are included.
+
+Read-only (viewer) API keys can call this endpoint.
+
+## Query parameters
+
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| `code` | String | The code to look up | Yes |
+
+## Request example
+
+```bash
+curl "https://api.growi.io/api/public/v1/discount_codes/lookup?code=LEAKEDCODE1234" \
+  -H "Authorization: Bearer YOUR_PUBLIC_API_KEY"
+```
+
+## Response example
+
+```json
+{
+  "data": {
+    "code": "leakedcode1234",
+    "code_type": "safe_link",
+    "main_code": "leakedcode",
+    "created_at": "2026-11-02T14:05:11Z",
+    "campaign_affiliate": {
+      "id": 3490313,
+      "status": "active",
+      "user_id": 812345,
+      "name": "Jane Doe",
+      "email": "jane@example.com",
+      "pii_hidden": false
+    },
+    "campaign": {
+      "id": 12345,
+      "name": "Ambassador Program",
+      "campaign_type": "ambassador_program",
+      "status": "active"
+    },
+    "usage": {
+      "orders": 1,
+      "total_cents": 8900,
+      "last_used_at": "2026-11-03T09:12:44Z"
+    },
+    "shopify": {
+      "connected": true,
+      "live": true,
+      "discount_status": "ACTIVE"
+    }
+  }
+}
+```
+
+## Response fields
+
+| Field | Description |
+| --- | --- |
+| `code` | The code you sent, in lowercase |
+| `code_type` | `main`, `meta_ad`, `alias` or `safe_link` |
+| `main_code` | The creator's own code. For a safe link code or alias, this is the code it hangs off |
+| `campaign_affiliate.id` | The creator's enrollment id. Use it with the [campaign creator endpoints](/api-reference/endpoint/list-campaign-affiliates) |
+| `campaign_affiliate.status` | `active`, `paused`, `completed`, `pending`, `removed`, `left` or `archived` |
+| `campaign_affiliate.name`, `email` | Hidden (`pii_hidden: true`) for creators who joined through the Growi marketplace |
+| `usage.orders`, `usage.total_cents` | Sales Growi recorded with this exact code, and their order total in the smallest currency unit |
+| `shopify.live` | `true` when the code exists on your Shopify store right now. `false` when it is gone. `null` when no Shopify store is connected or Shopify could not be reached |
+| `shopify.discount_status` | Status of the Shopify discount the code sits on, for example `ACTIVE` or `EXPIRED` |
+
+## Error responses
+
+**400: no code sent**
+
+```json
+{ "error": "code is required" }
+```
+
+**404: the code is not a Growi creator code in your organization**
+
+```json
+{ "error": "No Growi ambassador code matches this code." }
+```
+
+A 404 is the normal answer for your own store codes (for example a welcome code) and for codes from other tools.

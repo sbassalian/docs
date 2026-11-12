@@ -18943,6 +18943,383 @@
         },
         "x-generated-by": "scripts/sync_openapi.rb"
       }
+    },
+    "/discount_codes/lookup": {
+      "get": {
+        "summary": "Look Up Discount Code",
+        "description": "Maps a discount code to the creator it belongs to. Matches a creator's main code, Meta ad code, alias or a one-time safe link code. Letter case does not matter. Works with read-only API keys.",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "required": true,
+            "description": "The code to look up",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Code found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "leakedcode1234"
+                        },
+                        "code_type": {
+                          "type": "string",
+                          "enum": [
+                            "main",
+                            "meta_ad",
+                            "alias",
+                            "safe_link"
+                          ],
+                          "example": "safe_link"
+                        },
+                        "main_code": {
+                          "type": "string",
+                          "example": "leakedcode",
+                          "description": "The creator's own code"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "nullable": true
+                        },
+                        "campaign_affiliate": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 3490313
+                            },
+                            "status": {
+                              "type": "string",
+                              "example": "active"
+                            },
+                            "user_id": {
+                              "type": "integer",
+                              "example": 812345
+                            },
+                            "name": {
+                              "type": "string",
+                              "nullable": true,
+                              "example": "Jane Doe"
+                            },
+                            "email": {
+                              "type": "string",
+                              "nullable": true,
+                              "example": "jane@example.com"
+                            },
+                            "pii_hidden": {
+                              "type": "boolean",
+                              "example": false
+                            }
+                          }
+                        },
+                        "campaign": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 12345
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Ambassador Program"
+                            },
+                            "campaign_type": {
+                              "type": "string",
+                              "example": "ambassador_program"
+                            },
+                            "status": {
+                              "type": "string",
+                              "example": "active"
+                            }
+                          }
+                        },
+                        "usage": {
+                          "type": "object",
+                          "properties": {
+                            "orders": {
+                              "type": "integer",
+                              "example": 1,
+                              "description": "Sales recorded with this exact code"
+                            },
+                            "total_cents": {
+                              "type": "integer",
+                              "example": 8900
+                            },
+                            "last_used_at": {
+                              "type": "string",
+                              "format": "date-time",
+                              "nullable": true
+                            }
+                          }
+                        },
+                        "shopify": {
+                          "type": "object",
+                          "properties": {
+                            "connected": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "live": {
+                              "type": "boolean",
+                              "nullable": true,
+                              "example": true,
+                              "description": "Whether the code exists on Shopify right now"
+                            },
+                            "discount_status": {
+                              "type": "string",
+                              "nullable": true,
+                              "example": "ACTIVE"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No code sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The code is not a Growi creator code in your organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discount_codes/disable": {
+      "post": {
+        "summary": "Turn Off Discount Code",
+        "description": "Turns one code off on Shopify. A safe link code is deleted right away. The code of a creator who was removed or left is cleaned up in the background (202). The main code of a creator who is still in the program is refused with 409. Safe to call again for the same code.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "code"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "LEAKEDCODE1234",
+                    "description": "The code to turn off. Letter case does not matter."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Code is off",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "leakedcode1234"
+                        },
+                        "code_type": {
+                          "type": "string",
+                          "enum": [
+                            "main",
+                            "meta_ad",
+                            "alias",
+                            "safe_link"
+                          ],
+                          "example": "safe_link"
+                        },
+                        "campaign_affiliate_id": {
+                          "type": "integer",
+                          "example": 3490313
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "disabled",
+                            "queued"
+                          ],
+                          "example": "disabled"
+                        },
+                        "changed": {
+                          "type": "boolean",
+                          "example": true,
+                          "description": "false when the code was already off"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Code turned off on Shopify."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "The creator was removed or left. Their codes and link are being turned off in the background",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "leakedcode1234"
+                        },
+                        "code_type": {
+                          "type": "string",
+                          "enum": [
+                            "main",
+                            "meta_ad",
+                            "alias",
+                            "safe_link"
+                          ],
+                          "example": "safe_link"
+                        },
+                        "campaign_affiliate_id": {
+                          "type": "integer",
+                          "example": 3490313
+                        },
+                        "status": {
+                          "type": "string",
+                          "example": "queued"
+                        },
+                        "changed": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Read-only API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The code is not a Growi creator code in your organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The creator is still in the program, or the code is an alias",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Shopify did not accept the change. Nothing was changed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

@@ -1,0 +1,95 @@
+---
+title: "Custom website click tracking"
+description: "Show creators their link clicks when your links point at your own (non-Shopify) website"
+---
+
+<Info>
+  **Who this is for** Brands whose creator links go straight to their own site,
+  for example `https://yoursite.com/?a=megan1`, and who report sales with
+  [Create affiliate sale](/api-reference/endpoint/create-affiliate-sale).
+  Shopify stores do not need this. The Growi storefront script already records
+  their clicks.
+</Info>
+
+Growi can only count a click if it is told about it. A link to your own site never passes through Growi, so your site has to report the visit. This takes one small server route.
+
+## How it works
+
+1. A visitor lands on your site with `?a=<creator tag>` in the URL.
+2. Your site gives the visitor an anonymous ID (a first-party cookie) if they do not have one.
+3. Your **server** calls [Create page views](/api-reference/endpoint/create-page-views) with the tag and the visitor ID.
+4. Within a few minutes the creator sees the click on their campaign Revenue page as **Page Views** and **Unique Clicks**.
+
+## 1. Report the click from your server
+
+Report once per landing that carries an `a` tag. Do not report every page the visitor opens afterwards.
+
+```ts app/api/growi-click/route.ts (Next.js)
+import { cookies, headers } from "next/headers";
+import { NextResponse } from "next/server";
+
+const BOT = /bot|crawl|spider|preview|facebookexternalhit|slack|discord|whatsapp|telegram|curl|headless/i;
+
+export async function POST(request: Request) {
+  const { tag, path, referrer } = await request.json();
+  const userAgent = (await headers()).get("user-agent") ?? "";
+  if (!tag || !userAgent || BOT.test(userAgent)) return NextResponse.json({ ok: true });
+
+  const jar = await cookies();
+  let visitorUid = jar.get("growi_vid")?.value;
+  if (!visitorUid) {
+    visitorUid = crypto.randomUUID();
+    jar.set("growi_vid", visitorUid, { maxAge: 60 * 60 * 24 * 365, sameSite: "lax", secure: true, httpOnly: true });
+  }
+
+  await fetch("https://api.growi.io/api/public/v1/page_views", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.GROWI_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      campaign_affiliate_id: tag,
+      visitor_uid: visitorUid,
+      page_path: path,
+      referrer_url: referrer,
+    }),
+  }).catch(() => {});
+
+  return NextResponse.json({ ok: true });
+}
+```
+
+Call that route from the place where your site already reads the `a` parameter:
+
+```ts
+const tag = new URLSearchParams(window.location.search).get("a");
+if (tag) {
+  navigator.sendBeacon(
+    "/api/growi-click",
+    new Blob(
+      [JSON.stringify({ tag, path: window.location.pathname, referrer: document.referrer })],
+      { type: "application/json" }
+    )
+  );
+}
+```
+
+<Warning>
+  Keep the API key on the server. Never call `api.growi.io` with your key from
+  the browser.
+</Warning>
+
+## 2. Check it
+
+Open one of your creator links in a private window, then call the endpoint by hand with the same tag. A `201` with `"created": 1` means the click was recorded. `"unmatched": 1` means the tag is not one of your creators.
+
+## 3. Backfill past clicks (optional)
+
+If you have your own log of past visits with the creator tag and a time, send them to the same endpoint in batches of up to 500 with `occurred_at` set. Sending a batch twice does not double count.
+
+## Good to know
+
+- Sales attribution does not change. You keep reporting sales the same way.
+- Creators keep their current links. Clicks on links that are already posted count from the moment your site starts reporting them.
+- Page views have their own limit of 1,000 requests per hour per API key and never slow down your sale reports.

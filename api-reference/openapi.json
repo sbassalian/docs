@@ -19320,6 +19320,130 @@
           }
         }
       }
+    },
+    "/campaign_affiliates/{id}/remove": {
+      "post": {
+        "summary": "Remove Campaign Creator",
+        "description": "Removes a creator from a campaign or ambassador program, the same as Remove in the dashboard. Their Shopify code and link are turned off in the background and campaign_affiliate.removed fires. Past sales stay. Safe to call again.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Campaign creator (enrollment) ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "example": "Code posted on a coupon site",
+                    "description": "Saved in your activity log. Up to 255 characters."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Creator removed, or already out of the program",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 3490313
+                        },
+                        "campaign_id": {
+                          "type": "integer",
+                          "example": 12345
+                        },
+                        "user_id": {
+                          "type": "integer",
+                          "example": 812345
+                        },
+                        "status": {
+                          "type": "string",
+                          "example": "removed"
+                        },
+                        "changed": {
+                          "type": "boolean",
+                          "example": true,
+                          "description": "false when the creator was already out of the program"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Read-only API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign creator not found for your organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The creator is on a 1:1 contract",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

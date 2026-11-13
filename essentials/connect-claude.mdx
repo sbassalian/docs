@@ -32,6 +32,12 @@ What Claude can do depends on your role in the organization you connect.
 - Every change Claude makes is logged, with who asked for it.
 - Claude only ever sees the organization you connected. A parent organization
   also sees its child brands, the same as the API.
+- TikTok Shop sales tools (`list_tts_top_creators`, `list_tts_top_videos`,
+  `list_tts_shop_videos_by_views` and `get_tts_revenue_trend`) read one shop at
+  a time. If your shops are connected on your child brands, Claude passes that
+  brand's `organization_id`. `get_organization` lists your brands and shows
+  which ones have a TikTok Shop, so you can ask "Who were the top TikTok Shop
+  creators for each of my brands last week?"
 - Growi's internal platform tools are never available to Claude.
 
 <Note>
